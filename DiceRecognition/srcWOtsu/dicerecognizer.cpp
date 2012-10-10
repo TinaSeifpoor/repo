@@ -210,12 +210,61 @@ ContourList DiceRecognizer::groupDiceCircles(Contour diceCircle, Contour filter,
 
 Mat DiceRecognizer::cleanDiceImage(Mat imGray)
 {
-    Mat imMean;
-    blur(imGray, imMean, Size(199,199));
-    Mat imDiff = imGray - imMean;
-    Mat imMask = imDiff > 120;
-    Mat imClean;
-    bitwise_and (imGray, imMask, imClean);
+//    imshow ("before threshold", imGray);
+//    waitKey();
+    int histSize = 256;
+    float range[] = {0, 256};
+    const float* histRange = {range};
+    vector<int> histData;
+    histData.resize(256);
+    for (int i=0; i < imGray.cols; ++i)
+        for (int j=0; j < imGray.rows; ++j)
+            int intensity = imGray[i][j];
+    calcHist(&imGray, 1, 0, Mat(), histData, 1, &histSize, &histRange);
+    //
+    int total = imGray.rows * imGray.cols;
+
+    float sum = 0;
+    for (int t=0; t<256; ++t)
+        sum += t * histData[t];
+    float sumB = 0;
+    int wB = 0, wF = 0;
+
+    float varMax = 0;
+    int threshold = 0;
+
+    for (int t=0; t<256; ++t)
+    {
+        wB += histData[t]; // Weight Background
+        if (wB==0)
+            continue;
+        wF = total - wB; // Weight Foreground
+        if (wF == 0)
+            break;
+        sumB += (float) (t * histData[t]);
+
+        float mB = sumB / wB; // Mean Background
+        float mF = (sum - sumB) / wF; // Mean Foreground
+
+        // Calculate Between Class Variance
+        float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);
+
+        // Check if new maximum found
+        if (varBetween > varMax)
+        {
+            varMax = varBetween;
+            threshold = t;
+        }
+    }
+    Mat imClean = imGray > threshold;
+    imshow ("after threshold", imClean);
+    imshow ("before threshold", imGray);
+    waitKey();
+//    blur(imGray, imMean, Size(199,199));
+//    Mat imDiff = imGray - imMean;
+//    Mat imMask = imDiff > 120;
+//    Mat imClean;
+//    bitwise_and (imGray, imMask, imClean);
     return imClean;
 }
 
