@@ -8,7 +8,6 @@ class DiceRecognizer : public IDiceRecognizer
 {
 public:
     DiceRecognizer();
-    virtual ~DiceRecognizer() {}
     std::multiset<int> readNumbers(const cv::Mat& img);
 private:
     cv::Mat autoThreshold(cv::Mat imGray, bool isBright=true, int sigma=4);
