@@ -38,6 +38,10 @@ public:
 private:
     cv::Mat maskImageContour (Contour contours, cv::Size imSize);
     void sortContourHiearchy(Contour contours, Hierarchy hierarchy, std::vector<int> oldIndices, Contour *contoursSorted, Hierarchy *hierarchySorted);
+    double calcCircularity(ContourPoints contourPoints);
+    std::vector<double> calcCircularity(Contour contours);
+    double calcRectangularity(ContourPoints contourPoints);
+    std::vector<double> calcRectangularity(Contour contours);
 };
 
 #endif // CONTOURANALYSIS_H

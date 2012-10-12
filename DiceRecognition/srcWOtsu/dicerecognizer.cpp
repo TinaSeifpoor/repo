@@ -108,33 +108,33 @@ void DiceRecognizer::showResults(ContourList resultContours, Mat imGray)
     }
 }
 
-Contour DiceRecognizer::pickDiceBody(Contour diceBodyCandidates)
+Contour DiceRecognizer::pickDiceBody(Contour dieBodyCandidates)
 {
-    int diceBodyMinAreaThreshold=350, diceBodyMaxAreaThreshold=2000;
-    double diceBodyMinAreaRectangularity=.5, diceBodyMaxAreaRectangularity=1;
-    Contour diceBodyContour, tempContours;
-    ca->selectContoursByArea(diceBodyCandidates,
-                             diceBodyMinAreaThreshold, diceBodyMaxAreaThreshold,
+    int dieBodyMinAreaThreshold=350, dieBodyMaxAreaThreshold=2000;
+    double dieBodyMinRectangularity=.5, dieBodyMaxRectangularity=1;
+    Contour dieBodyContour, tempContours;
+    ca->selectContoursByArea(dieBodyCandidates,
+                             dieBodyMinAreaThreshold, dieBodyMaxAreaThreshold,
                              &tempContours);
     ca->selectContoursByRectangularity(tempContours,
-                                       diceBodyMinAreaRectangularity, diceBodyMaxAreaRectangularity,
-                                       &diceBodyContour);
-    return diceBodyContour;
+                                       dieBodyMinRectangularity, dieBodyMaxRectangularity,
+                                       &dieBodyContour);
+    return dieBodyContour;
 }
 
-Contour DiceRecognizer::pickDiceCircles(Contour diceCircleCandidates)
+Contour DiceRecognizer::pickDiceCircles(Contour dieCircleCandidates)
 {
-    int diceCircleMinAreaThreshold=10, diceCircleMaxAreaThreshold=100;
-    double diceCircleMinCircularity=.2, diceCircleMaxCircularity = 1;
-    Contour diceCircleContour, tempContours;
-    ca->selectContoursByArea(diceCircleCandidates,
-                             diceCircleMinAreaThreshold, diceCircleMaxAreaThreshold,
+    int dieCircleMinAreaThreshold=10, dieCircleMaxAreaThreshold=100;
+    double dieCircleMinCircularity=.4, dieCircleMaxCircularity = 1;
+    Contour dieCircleContour, tempContours;
+    ca->selectContoursByArea(dieCircleCandidates,
+                             dieCircleMinAreaThreshold, dieCircleMaxAreaThreshold,
                              &tempContours);
     ca->selectContoursByCircularity(tempContours,
-                                    diceCircleMinCircularity, diceCircleMaxCircularity,
-                                    &diceCircleContour);
+                                    dieCircleMinCircularity, dieCircleMaxCircularity,
+                                    &dieCircleContour);
 
-    return diceCircleContour;
+    return dieCircleContour;
 }
 
 ContourList DiceRecognizer::extractDiceCirclesFromBody(Contour diceBodyContours, Mat im, bool isBright)
@@ -212,59 +212,68 @@ Mat DiceRecognizer::cleanDiceImage(Mat imGray)
 {
 //    imshow ("before threshold", imGray);
 //    waitKey();
-    int histSize = 256;
-    float range[] = {0, 256};
-    const float* histRange = {range};
-    vector<int> histData;
-    histData.resize(256);
-    for (int i=0; i < imGray.cols; ++i)
-        for (int j=0; j < imGray.rows; ++j)
-            int intensity = imGray[i][j];
-    calcHist(&imGray, 1, 0, Mat(), histData, 1, &histSize, &histRange);
+//    Mat imTest, imTest2;
+//    threshold(imGray, imTest, 128, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+//    threshold(imGray, imTest2, 128, 255, CV_8U);
+//    imshow ("a", imTest);
+//    imshow ("b", imTest2);
+//    waitKey();
+//    int histSize = 256;
+//    float range[] = {0, 256};
+//    const float* histRange = {range};
+//    vector<int> histData;
+
+//    histData.resize(256);
+//    for (int i=0; i < imGray.cols; ++i)
+//        for (int j=0; j < imGray.rows; ++j)
+//            int intensity = imGray[i][j];
+
+//    calcHist(&imGray, 1, 0, Mat(), histData, 1, &histSize, &histRange);
     //
-    int total = imGray.rows * imGray.cols;
+//    int total = imGray.rows * imGray.cols;
 
-    float sum = 0;
-    for (int t=0; t<256; ++t)
-        sum += t * histData[t];
-    float sumB = 0;
-    int wB = 0, wF = 0;
+//    float sum = 0;
+//    for (int t=0; t<256; ++t)
+//        sum += t * histData[t];
+//    float sumB = 0;
+//    int wB = 0, wF = 0;
 
-    float varMax = 0;
-    int threshold = 0;
+//    float varMax = 0;
+//    int threshold = 0;
 
-    for (int t=0; t<256; ++t)
-    {
-        wB += histData[t]; // Weight Background
-        if (wB==0)
-            continue;
-        wF = total - wB; // Weight Foreground
-        if (wF == 0)
-            break;
-        sumB += (float) (t * histData[t]);
+//    for (int t=0; t<256; ++t)
+//    {
+//        wB += histData[t]; // Weight Background
+//        if (wB==0)
+//            continue;
+//        wF = total - wB; // Weight Foreground
+//        if (wF == 0)
+//            break;
+//        sumB += (float) (t * histData[t]);
 
-        float mB = sumB / wB; // Mean Background
-        float mF = (sum - sumB) / wF; // Mean Foreground
+//        float mB = sumB / wB; // Mean Background
+//        float mF = (sum - sumB) / wF; // Mean Foreground
 
-        // Calculate Between Class Variance
-        float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);
+//        // Calculate Between Class Variance
+//        float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);
 
-        // Check if new maximum found
-        if (varBetween > varMax)
-        {
-            varMax = varBetween;
-            threshold = t;
-        }
-    }
-    Mat imClean = imGray > threshold;
-    imshow ("after threshold", imClean);
-    imshow ("before threshold", imGray);
-    waitKey();
-//    blur(imGray, imMean, Size(199,199));
-//    Mat imDiff = imGray - imMean;
-//    Mat imMask = imDiff > 120;
-//    Mat imClean;
-//    bitwise_and (imGray, imMask, imClean);
+//        // Check if new maximum found
+//        if (varBetween > varMax)
+//        {
+//            varMax = varBetween;
+//            threshold = t;
+//        }
+//    }
+//    Mat imClean = imGray /*> threshold*/;
+//    imshow ("after threshold", imClean);
+//    imshow ("before threshold", imGray);
+//    waitKey();
+    Mat imMean;
+    blur(imGray, imMean, Size(121,121));
+    Mat imDiff = imGray - imMean;
+    Mat imMask = imDiff > 120;
+    Mat imClean;
+    bitwise_and (imGray, imMask, imClean);
     return imClean;
 }
 

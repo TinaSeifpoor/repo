@@ -135,6 +135,67 @@ void ContourAnalysis::sortContourHiearchy(Contour contours, Hierarchy hierarchy,
     }
 }
 
+double ContourAnalysis::calcCircularity(ContourPoints contourPoints)
+{
+    Point2f center;
+    float radius;
+    minEnclosingCircle(contourPoints, center, radius);
+    int circleArea = (double)(radius*radius)*pi;
+    int area = contourArea(contourPoints);
+    return (double)area / circleArea;
+
+
+//    Moments m = moments(contourPoints);
+//    int area = contourArea(contourPoints);
+//    Point centerOfGravity;
+//    centerOfGravity.x = m.m10 / m.m00;
+//    centerOfGravity.y = m.m01 / m.m00;
+//    Scalar maxDistSquare=-1;
+//    for (int j=0; j< contourPoints.size(); ++j)
+//    {
+//        Point point = contourPoints[j];
+//        Scalar distSquare;
+//        cv::pow(Scalar(centerOfGravity.x - point.x, centerOfGravity.y - point.y),2,distSquare);
+//        if ((distSquare[0]+distSquare[1]) > maxDistSquare[0])
+//            maxDistSquare = distSquare[0]+distSquare[1];
+//    }
+//    return area / (maxDistSquare[0] * pi); //C = F / (max^2 * pi)
+}
+
+vector<double> ContourAnalysis::calcCircularity(Contour contours)
+{
+    int nContours = contours.size();
+    vector<double> circularityList(nContours);
+    for (int i=0; i< nContours; ++i)
+        circularityList[i] = this->calcCircularity(contours[i]);
+    return circularityList;
+}
+
+double ContourAnalysis::calcRectangularity(ContourPoints contourPoints)
+{
+    Point2f pts[4];
+    minAreaRect(contourPoints).points(pts);
+    vector<Point> rectanglePoints;
+    rectanglePoints.reserve(4);
+    vector<Point>::iterator itRectanglePoints=rectanglePoints.begin();
+    for (int i = 0; i<4; ++i)
+    {
+        itRectanglePoints = rectanglePoints.insert(itRectanglePoints, pts[i]);
+    }
+    int rectArea = contourArea(rectanglePoints);
+    int area = contourArea(contourPoints);
+    return (double)area / rectArea;
+}
+
+vector<double> ContourAnalysis::calcRectangularity(Contour contours)
+{
+    int nContours = contours.size();
+    vector<double> rectangularityList(nContours);
+    for (int i=0; i< nContours; ++i)
+        rectangularityList[i] = this->calcRectangularity(contours[i]);
+    return rectangularityList;
+}
+
 void ContourAnalysis::selectContours(Contour contours, Hierarchy hierarchy, vector<int> indices, Contour *contoursSelected, Hierarchy *hierarchySelected)
 {
     Contour contoursUnsorted(indices.size());
@@ -155,7 +216,6 @@ void ContourAnalysis::selectContours(Contour contours, vector<int> indices, Cont
     contoursSelected->clear();
     Contour::iterator it = contoursSelected->begin();
     int nContours = indices.size();
-    contoursSelected->resize(nContours);
     for(int i=0; i<nContours; ++i)
     {
         it = contoursSelected->insert(it, contours[indices[i]]);
@@ -233,22 +293,7 @@ void ContourAnalysis::selectContoursByCircularity(Contour contours, Hierarchy hi
     Hierarchy::iterator itHierarchies = hierarchyUnsorted.begin();
     for(int i = 0; i < contours.size(); ++i)
     {
-        vector<Point> contourPoints = contours[i];
-        int area = contourArea(contourPoints);
-        Moments m = moments(contours[i]);
-        Point gravity;
-        gravity.x = m.m10 / m.m00;
-        gravity.y = m.m01 / m.m00;
-        Scalar maxDistSquare=-1;
-        for (int j=0; j< contourPoints.size(); ++j)
-        {
-            Point point = contourPoints[j];
-            Scalar distSquare;
-            cv::pow(Scalar(gravity.x - point.x, gravity.y - point.y),2,distSquare);
-            if ((distSquare[0]+distSquare[1]) > maxDistSquare[0])
-                maxDistSquare = distSquare[0]+distSquare[1];
-        }
-        double circularity = area / (maxDistSquare[0] * pi); //C = F / (max^2 * pi)
+        double circularity = this->calcCircularity(contours[i]);
         if (circularity > minCircularity && circularity < maxCircularity)
         {
             itContours = contoursUnsorted.insert(itContours, contours[i]);
@@ -265,28 +310,12 @@ void ContourAnalysis::selectContoursByCircularity(Contour contours, double minCi
     Contour::iterator itContours = contoursSelected->begin();
     for(int i = 0; i < contours.size(); ++i)
     {
-        vector<Point> contourPoints = contours[i];
-        int area = contourArea(contourPoints);
-        Moments m = moments(contours[i]);
-        Point gravity;
-        gravity.x = m.m10 / m.m00;
-        gravity.y = m.m01 / m.m00;
-        Scalar maxDistSquare=-1;
-        for (int j=0; j< contourPoints.size(); ++j)
-        {
-            Point point = contourPoints[j];
-            Scalar distSquare;
-            cv::pow(Scalar(gravity.x - point.x, gravity.y - point.y),2,distSquare);
-            if ((distSquare[0]+distSquare[1]) > maxDistSquare[0])
-                maxDistSquare = distSquare[0]+distSquare[1];
-        }
-        double circularity = area / (maxDistSquare[0] * pi); //C = F / (max^2 * pi)
+        double circularity = this->calcCircularity(contours[i]);
         if (circularity > minCircularity && circularity < maxCircularity)
         {
             itContours = contoursSelected->insert(itContours, contours[i]);
         }
     }
-    // sort again hierarchies
 }
 
 void ContourAnalysis::selectContoursByRectangularity(Contour contours, Hierarchy hierarchy, double minRectangularity, double maxRectangularity, Contour *contoursSelected, Hierarchy *hierarchySelected)
@@ -297,19 +326,7 @@ void ContourAnalysis::selectContoursByRectangularity(Contour contours, Hierarchy
     Hierarchy::iterator itHierarchies = hierarchyUnsorted.begin();
     for(int i = 0; i < contours.size(); ++i)
     {
-        vector<Point> contourPoints = contours[i];
-        Point2f pts[4];
-        minAreaRect(contourPoints).points(pts);
-        vector<Point> rectanglePoints;
-        rectanglePoints.reserve(4);
-        vector<Point>::iterator itRectanglePoints=rectanglePoints.begin();
-        for (int i = 0; i<4; ++i)
-        {
-            itRectanglePoints = rectanglePoints.insert(itRectanglePoints, pts[i]);
-        }
-        int rectArea = contourArea(rectanglePoints);
-        int area = contourArea(contourPoints);
-        double rectangularity = (double)area / rectArea;
+        double rectangularity = this->calcRectangularity(contours[i]);
         if (rectangularity > minRectangularity && rectangularity < maxRectangularity)
         {
             itContours = contoursUnsorted.insert(itContours, contours[i]);
@@ -326,19 +343,7 @@ void ContourAnalysis::selectContoursByRectangularity(Contour contours, double mi
     Contour::iterator itContours = contoursSelected->begin();
     for(int i = 0; i < contours.size(); ++i)
     {
-        vector<Point> contourPoints = contours[i];
-        Point2f pts[4];
-        minAreaRect(contourPoints).points(pts);
-        vector<Point> rectanglePoints;
-        rectanglePoints.reserve(4);
-        vector<Point>::iterator itRectanglePoints=rectanglePoints.begin();
-        for (int i = 0; i<4; ++i)
-        {
-            itRectanglePoints = rectanglePoints.insert(itRectanglePoints, pts[i]);
-        }
-        int rectArea = contourArea(rectanglePoints);
-        int area = contourArea(contourPoints);
-        double rectangularity = (double)area / rectArea;
+        double rectangularity = this->calcRectangularity(contours[i]);
         if (rectangularity > minRectangularity && rectangularity < maxRectangularity)
         {
             itContours = contoursSelected->insert(itContours, contours[i]);
