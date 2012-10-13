@@ -1,5 +1,5 @@
 #include "dicerecognizer.h"
-
+#include "myotsu.h"
 using std::multiset;
 
 using namespace cv;
@@ -15,21 +15,28 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
     else
         imGray.setTo(im);
 
+    // Otsu part (b)
+//    MyOtsu mo;
+//    Mat imMyOtsu = mo.calcMyOtsu(imGray);
+//    Mat imCVOtsu = mo.calcCVOtsu(imGray);
+//    Mat imDiffOtsu = (imMyOtsu+1-imCVOtsu)>0;
+//    imshow("my otsu vs. cv otsu", imDiffOtsu);
+//    waitKey();
+    // Otsu part (e)
+
 
     // Extract dice body contours(b)
-    // Note: It is very hard to extract body contours of black dices due to similarity with background
+    // Note: It is very hard to extract body contours of black dice due to similarity with background
     // therefore they'll be handled later on.
     Contour diceBodyContours = this->extractDiceBody(imGray);
     // Extract dice body contours(e)
 
-    // Extract dice circles from bodies (b)
-    ContourList diceCirclePerDice = this->extractDiceCirclesFromBody(diceBodyContours, imGray);
-    //    ca->showContours(diceBodyContours, ca->assignRandomHierarchy(diceBodyContours), imGray.size());
-    //    a();
+    // Extract dice circles from bodices (b)
+    ContourList circlesPerDices = this->extractDiceCirclesFromBody(diceBodyContours, imGray);
 
-    // Extract dice circles from bodies (e)
+    // Extract dice circles from bodices (e)
     // Extract remaining dice circles (b)
-    // From black dices!
+    // From black dice!
     Mat imBin = imGray > 150;
     Contour edgeContours;
     findContours(imBin, edgeContours, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
@@ -41,19 +48,19 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
     // Extract remaining dice circles (e)
 
     // Concat dice circle groups into dice circles per dice array (result array)
-    int     nDiceCirclePerDice = diceCirclePerDice.size(),
-            nDiceCircleGrouped = diceCircleGrouped.size(),
-            nDiceCirclePerDiceFinal = nDiceCirclePerDice + nDiceCircleGrouped;
-    diceCirclePerDice.resize(nDiceCirclePerDiceFinal);
-    for (int i=nDiceCirclePerDice; i < nDiceCirclePerDiceFinal; ++i)
+    int     nCirclesPerDices = circlesPerDices.size(),
+            nCirclesGrouped = diceCircleGrouped.size(),
+            nCirclesPerDicesFinal = nCirclesPerDices + nCirclesGrouped;
+    circlesPerDices.resize(nCirclesPerDicesFinal);
+    for (int i=nCirclesPerDices; i < nCirclesPerDicesFinal; ++i)
     {
-        diceCirclePerDice[i] = diceCircleGrouped[i-nDiceCirclePerDice];
+        circlesPerDices[i] = diceCircleGrouped[i-nCirclesPerDices];
     }
 
 
     multiset<int> numbers;
     multiset<int>::iterator itNumbers = numbers.begin();
-    foreach (Contour diceCircleContour, diceCirclePerDice)
+    foreach (Contour diceCircleContour, circlesPerDices)
     {
         itNumbers = numbers.insert(itNumbers, diceCircleContour.size());
     }
@@ -67,116 +74,91 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
     return numbers;
 }
 
-Mat DiceRecognizer::autoThreshold(Mat imGray, bool isBright, int sigma)
-{
-    Mat imTh;
-    Scalar imMeanGray, imStdDevGray;
-    meanStdDev(imGray, imMeanGray, imStdDevGray);
-    Scalar thresholds;
-    thresholds[0] = imMeanGray[0] + imStdDevGray[0] * sigma;
-    thresholds[1] = 255;
-    if (!isBright)
-    {
-        cv::threshold(255-imGray, imTh, thresholds[0], thresholds[1], CV_8U);
-    }
-    else
-    {
-        cv::threshold(imGray, imTh, thresholds[0], thresholds[1], CV_8U);
-    }
-    return imTh;
-}
 
 Mat DiceRecognizer::morphSquare (Mat imGray, int morphType, double length)
 {
     Mat element = getStructuringElement(MORPH_ELLIPSE, Size(length*2+1, length*2+1), Point(length, length));
     Mat imMorphed;
-    //    dilate(imGray, imMorphed, element, Point(0,0), 3);
     morphologyEx(imGray, imMorphed, morphType, element, Point(-1, -1), 3);
     return imMorphed;
 }
 
 void DiceRecognizer::showResults(ContourList resultContours, Mat imGray)
 {
-    QString rawText(QString("Dice %1: %2"));
+    QString rawText(QString("Dices %1: %2"));
     for (int i=0; i<resultContours.size(); ++i)
     {
         int diceNumber = resultContours[i].size();
         Scalar color((rand()&255), (rand()&255), (rand()&255) );
-        ca->drawContours_xld(resultContours[i], ca->assignRandomHierarchy(resultContours[i]), imGray, color);
+        ca->drawContours_xld(resultContours[i], imGray, color);
         string text = rawText.arg(i).arg(diceNumber).toAscii().constData();
         putText(imGray, text, Point(20,i*20+100), FONT_HERSHEY_PLAIN, 1.5, color, 1, CV_AA);
     }
 }
 
-Contour DiceRecognizer::pickDiceBody(Contour dieBodyCandidates)
+Contour DiceRecognizer::pickDiceBody(Contour diceBodyCandidates)
 {
-    int dieBodyMinAreaThreshold=350, dieBodyMaxAreaThreshold=2000;
-    double dieBodyMinRectangularity=.5, dieBodyMaxRectangularity=1;
-    Contour dieBodyContour, tempContours;
-    ca->selectContoursByArea(dieBodyCandidates,
-                             dieBodyMinAreaThreshold, dieBodyMaxAreaThreshold,
+    int diceBodyMinAreaThreshold=350, diceBodyMaxAreaThreshold=2000;
+    double diceBodyMinRectangularity=.5, diceBodyMaxRectangularity=1;
+    Contour diceBodyContour, tempContours;
+    ca->selectContoursByArea(diceBodyCandidates,
+                             diceBodyMinAreaThreshold, diceBodyMaxAreaThreshold,
                              &tempContours);
     ca->selectContoursByRectangularity(tempContours,
-                                       dieBodyMinRectangularity, dieBodyMaxRectangularity,
-                                       &dieBodyContour);
-    return dieBodyContour;
+                                       diceBodyMinRectangularity, diceBodyMaxRectangularity,
+                                       &diceBodyContour);
+    return diceBodyContour;
 }
 
-Contour DiceRecognizer::pickDiceCircles(Contour dieCircleCandidates)
+Contour DiceRecognizer::pickDiceCircles(Contour diceCircleCandidates)
 {
-    int dieCircleMinAreaThreshold=10, dieCircleMaxAreaThreshold=100;
-    double dieCircleMinCircularity=.4, dieCircleMaxCircularity = 1;
-    Contour dieCircleContour, tempContours;
-    ca->selectContoursByArea(dieCircleCandidates,
-                             dieCircleMinAreaThreshold, dieCircleMaxAreaThreshold,
+    int diceCircleMinAreaThreshold=10, diceCircleMaxAreaThreshold=100;
+    double diceCircleMinCircularity=.4, diceCircleMaxCircularity = 1;
+    Contour diceCircleContour, tempContours;
+    ca->selectContoursByArea(diceCircleCandidates,
+                             diceCircleMinAreaThreshold, diceCircleMaxAreaThreshold,
                              &tempContours);
     ca->selectContoursByCircularity(tempContours,
-                                    dieCircleMinCircularity, dieCircleMaxCircularity,
-                                    &dieCircleContour);
+                                    diceCircleMinCircularity, diceCircleMaxCircularity,
+                                    &diceCircleContour);
 
-    return dieCircleContour;
+    return diceCircleContour;
 }
 
 ContourList DiceRecognizer::extractDiceCirclesFromBody(Contour diceBodyContours, Mat im, bool isBright)
 {
-    ContourList diceCircleGrouped;
-    ContourList::iterator itDiceCircleGrouped = diceCircleGrouped.begin();
-    int nDiceBodies = diceBodyContours.size();
-    for (int i=0; i<nDiceBodies; ++i)
+    ContourList diceCirclesGrouped;
+    ContourList::iterator itDicesCirclesGrouped = diceCirclesGrouped.begin();
+    int nDicesBodices = diceBodyContours.size();
+    for (int i=0; i<nDicesBodices; ++i)
     {
         Contour diceBodyContour;
         ca->selectContours(diceBodyContours, i, &diceBodyContour);
-        //        ca->showContours(diceBodyContour, ca->assignRandomHierarchy(diceBodyContour), im.size());
-        //        waitKey();
         Contour diceCircles = this->extractDiceCircle(diceBodyContour, im, isBright);
-//                ca->showContours(diceCircles, ca->assignRandomHierarchy(diceCircles), im.size());
-//                waitKey();
-        itDiceCircleGrouped = diceCircleGrouped.insert(itDiceCircleGrouped,diceCircles);
+        itDicesCirclesGrouped = diceCirclesGrouped.insert(itDicesCirclesGrouped,diceCircles);
     }
-    return diceCircleGrouped;
+    return diceCirclesGrouped;
 }
 
 Contour DiceRecognizer::extractDiceCircle(Contour diceBody, Mat im, bool isBright)
 {
 
-    Mat imMaskDiceBody = Mat::zeros(im.size(), im.type());
-    drawContours(imMaskDiceBody, diceBody, -1, Scalar(255), CV_FILLED);
-    Mat imGrayDiceBody(im.size(), CV_8U);
+    Mat imMaskDicesBody = Mat::zeros(im.size(), im.type());
+    drawContours(imMaskDicesBody, diceBody, -1, Scalar(255), CV_FILLED);
+    Mat imGrayDicesBody(im.size(), CV_8U);
     Mat imBin;
     if (isBright)
     {
-        imGrayDiceBody.setTo(Scalar(255));
-        im.copyTo(imGrayDiceBody, imMaskDiceBody);
-        imBin = imGrayDiceBody < 150;
+        imGrayDicesBody.setTo(Scalar(255));
+        im.copyTo(imGrayDicesBody, imMaskDicesBody);
+        imBin = imGrayDicesBody < 150;
     }
     else
     {
-        imGrayDiceBody.setTo(Scalar(0));
-        im.copyTo(imGrayDiceBody, imMaskDiceBody);
-        imBin = imGrayDiceBody > 150;
+        imGrayDicesBody.setTo(Scalar(0));
+        im.copyTo(imGrayDicesBody, imMaskDicesBody);
+        imBin = imGrayDicesBody > 150;
     }
-//    imshow("a", imBin);
-//    waitKey();
     Contour edgeContours;
     findContours(imBin, edgeContours, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
     return this->pickDiceCircles(edgeContours);
@@ -187,10 +169,7 @@ Contour DiceRecognizer::extractDiceBody(Mat im)
     Contour edgeContours;
     Mat imCanny, imClean = this->cleanDiceImage(im);
     Canny(imClean, imCanny, 5, 40, 5);
-//    imshow ("a", imClean);
     findContours( imCanny, edgeContours, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
-//    ca->showContours(edgeContours,ca->assignRandomHierarchy(edgeContours), im.size());
-//    waitKey();
     Contour convex( edgeContours.size() );
     for( int i = 0; i < edgeContours.size(); i++ )
     {  convexHull( Mat(edgeContours[i]), convex[i], false ); }
@@ -202,72 +181,14 @@ ContourList DiceRecognizer::groupDiceCircles(Contour diceCircle, Contour filter,
     Mat imMask = Mat::zeros(im.size(), im.type());
     drawContours(imMask, diceCircle, -1, Scalar(255), CV_FILLED);
     drawContours(imMask, filter, -1, Scalar(0), CV_FILLED);
-    Mat imDiceBody = this->morphSquare(imMask, MORPH_DILATE, 7);
+    Mat imDicesBody = this->morphSquare(imMask, MORPH_DILATE, 7);
     Contour diceBody;
-    findContours( imDiceBody, diceBody, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
+    findContours( imDicesBody, diceBody, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
     return this->extractDiceCirclesFromBody(diceBody, imMask, false);
 }
 
 Mat DiceRecognizer::cleanDiceImage(Mat imGray)
 {
-//    imshow ("before threshold", imGray);
-//    waitKey();
-//    Mat imTest, imTest2;
-//    threshold(imGray, imTest, 128, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-//    threshold(imGray, imTest2, 128, 255, CV_8U);
-//    imshow ("a", imTest);
-//    imshow ("b", imTest2);
-//    waitKey();
-//    int histSize = 256;
-//    float range[] = {0, 256};
-//    const float* histRange = {range};
-//    vector<int> histData;
-
-//    histData.resize(256);
-//    for (int i=0; i < imGray.cols; ++i)
-//        for (int j=0; j < imGray.rows; ++j)
-//            int intensity = imGray[i][j];
-
-//    calcHist(&imGray, 1, 0, Mat(), histData, 1, &histSize, &histRange);
-    //
-//    int total = imGray.rows * imGray.cols;
-
-//    float sum = 0;
-//    for (int t=0; t<256; ++t)
-//        sum += t * histData[t];
-//    float sumB = 0;
-//    int wB = 0, wF = 0;
-
-//    float varMax = 0;
-//    int threshold = 0;
-
-//    for (int t=0; t<256; ++t)
-//    {
-//        wB += histData[t]; // Weight Background
-//        if (wB==0)
-//            continue;
-//        wF = total - wB; // Weight Foreground
-//        if (wF == 0)
-//            break;
-//        sumB += (float) (t * histData[t]);
-
-//        float mB = sumB / wB; // Mean Background
-//        float mF = (sum - sumB) / wF; // Mean Foreground
-
-//        // Calculate Between Class Variance
-//        float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);
-
-//        // Check if new maximum found
-//        if (varBetween > varMax)
-//        {
-//            varMax = varBetween;
-//            threshold = t;
-//        }
-//    }
-//    Mat imClean = imGray /*> threshold*/;
-//    imshow ("after threshold", imClean);
-//    imshow ("before threshold", imGray);
-//    waitKey();
     Mat imMean;
     blur(imGray, imMean, Size(121,121));
     Mat imDiff = imGray - imMean;

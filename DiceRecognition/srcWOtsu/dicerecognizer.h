@@ -10,19 +10,17 @@ public:
     DiceRecognizer();
     std::multiset<int> readNumbers(const cv::Mat& img);
 private:
-    cv::Mat autoThreshold(cv::Mat imGray, bool isBright=true, int sigma=4);
+    cv::Mat cleanDiceImage (cv::Mat imGray);
     cv::Mat morphSquare (cv::Mat imGray, int morphType, double length);
     void showResults(ContourList resultContours, cv::Mat imGray);
     Contour pickDiceBody (Contour diceBodyCandidates);
     Contour pickDiceCircles (Contour diceCircleCandidates);
-    ContourList extractDiceCirclesFromBody (Contour diceBodyContours, cv::Mat im, bool isBright=true);
     Contour extractDiceCircle (Contour diceBody, cv::Mat im, bool isBright=true);
     Contour extractDiceBody (cv::Mat im);
+    ContourList extractDiceCirclesFromBody (Contour diceBodyContours, cv::Mat im, bool isBright=true);
     ContourList groupDiceCircles (Contour diceCircle, Contour filter, cv::Mat im);
-    cv::Mat cleanDiceImage (cv::Mat imGray);
-
-
     ContourAnalysis *ca;
+    cv::Mat myOtsu (cv::Mat imGray, int intensityThreshold);
 
 //    cv::Mat dCircle (cv::Mat imGray, cv::Mat imErosion, int radius);
 };

@@ -11,9 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = DiceRecognition
 TEMPLATE = app
 
-INCLUDEPATH += D:/opencv/2.4.2/OpenCV/build/include/
+INCLUDEPATH += E:/OpenCV2.4.2/OpenCV/build/include/
 
-LIBS += -L"D:/opencv/2.4.2/OpenCV/build/x86/vc9/lib/"
+LIBS += -L"E:/opencv2.4.2/OpenCV/build/x86/vc9/lib/"
 
 LIBS +=  -lopencv_calib3d242d\
             -lopencv_contrib242d\
@@ -55,7 +55,8 @@ SOURCES += \
     PerformanceMeter.cpp \
     main.cpp \
     dicerecognizer.cpp \
-    contouranalysis.cpp
+    contouranalysis.cpp \
+    myotsu.cpp
 
 HEADERS  += \
     Util.h \
@@ -63,4 +64,5 @@ HEADERS  += \
     PerformanceMeter.h \
     dicerecognizer.h \
     IDiceRecongizer.h \
-    contouranalysis.h
+    contouranalysis.h \
+    myotsu.h

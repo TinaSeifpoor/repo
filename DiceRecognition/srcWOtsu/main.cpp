@@ -12,7 +12,7 @@ int main()
     IDiceRecognizer *recognizer = new DiceRecognizer();
     
     // read image
-//    QString path("data/59.jpg");
+//    QString path("data/histTest.png");
 //    cv::Mat im = cv::imread(path.toAscii().constData());
 //    recognizer->readNumbers(im);
     PerformanceMeter(recognizer).evaluate();
