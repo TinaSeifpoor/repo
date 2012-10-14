@@ -61,9 +61,9 @@ double ContourAnalysis::calcCircularity(ContourPoints contourPoints)
     Point2f center;
     float radius;
     minEnclosingCircle(contourPoints, center, radius);
-    int circleArea = (double)(radius*radius)*pi;
-    int area = contourArea(contourPoints);
-    return (double)area / circleArea;
+    double circleArea = (double)(radius*radius)*pi;
+    double area = contourArea(contourPoints);
+    return area / circleArea;
 }
 
 vector<double> ContourAnalysis::calcCircularity(Contour contours)
@@ -86,9 +86,9 @@ double ContourAnalysis::calcRectangularity(ContourPoints contourPoints)
     {
         itRectanglePoints = rectanglePoints.insert(itRectanglePoints, pts[i]);
     }
-    int rectArea = contourArea(rectanglePoints);
-    int area = contourArea(contourPoints);
-    return (double)(area / rectArea);
+    double rectArea = contourArea(rectanglePoints);
+    double area = contourArea(contourPoints);
+    return area / rectArea;
 }
 
 vector<double> ContourAnalysis::calcRectangularity(Contour contours)

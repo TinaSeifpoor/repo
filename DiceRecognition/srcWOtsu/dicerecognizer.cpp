@@ -31,10 +31,10 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
     Contour diceBodyContours = this->extractDiceBody(imGray);
     // Extract dice body contours(e)
 
-    // Extract dice circles from bodices (b)
-    ContourList circlesPerDices = this->extractDiceCirclesFromBody(diceBodyContours, imGray);
+    // Extract dice circles from bodies (b)
+    ContourList circlesPerDice = this->extractDiceCirclesFromBody(diceBodyContours, imGray);
 
-    // Extract dice circles from bodices (e)
+    // Extract dice circles from bodies (e)
     // Extract remaining dice circles (b)
     // From black dice!
     Mat imBin = imGray > 150;
@@ -48,28 +48,28 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
     // Extract remaining dice circles (e)
 
     // Concat dice circle groups into dice circles per dice array (result array)
-    int     nCirclesPerDices = circlesPerDices.size(),
+    int     nCirclesPerDice = circlesPerDice.size(),
             nCirclesGrouped = diceCircleGrouped.size(),
-            nCirclesPerDicesFinal = nCirclesPerDices + nCirclesGrouped;
-    circlesPerDices.resize(nCirclesPerDicesFinal);
-    for (int i=nCirclesPerDices; i < nCirclesPerDicesFinal; ++i)
+            nCirclesPerDiceFinal = nCirclesPerDice + nCirclesGrouped;
+    circlesPerDice.resize(nCirclesPerDiceFinal);
+    for (int i=nCirclesPerDice; i < nCirclesPerDiceFinal; ++i)
     {
-        circlesPerDices[i] = diceCircleGrouped[i-nCirclesPerDices];
+        circlesPerDice[i] = diceCircleGrouped[i-nCirclesPerDice];
     }
 
 
     multiset<int> numbers;
     multiset<int>::iterator itNumbers = numbers.begin();
-    foreach (Contour diceCircleContour, circlesPerDices)
+    foreach (Contour diceCircleContour, circlesPerDice)
     {
         itNumbers = numbers.insert(itNumbers, diceCircleContour.size());
     }
+
     Mat imResult;
     cvtColor(imGray, imResult, CV_GRAY2RGB);
-
-//    showResults(diceCircleContours, imResult);
-//    imshow ("result", imResult);
-//    waitKey();
+    showResults(circlesPerDice, imResult);
+    imshow ("result", imResult);
+    waitKey();
 
     return numbers;
 }
@@ -85,7 +85,7 @@ Mat DiceRecognizer::morphSquare (Mat imGray, int morphType, double length)
 
 void DiceRecognizer::showResults(ContourList resultContours, Mat imGray)
 {
-    QString rawText(QString("Dices %1: %2"));
+    QString rawText(QString("Dice %1: %2"));
     for (int i=0; i<resultContours.size(); ++i)
     {
         int diceNumber = resultContours[i].size();
@@ -128,14 +128,14 @@ Contour DiceRecognizer::pickDiceCircles(Contour diceCircleCandidates)
 ContourList DiceRecognizer::extractDiceCirclesFromBody(Contour diceBodyContours, Mat im, bool isBright)
 {
     ContourList diceCirclesGrouped;
-    ContourList::iterator itDicesCirclesGrouped = diceCirclesGrouped.begin();
-    int nDicesBodices = diceBodyContours.size();
-    for (int i=0; i<nDicesBodices; ++i)
+    ContourList::iterator itDiceCirclesGrouped = diceCirclesGrouped.begin();
+    int nDicebodies = diceBodyContours.size();
+    for (int i=0; i<nDicebodies; ++i)
     {
         Contour diceBodyContour;
         ca->selectContours(diceBodyContours, i, &diceBodyContour);
         Contour diceCircles = this->extractDiceCircle(diceBodyContour, im, isBright);
-        itDicesCirclesGrouped = diceCirclesGrouped.insert(itDicesCirclesGrouped,diceCircles);
+        itDiceCirclesGrouped = diceCirclesGrouped.insert(itDiceCirclesGrouped,diceCircles);
     }
     return diceCirclesGrouped;
 }
@@ -143,21 +143,21 @@ ContourList DiceRecognizer::extractDiceCirclesFromBody(Contour diceBodyContours,
 Contour DiceRecognizer::extractDiceCircle(Contour diceBody, Mat im, bool isBright)
 {
 
-    Mat imMaskDicesBody = Mat::zeros(im.size(), im.type());
-    drawContours(imMaskDicesBody, diceBody, -1, Scalar(255), CV_FILLED);
-    Mat imGrayDicesBody(im.size(), CV_8U);
+    Mat imMaskDiceBody = Mat::zeros(im.size(), im.type());
+    drawContours(imMaskDiceBody, diceBody, -1, Scalar(255), CV_FILLED);
+    Mat imGrayDiceBody(im.size(), CV_8U);
     Mat imBin;
     if (isBright)
     {
-        imGrayDicesBody.setTo(Scalar(255));
-        im.copyTo(imGrayDicesBody, imMaskDicesBody);
-        imBin = imGrayDicesBody < 150;
+        imGrayDiceBody.setTo(Scalar(255));
+        im.copyTo(imGrayDiceBody, imMaskDiceBody);
+        imBin = imGrayDiceBody < 150;
     }
     else
     {
-        imGrayDicesBody.setTo(Scalar(0));
-        im.copyTo(imGrayDicesBody, imMaskDicesBody);
-        imBin = imGrayDicesBody > 150;
+        imGrayDiceBody.setTo(Scalar(0));
+        im.copyTo(imGrayDiceBody, imMaskDiceBody);
+        imBin = imGrayDiceBody > 150;
     }
     Contour edgeContours;
     findContours(imBin, edgeContours, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
@@ -181,9 +181,9 @@ ContourList DiceRecognizer::groupDiceCircles(Contour diceCircle, Contour filter,
     Mat imMask = Mat::zeros(im.size(), im.type());
     drawContours(imMask, diceCircle, -1, Scalar(255), CV_FILLED);
     drawContours(imMask, filter, -1, Scalar(0), CV_FILLED);
-    Mat imDicesBody = this->morphSquare(imMask, MORPH_DILATE, 7);
+    Mat imDiceBody = this->morphSquare(imMask, MORPH_DILATE, 7);
     Contour diceBody;
-    findContours( imDicesBody, diceBody, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
+    findContours( imDiceBody, diceBody, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
     return this->extractDiceCirclesFromBody(diceBody, imMask, false);
 }
 
