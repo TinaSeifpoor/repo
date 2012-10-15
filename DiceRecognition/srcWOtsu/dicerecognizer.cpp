@@ -65,11 +65,11 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
         itNumbers = numbers.insert(itNumbers, diceCircleContour.size());
     }
 
-    Mat imResult;
-    cvtColor(imGray, imResult, CV_GRAY2RGB);
-    showResults(circlesPerDice, imResult);
-    imshow ("result", imResult);
-    waitKey();
+//    Mat imResult;
+//    cvtColor(imGray, imResult, CV_GRAY2RGB);
+//    showResults(circlesPerDice, imResult);
+//    imshow ("result", imResult);
+//    waitKey();
 
     return numbers;
 }
