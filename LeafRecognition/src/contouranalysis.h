@@ -26,12 +26,14 @@ public:
     void selectContoursByCircularity (Contour contours, double minCircularity, double maxCircularity, Contour *contoursSelected);
     void selectContoursByRectangularity (Contour contours, double minRectangularity, double maxRectangularity, Contour *contoursSelected);
     Hierarchy assignRandomHierarchy (Contour contours);
-private:
-    cv::Mat maskImageContour (Contour contours, cv::Size imSize);
     double calcCircularity(ContourPoints contourPoints);
     std::vector<double> calcCircularity(Contour contours);
     double calcRectangularity(ContourPoints contourPoints);
     std::vector<double> calcRectangularity(Contour contours);
+    double calcAspectRatio(ContourPoints contourPoints);
+    std::vector<double> calcAspectRatio(Contour contours);
+private:
+    cv::Mat maskImageContour (Contour contours, cv::Size imSize);
 };
 
 #endif // CONTOURANALYSIS_H

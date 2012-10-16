@@ -1,38 +1,55 @@
 #include "leafrecognizer.h"
+#include <QString>
 
 using namespace cv;
 using namespace std;
 
-LeafRecognizer::LeafRecognizer()
-{
-}
-
-void LeafRecognizer::recognize(cv::Mat im)
+LeafRecognizer::LeafRecognizer(cv::Mat im):
+im(im)
 {
     Mat imGray;
-    if (im.channels()==3)
-        cvtColor(im, imGray, CV_RGB2GRAY);
+    ContourAnalysis ca;
+    if (this->im.channels()==3)
+        cvtColor(this->im, imGray, CV_RGB2GRAY);
     else
-        im.copyTo(imGray,im);
-    Mat imTh, imCanny;
+        this->im.copyTo(imGray,this->im);
+    Mat imTh;
     imTh = this->binThreshold(imGray);
-//    imTh = imGray < 240;
-//    threshold (imGray, imTh, 0, 255, THRESH_BINARY|THRESH_OTSU);
     Contour leafExteriorContour, leafExteriorContourCandidates;
     findContours(imTh, leafExteriorContourCandidates, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE);
-    ContourAnalysis ca;
-//    ca.selectContoursByRectangularity(leafExteriorContourCandidates, 0, 0.9, &leafExteriorContour);
-    ca.selectContoursByArea(leafExteriorContourCandidates, 100000, 1000000, &leafExteriorContour);
-    drawContours(im, leafExteriorContour, 0, Scalar(255,0,0), 5);
-//    ca.showContours(leafExteriorContour, imGray.size());
-    imshow("test", im);
-    waitKey();
-    int a = 5;
+    ca.selectContoursByArea(leafExteriorContourCandidates, 10000, 10000000, &this->leafExteriorContour);
+}
+
+QVariantHash LeafRecognizer::getLeafFeatures(Mat *imOut)
+{
+    QVariantHash leafFeatures;
+    leafFeatures.insert("Rectangularity", this->getExteriorRectangularity());
+    leafFeatures.insert("Aspect Ratio", this->getAspectRatio());
+    this->im.copyTo(*imOut, this->im);
+//    QString features("%1: %2");
+//    ca.drawContours_xld(this->leafExteriorContour, *imOut, Scalar(150, 0, 150));
+    ca.drawContours_xld(this->getSmallestRectangle(this->leafExteriorContour), *imOut, Scalar(250, 0, 0));
+//    for (int i=0; i<leafFeatures.keys().count(); ++i)
+//    {
+//        QString key = leafFeatures.keys()[i];
+//        putText(*imOut, features.arg(key).arg(leafFeatures.value(key).toFloat()).toAscii().constData(), Point(20,i*50+20), FONT_HERSHEY_PLAIN, 1, Scalar(250,0,110), 1, CV_AA);
+//    }
+    return leafFeatures;
+}
+
+float LeafRecognizer::getExteriorRectangularity()
+{
+    return this->ca.calcRectangularity(this->leafExteriorContour[0]);
+}
+
+float LeafRecognizer::getAspectRatio()
+{
+    return this->ca.calcAspectRatio(this->leafExteriorContour[0]);
 }
 
 Mat LeafRecognizer::binThreshold(Mat im)
 {
-//    Mat imBinTh;
+    //    Mat imBinTh;
     int histSize = 256;
     float range[] = {0, 256};
     const float* histRange = {range};
@@ -53,21 +70,21 @@ float LeafRecognizer::getBinThVal(Mat hist)
     }
     vector<float> pdfMinima;
     float sigma = 1, size = 1;
-//    if (pdfMinima.size()!=1)
-//    {
-//        size+=2;
-//        if (pdfMinima.size()!=1)
-//        {
-            pdf[0] = 1;
-            pdf[1] = 2;
-            pdf[2] = 3;
-            pdf[255] = 3;
-            pdf[254] = 2;
-            pdf[253] = 1;
-            vector<float> pdfCopy= smoothGauss1D(pdf, sigma, size);
-            pdfMinima = this->localMinima(pdfCopy);
-//        }
-//    }
+    //    if (pdfMinima.size()!=1)
+    //    {
+    //        size+=2;
+    //        if (pdfMinima.size()!=1)
+    //        {
+    pdf[0] = 1;
+    pdf[1] = 2;
+    pdf[2] = 3;
+    pdf[255] = 3;
+    pdf[254] = 2;
+    pdf[253] = 1;
+    vector<float> pdfCopy= smoothGauss1D(pdf, sigma, size);
+    pdfMinima = this->localMinima(pdfCopy);
+    //        }
+    //    }
     return pdfMinima[0];
 }
 
@@ -125,4 +142,25 @@ vector<float> LeafRecognizer::smoothGauss1D(vector<float> v, float sigma, float 
         vOut[i] = value;
     }
     return vOut;
+}
+
+Contour LeafRecognizer::getSmallestRectangle(Contour contours)
+{
+    int nContours = contours.size();
+    Contour rectangles(nContours);
+    for (int i = 0; i<nContours; ++i)
+    {
+        ContourPoints contourPoints = contours[i];
+        Point2f pts[4];
+        minAreaRect(contourPoints).points(pts);
+        vector<Point> rectanglePoints;
+        rectanglePoints.reserve(4);
+        vector<Point>::iterator itRectanglePoints=rectanglePoints.begin();
+        for (int i = 0; i<4; ++i)
+        {
+            itRectanglePoints = rectanglePoints.insert(itRectanglePoints, pts[i]);
+        }
+        rectangles[i] = rectanglePoints;
+    }
+    return rectangles;
 }

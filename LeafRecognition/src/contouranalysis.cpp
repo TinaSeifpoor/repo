@@ -33,7 +33,7 @@ void ContourAnalysis::drawContours_xld(Contour contours, Mat im, Scalar color)
             color = Scalar( (rand()&255), (rand()&255), (rand()&255) );
         for( ; idx >= 0; idx = hierarchy[idx][0] )
         {
-            cv::drawContours( im, contours, idx, color, CV_FILLED, 8, hierarchy );
+            cv::drawContours( im, contours, idx, color, 3, 8, hierarchy );
         }
     }
 }
@@ -98,6 +98,48 @@ vector<double> ContourAnalysis::calcRectangularity(Contour contours)
     for (int i=0; i< nContours; ++i)
         rectangularityList[i] = this->calcRectangularity(contours[i]);
     return rectangularityList;
+}
+
+double ContourAnalysis::calcAspectRatio(ContourPoints contourPoints)
+{
+    Point2f pts[4];
+    minAreaRect(contourPoints).points(pts);
+    float maxDistance=-1, distance1=-1, distance2=-1;
+    for (int i = 1; i<4; ++i)
+    {
+        float dist;
+        dist = sqrt(float((pts[i].x - pts[0].x) * (pts[i].x - pts[0].x) + (pts[i].y - pts[0].y) * (pts[i].y - pts[0].y)));
+//        float dist = distScalar[0];
+        if (maxDistance<dist)
+        {
+            float dummy;
+            dummy = maxDistance;
+            maxDistance = dist;
+            dist = dummy;
+        }
+        if(distance1<dist)
+        {
+            float dummy;
+            dummy = distance1;
+            distance1 = dist;
+            dist = dummy;
+        }
+        if(distance2<dist)
+        {
+            distance2 = dist;
+        }
+    }
+    return distance1/distance2;
+
+}
+
+vector<double> ContourAnalysis::calcAspectRatio(Contour contours)
+{
+    int nContours = contours.size();
+    vector<double> aspectRatioList(nContours);
+    for (int i=0; i< nContours; ++i)
+        aspectRatioList[i] = this->calcAspectRatio(contours[i]);
+    return aspectRatioList;
 }
 
 void ContourAnalysis::selectContours(Contour contours, vector<int> indices, Contour *contoursSelected)
