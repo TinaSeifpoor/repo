@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core
+#QT       += core
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DiceRecognition
 TEMPLATE = app

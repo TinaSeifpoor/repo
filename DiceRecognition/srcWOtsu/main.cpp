@@ -4,7 +4,6 @@
 #include "dicerecognizer.h"
 
 
-#include <QDir>
 
 int main()
 {
@@ -12,12 +11,7 @@ int main()
     IDiceRecognizer *recognizer = new DiceRecognizer();
     
     // read image
-//    QString path("data/histTest.png");
-//    cv::Mat im = cv::imread(path.toAscii().constData());
-//    recognizer->readNumbers(im);
     PerformanceMeter(recognizer).evaluate();
-
-        cv::waitKey();
 
     delete recognizer;
 

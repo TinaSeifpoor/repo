@@ -3,7 +3,7 @@
 using std::multiset;
 
 using namespace cv;
-#include <QString>
+//#include <QString>
 
 std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
 {
@@ -60,9 +60,10 @@ std::multiset<int> DiceRecognizer::readNumbers(const cv::Mat &im)
 
     multiset<int> numbers;
     multiset<int>::iterator itNumbers = numbers.begin();
-    foreach (Contour diceCircleContour, circlesPerDice)
+    int nDice = circlesPerDice.size();
+    for (int i=0; i<nDice; ++i)
     {
-        itNumbers = numbers.insert(itNumbers, diceCircleContour.size());
+        itNumbers = numbers.insert(itNumbers, circlesPerDice[i].size());
     }
 
 //    Mat imResult;
@@ -83,18 +84,18 @@ Mat DiceRecognizer::morphSquare (Mat imGray, int morphType, double length)
     return imMorphed;
 }
 
-void DiceRecognizer::showResults(ContourList resultContours, Mat imGray)
-{
-    QString rawText(QString("Dice %1: %2"));
-    for (int i=0; i<resultContours.size(); ++i)
-    {
-        int diceNumber = resultContours[i].size();
-        Scalar color((rand()&255), (rand()&255), (rand()&255) );
-        ca->drawContours_xld(resultContours[i], imGray, color);
-        string text = rawText.arg(i).arg(diceNumber).toAscii().constData();
-        putText(imGray, text, Point(20,i*20+100), FONT_HERSHEY_PLAIN, 1.5, color, 1, CV_AA);
-    }
-}
+//void DiceRecognizer::showResults(ContourList resultContours, Mat imGray)
+//{
+//    QString rawText(QString("Dice %1: %2"));
+//    for (int i=0; i<resultContours.size(); ++i)
+//    {
+//        int diceNumber = resultContours[i].size();
+//        Scalar color((rand()&255), (rand()&255), (rand()&255) );
+//        ca->drawContours_xld(resultContours[i], imGray, color);
+//        string text = rawText.arg(i).arg(diceNumber).toAscii().constData();
+//        putText(imGray, text, Point(20,i*20+100), FONT_HERSHEY_PLAIN, 1.5, color, 1, CV_AA);
+//    }
+//}
 
 Contour DiceRecognizer::pickDiceBody(Contour diceBodyCandidates)
 {
