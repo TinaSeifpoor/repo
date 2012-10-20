@@ -54,9 +54,16 @@ SOURCES += \
     main.cpp \
     contouranalysis.cpp \
     myotsu.cpp \
-    leafrecognizer.cpp
+    leafrecognizer.cpp \
+    datasetparser.cpp \
+    extractleafcontour.cpp \
+    exteriorleafcontourfeatures.cpp
 
 HEADERS  += \
     contouranalysis.h \
     myotsu.h \
-    leafrecognizer.h
+    leafrecognizer.h \
+    datasetparser.h \
+    Common.h \
+    extractleafcontour.h \
+    exteriorleafcontourfeatures.h

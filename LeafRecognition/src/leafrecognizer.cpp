@@ -70,21 +70,8 @@ float LeafRecognizer::getBinThVal(Mat hist)
     }
     vector<float> pdfMinima;
     float sigma = 1, size = 1;
-    //    if (pdfMinima.size()!=1)
-    //    {
-    //        size+=2;
-    //        if (pdfMinima.size()!=1)
-    //        {
-    pdf[0] = 1;
-    pdf[1] = 2;
-    pdf[2] = 3;
-    pdf[255] = 3;
-    pdf[254] = 2;
-    pdf[253] = 1;
     vector<float> pdfCopy= smoothGauss1D(pdf, sigma, size);
     pdfMinima = this->localMinima(pdfCopy);
-    //        }
-    //    }
     return pdfMinima[0];
 }
 

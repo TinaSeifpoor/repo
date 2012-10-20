@@ -8,6 +8,7 @@ typedef std::vector<ContourPoints> Contour;
 typedef std::vector<Contour> ContourList;
 typedef std::vector<cv::Vec4i> Hierarchy;
 typedef std::vector<Hierarchy> HierarchyList;
+typedef cv::Mat Im;
 
 class ContourAnalysis
 {
