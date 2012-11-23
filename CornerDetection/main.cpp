@@ -1,5 +1,4 @@
-
-#include <myharris.h>
+#include "./myharris.h"
 using namespace std;
 
 int main()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by Qt Creator 2.5.0, 2012-11-22T21:13:00. -->
+<!-- Written by Qt Creator 2.5.0, 2012-11-23T02:00:51. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -108,7 +108,7 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
     <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">E:/project/CornerDetection-build-desktop-Qt_4_8_2__4_8_2__Debug</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId">5</value>
-    <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
+    <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">false</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
     <value type="QString" key="ProjectExplorer.BuildCOnfiguration.ToolChain">ProjectExplorer.ToolChain.Msvc:{9f0dbaf8-97f4-48e6-a1bd-14d92e8463b8}</value>
@@ -209,15 +209,16 @@
      <value type="int">13</value>
      <value type="int">14</value>
     </valuelist>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments"></value>
-    <value type="int" key="ProjectExplorer.CustomExecutableRunConfiguration.BaseEnvironmentBase">2</value>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable"></value>
-    <value type="bool" key="ProjectExplorer.CustomExecutableRunConfiguration.UseTerminal">false</value>
-    <valuelist type="QVariantList" key="ProjectExplorer.CustomExecutableRunConfiguration.UserEnvironmentChanges"/>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.WorkingDirectory">%{buildDir}</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Executable</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">CornerDetection</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.CustomExecutableRunConfiguration</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration</value>
+    <value type="int" key="Qt4ProjectManager.Qt4RunConfiguration.BaseEnvironmentBase">2</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">CornerDetection.pro</value>
+    <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
+    <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">true</value>
+    <valuelist type="QVariantList" key="Qt4ProjectManager.Qt4RunConfiguration.UserEnvironmentChanges"/>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
