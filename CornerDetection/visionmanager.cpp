@@ -23,15 +23,18 @@ vector<double> VisionManager::inspectImagesWithHomography(const string &im1Filep
 {
     Image im1 = imread(im1Filepath);
     Image im2 = imread(im2Filepath);
-    Mat homographyMatrix(3,3,CV_64F);
-    ifstream dataFile(h1to2FilePath.c_str());
-    for (uint idxRow=0; idxRow<3; ++idxRow)
+    Mat homographyMatrix = Mat::eye(3,3,CV_64F);
+    if (!h1to2FilePath.empty())
     {
-        for (uint idxCol=0; idxCol<3; ++idxCol)
+        ifstream dataFile(h1to2FilePath.c_str());
+        for (uint idxRow=0; idxRow<3; ++idxRow)
         {
-            double val;
-            dataFile >> val;
-            homographyMatrix.at<double>(idxRow, idxCol) = val;
+            for (uint idxCol=0; idxCol<3; ++idxCol)
+            {
+                double val;
+                dataFile >> val;
+                homographyMatrix.at<double>(idxRow, idxCol) = val;
+            }
         }
     }
     return inspectImagesWithHomography(im1, im2, homographyMatrix);
