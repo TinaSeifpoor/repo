@@ -21,7 +21,7 @@ public:
                      stringList grafittiImagePathList  , stringList grafittiHomographyPathList);
     RepeatabilityMatrix measureRepeatability(FeatureDetectorType fdt);
 
-    void writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath);
+    void writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath, stringList header=stringList());
 
 private:
 

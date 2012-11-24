@@ -1,6 +1,6 @@
 #include "visionmanager.h"
 #include <fstream>
-
+#include <opencv2/nonfree/features2d.hpp>
 //using namespace cv;
 //using namespace std;
 
@@ -104,8 +104,8 @@ VisionManager::KeyPoints VisionManager::inspect(Mat im, Mat mask, FeatureDetecto
     KeyPoints keyPoints;
     if(fdt == fdtSift)
     {
-        Ptr<FeatureDetector> fd = FeatureDetector::create("SIFT");
-        fd->detect(im, keyPoints, mask);
+        SIFT fd;
+        fd.detect(im, keyPoints, mask);
     }
     else if (fdt == fdtStar)
     {

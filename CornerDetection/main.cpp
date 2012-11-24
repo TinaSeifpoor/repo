@@ -46,12 +46,24 @@ int main()
     stringList nameList;
     MeasureInterestPointDetectors mipd(kuzeyImagePathListGauss, kuzeyImagePathListQuality,
                         grafittiImagePathList, grafittiHomographyPathList);
+    repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtSift));
+    nameList.push_back("Sift Repeatability");
     repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtHarris));
     nameList.push_back("Harris Repeatability");
     repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtStar));
     nameList.push_back("Star Repeatability");
-
-    mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.yaml");
+    stringList header;
+    header.push_back("Repeatability Report");
+    header.push_back("Repeatability List goes as");
+    header.push_back("Kuzey Gauss03 - Kuzey Gauss05");
+    header.push_back("Kuzey Gauss07 - Kuzey Gauss09");
+    header.push_back("Kuzey Gauss11 - Kuzey Quality 80");
+    header.push_back("Kuzey Quality 60 - Kuzey Quality 30");
+    header.push_back("Kuzey Quality 10 - Kuzey Quality 5");
+    header.push_back("Grafitti 2 - Grafitti 3");
+    header.push_back("Grafitti 4 - Grafitti 5");
+    header.push_back("Grafitti 6");
+    mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.yml",header);
 
     return 0;
 }

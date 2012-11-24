@@ -34,10 +34,16 @@ MeasureInterestPointDetectors::RepeatabilityMatrix MeasureInterestPointDetectors
     return repeatabilityMatrix;
 }
 
-void MeasureInterestPointDetectors::writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath)
+void MeasureInterestPointDetectors::writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath, stringList header)
 {
     using namespace cv;
     FileStorage fs(filePath, FileStorage::WRITE);
+    fs << "Header" << "[";
+    for (uint idx=0; idx<header.size(); ++idx)
+    {
+        fs << header[idx];
+    }
+    fs << "]";
     while (!repMatList.empty() && !nameList.empty())
     {
         fs << nameList.back() << repMatList.back();
