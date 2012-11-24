@@ -4,7 +4,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     visionmanager.cpp \
-    harriscornerdetector.cpp
+    harriscornerdetector.cpp \
+    measureinterestpointdetectors.cpp
 
 INCLUDEPATH += E:/OpenCV2.4.2/OpenCV/build/include/
 
@@ -31,4 +32,5 @@ LIBS +=  -lopencv_calib3d242d\
 
 HEADERS += \
     visionmanager.h \
-    harriscornerdetector.h
+    harriscornerdetector.h \
+    measureinterestpointdetectors.h

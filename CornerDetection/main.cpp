@@ -1,27 +1,55 @@
-#include "visionmanager.h"
-using namespace std;
+#include "measureinterestpointdetectors.h"
 
 int main()
 {
-    VisionManager vm;
+    typedef const std::string string;
+    typedef std::vector<const std::string> StringList;
+    typedef cv::Mat RepeatabilityMatrix;
 
-//    const string& image1 = "./data/img1.png";
-//    const string& image2 = "./data/img6.png";
-//    vector<string> homographyFilepath;
-//    homographyFilepath.push_back("./data/H1to2p");
-//    homographyFilepath.push_back("./data/H1to3p");
-//    homographyFilepath.push_back("./data/H1to4p");
-//    homographyFilepath.push_back("./data/H1to5p");
-//    homographyFilepath.push_back("./data/H1to6p");
-//    homographyFilepath.push_back("./data/H1to6p");
+    StringList kuzeyImagePathListGauss,
+            kuzeyImagePathListQuality,
+            grafittiImagePathList,
+            grafittiHomographyPathList;
+
+    kuzeyImagePathListGauss.push_back("./data/kuzey.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG03.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG05.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG07.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG09.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG11.jpg");
 
 
-//    vm.inspectImagesWithHomography(image1, image2,
-//                                  homographyFilepath[4]);
-    const string& image1 = "./data/kuzey.jpg";
-    const string& image2 = "./data/kuzey45.jpg";
-    vm.inspectImagesWithHomography(image1, image2, "");
-    cout << "\n";
+    kuzeyImagePathListQuality.push_back("./data/kuzey.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ05.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ10.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ30.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ60.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ80.jpg");
+
+
+    grafittiImagePathList.push_back("./data/img1.png");
+    grafittiImagePathList.push_back("./data/img2.png");
+    grafittiImagePathList.push_back("./data/img3.png");
+    grafittiImagePathList.push_back("./data/img4.png");
+    grafittiImagePathList.push_back("./data/img5.png");
+    grafittiImagePathList.push_back("./data/img6.png");
+
+
+    grafittiHomographyPathList.push_back("./data/H1to2p");
+    grafittiHomographyPathList.push_back("./data/H1to3p");
+    grafittiHomographyPathList.push_back("./data/H1to4p");
+    grafittiHomographyPathList.push_back("./data/H1to5p");
+    grafittiHomographyPathList.push_back("./data/H1to6p");
+
+    MeasureInterestPointDetectors mipd(kuzeyImagePathListGauss, kuzeyImagePathListQuality,
+                        grafittiImagePathList, grafittiHomographyPathList);
+//    RepeatabilityMatrix harrisRepeatability = mipd.measureRepeatability(VisionManager::fdtHarris);
+//    RepeatabilityMatrix starRepeatability = mipd.measureRepeatability(VisionManager::fdtStar);
+    //    RepeatabilityMatrix siftRepeatability = mipd.measureRepeatability(VisionManager::fdtSift);
+
+    RepeatabilityMatrix a= RepeatabilityMatrix::eye(2,2,CV_64F);
+    mipd.writeRepeatabilityOutput(a, "harrisRepeatability.yaml");
+//    mipd.writeRepeatabilityOutput(starRepeatability, "starRepeatability.yaml");
+
     return 0;
 }
-
