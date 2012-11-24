@@ -4,9 +4,10 @@
 
 class MeasureInterestPointDetectors
 {
-    typedef std::vector<const std::string> StringList;
+    typedef std::vector<const std::string> stringList;
     typedef std::vector<double> RepeatabilityList;
     typedef cv::Mat RepeatabilityMatrix;
+    typedef std::vector<RepeatabilityMatrix> RepeatabilityMatrixList;
     typedef cv::Mat Image;
     typedef std::vector<Image> ImageList;
     typedef cv::Mat Homography;
@@ -16,16 +17,16 @@ class MeasureInterestPointDetectors
     typedef VisionManager::FeatureDetectorType FeatureDetectorType;
 
 public:
-    MeasureInterestPointDetectors(StringList kuzeyImagePathListGauss, StringList kuzeyImagePathListQuality,
-                     StringList grafittiImagePathList  , StringList grafittiHomographyPathList);
+    MeasureInterestPointDetectors(stringList kuzeyImagePathListGauss, stringList kuzeyImagePathListQuality,
+                     stringList grafittiImagePathList  , stringList grafittiHomographyPathList);
     RepeatabilityMatrix measureRepeatability(FeatureDetectorType fdt);
 
-    void writeRepeatabilityOutput(RepeatabilityMatrix repMat, string filePath);
+    void writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath);
 
 private:
 
-    ImageList readImageList(StringList imagePathList);
-    HomographyList readHomographyList(StringList homographyPathList);
+    ImageList readImageList(stringList imagePathList);
+    HomographyList readHomographyList(stringList homographyPathList);
 
     ImageList kuzeyImageListGauss;
     ImageList kuzeyImageListQuality;

@@ -3,10 +3,11 @@
 int main()
 {
     typedef const std::string string;
-    typedef std::vector<const std::string> StringList;
+    typedef std::vector<const std::string> stringList;
     typedef cv::Mat RepeatabilityMatrix;
+    typedef std::vector<RepeatabilityMatrix> RepeatabilityMatrixList;
 
-    StringList kuzeyImagePathListGauss,
+    stringList kuzeyImagePathListGauss,
             kuzeyImagePathListQuality,
             grafittiImagePathList,
             grafittiHomographyPathList;
@@ -41,15 +42,16 @@ int main()
     grafittiHomographyPathList.push_back("./data/H1to5p");
     grafittiHomographyPathList.push_back("./data/H1to6p");
 
+    RepeatabilityMatrixList repeatabilityMatrixList;
+    stringList nameList;
     MeasureInterestPointDetectors mipd(kuzeyImagePathListGauss, kuzeyImagePathListQuality,
                         grafittiImagePathList, grafittiHomographyPathList);
-//    RepeatabilityMatrix harrisRepeatability = mipd.measureRepeatability(VisionManager::fdtHarris);
-//    RepeatabilityMatrix starRepeatability = mipd.measureRepeatability(VisionManager::fdtStar);
-    //    RepeatabilityMatrix siftRepeatability = mipd.measureRepeatability(VisionManager::fdtSift);
+    repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtHarris));
+    nameList.push_back("Harris Repeatability");
+    repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtStar));
+    nameList.push_back("Star Repeatability");
 
-    RepeatabilityMatrix a= RepeatabilityMatrix::eye(2,2,CV_64F);
-    mipd.writeRepeatabilityOutput(a, "harrisRepeatability.yaml");
-//    mipd.writeRepeatabilityOutput(starRepeatability, "starRepeatability.yaml");
+    mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.yaml");
 
     return 0;
 }

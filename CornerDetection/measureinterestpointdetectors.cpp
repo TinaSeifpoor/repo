@@ -2,8 +2,8 @@
 #include <fstream>
 using std::string;
 
-MeasureInterestPointDetectors::MeasureInterestPointDetectors(StringList kuzeyImagePathListGauss, StringList kuzeyImagePathListQuality,
-                                   StringList grafittiImagePathList, StringList grafittiHomographyPathList)
+MeasureInterestPointDetectors::MeasureInterestPointDetectors(stringList kuzeyImagePathListGauss, stringList kuzeyImagePathListQuality,
+                                   stringList grafittiImagePathList, stringList grafittiHomographyPathList)
 {
     this->kuzeyImageListGauss = this->readImageList(kuzeyImagePathListGauss);
     this->kuzeyImageListQuality = this->readImageList(kuzeyImagePathListQuality);
@@ -34,31 +34,36 @@ MeasureInterestPointDetectors::RepeatabilityMatrix MeasureInterestPointDetectors
     return repeatabilityMatrix;
 }
 
-void MeasureInterestPointDetectors::writeRepeatabilityOutput(RepeatabilityMatrix repMat, string filePath)
+void MeasureInterestPointDetectors::writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath)
 {
     using namespace cv;
     FileStorage fs(filePath, FileStorage::WRITE);
-    fs << "Repeatability" << repMat;
+    while (!repMatList.empty() && !nameList.empty())
+    {
+        fs << nameList.back() << repMatList.back();
+        nameList.pop_back();
+        repMatList.pop_back();
+    }
 
 }
 
-MeasureInterestPointDetectors::ImageList MeasureInterestPointDetectors::readImageList(StringList imagePathList)
+MeasureInterestPointDetectors::ImageList MeasureInterestPointDetectors::readImageList(stringList imagePathList)
 {
     ImageList imList;
-    for (StringList::iterator imagePathListIt=imagePathList.begin(); imagePathListIt!=imagePathList.end(); ++imagePathListIt)
+    for (stringList::iterator imagePathListIt=imagePathList.begin(); imagePathListIt!=imagePathList.end(); ++imagePathListIt)
     {
         imList.push_back(cv::imread(*imagePathListIt));
     }
     return imList;
 }
 
-MeasureInterestPointDetectors::HomographyList MeasureInterestPointDetectors::readHomographyList(StringList homographyPathList)
+MeasureInterestPointDetectors::HomographyList MeasureInterestPointDetectors::readHomographyList(stringList homographyPathList)
 {
     // For ifstream...
     using namespace std;
 
     HomographyList homographyList;
-    for (StringList::iterator homographyPathListIt=homographyPathList.begin(); homographyPathListIt!=homographyPathList.end();
+    for (stringList::iterator homographyPathListIt=homographyPathList.begin(); homographyPathListIt!=homographyPathList.end();
          ++homographyPathListIt)
     {
         Homography homography(3,3,CV_64F);
