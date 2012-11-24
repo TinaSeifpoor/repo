@@ -3,8 +3,8 @@ CONFIG += console
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    contouranalysis.cpp \
-    myharris.cpp
+    visionmanager.cpp \
+    harriscornerdetector.cpp
 
 INCLUDEPATH += E:/OpenCV2.4.2/OpenCV/build/include/
 
@@ -30,5 +30,5 @@ LIBS +=  -lopencv_calib3d242d\
             -lopencv_videostab242d
 
 HEADERS += \
-    contouranalysis.h \
-    myharris.h
+    visionmanager.h \
+    harriscornerdetector.h
