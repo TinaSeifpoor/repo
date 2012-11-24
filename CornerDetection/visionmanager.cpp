@@ -10,70 +10,66 @@
 typedef cv::Mat Image;
 typedef std::vector<cv::Point> ContourPoints;
 typedef std::vector<ContourPoints> Contours;
+typedef unsigned int uint;
 
 using namespace cv;
 using namespace std;
 
 VisionManager::VisionManager()
-{
-}
+{}
 
-void VisionManager::inspectImageWithHomography(const string &imageFilepath,
-                                               const string &homographyFilepath)
+vector<double> VisionManager::inspectImagesWithHomography(const string &im1Filepath, const string &im2Filepath,
+                                               const string &h1to2FilePath)
 {
-    Image imSrc = imread(imageFilepath);
+    Image im1 = imread(im1Filepath);
+    Image im2 = imread(im2Filepath);
     Mat homographyMatrix(3,3,CV_64F);
-    ifstream dataFile(homographyFilepath.c_str());
-    for (int idxRow=0; idxRow<3; ++idxRow)
+    ifstream dataFile(h1to2FilePath.c_str());
+    for (uint idxRow=0; idxRow<3; ++idxRow)
     {
-        for (int idxCol=0; idxCol<3; ++idxCol)
+        for (uint idxCol=0; idxCol<3; ++idxCol)
         {
             double val;
             dataFile >> val;
             homographyMatrix.at<double>(idxRow, idxCol) = val;
         }
     }
-    inspectImageWithHomography(imSrc, homographyMatrix);
+    return inspectImagesWithHomography(im1, im2, homographyMatrix);
 }
 
-void VisionManager::inspectImageWithHomography(Mat imSrc, Mat homographyMatrix)
+vector<double> VisionManager::inspectImagesWithHomography(Mat im1, Mat im2, Mat h1to2)
 {
-    Image imMaskSrc, imMaskDst, imDst;
-    int nCols = imSrc.cols,
-        nRows = imSrc.rows;
+    Image imMask1, imMask2;
+    uint nCols = im1.cols,
+         nRows = im1.rows;
 
-    imMaskSrc = Image(nRows, nCols, CV_8UC1, Scalar(255));
-    warpPerspective(imMaskSrc, imMaskDst, homographyMatrix, Size(nCols,nRows));
-    warpPerspective(imMaskDst, imMaskSrc, homographyMatrix.inv(), Size(nCols,nRows));
+    imMask1 = Image(nRows, nCols, CV_8UC1, Scalar(255));
+    // Get all points from im1 that exists in im2 domain
+    warpPerspective(imMask1, imMask2, h1to2, Size(nCols,nRows));
+    // Get points from im2 that still exists in im1 domain
+    warpPerspective(imMask2, imMask1, h1to2.inv(), Size(nCols,nRows));
 
-    warpPerspective(imSrc, imDst, homographyMatrix, Size(nCols,nRows));
+    vector<KeyPoint> keyPoints1, keyPoints2;
 
-    vector<KeyPoint> keyPointsSrc=this->inspectWithHarris(imSrc, imMaskSrc),
-                     keyPointsDst=this->inspectWithHarris(imDst, imMaskDst);
-    double repeatability = measureRepeatability(keyPointsSrc, keyPointsDst, homographyMatrix, imDst.size());
-    cout << repeatability;
-    //
-    Image imSrcDisp, imDstDisp, imSrc2DstDisp;
-    imSrc.copyTo(imSrcDisp);
-    imDst.copyTo(imDstDisp);
-    imDst.copyTo(imSrc2DstDisp);
-    drawXOnImage(imSrcDisp, keyPointsSrc);
-    drawXOnImage(imDstDisp, keyPointsDst);
-    vector<KeyPoint> keyPointsSrc2Dst;
-    warpPoint(homographyMatrix, keyPointsSrc, keyPointsSrc2Dst);
-    drawXOnImage(imSrc2DstDisp, keyPointsSrc2Dst);
-    imshow("Src", imSrcDisp);
-    imshow("Dst", imDstDisp);
-    imshow("maskDst", imMaskDst);
-    imshow("Src2Dst", imSrc2DstDisp);
-    waitKey();
-    int a=5;
-    a++;
+    keyPoints1=this->inspect(im1, imMask1, fdtHarris),
+    keyPoints2=this->inspect(im2, imMask2, fdtHarris);
+    double repeatabilityHarris = measureRepeatability(keyPoints1, keyPoints2, h1to2, imMask1.size());
+
+    keyPoints1=this->inspect(im1, imMask1, fdtStar);
+    keyPoints2=this->inspect(im2, imMask2, fdtStar);
+    double repeatabilityStar = measureRepeatability(keyPoints1, keyPoints2, h1to2, imMask1.size());
+
+    cout << string("\nHarris Repeatability: ") << repeatabilityHarris << string("\nStar Repeatability: ") << repeatabilityStar;
+    vector<double> repeatability;
+    repeatability.insert(repeatability.end(), repeatabilityHarris);
+    repeatability.insert(repeatability.end(), repeatabilityStar);
+    return repeatability;
 }
 
 
-void VisionManager::warpPoint(Mat M, const Point2f& src, Point2f& dst){
-    Mat srcM(3/*rows*/,1 /* cols */,CV_64F);
+void VisionManager::warpPoint(Mat M, const Point2f& src, Point2f& dst)
+{
+    Mat srcM(3/* rows */,1 /* cols */,CV_64F);
 
     srcM.at<double>(0,0)=src.x;
     srcM.at<double>(1,0)=src.y;
@@ -86,7 +82,7 @@ void VisionManager::warpPoint(Mat M, const Point2f& src, Point2f& dst){
 void VisionManager::warpPoint(Mat H, const vector<KeyPoint> &src, vector<KeyPoint> &dst)
 {
     dst.clear();
-    for (unsigned int idx=0; idx<src.size(); ++idx)
+    for (uint idx=0; idx<src.size(); ++idx)
     {
         KeyPoint srcKeyPoint = src[idx];
         Point2f dstPoint;
@@ -97,31 +93,34 @@ void VisionManager::warpPoint(Mat H, const vector<KeyPoint> &src, vector<KeyPoin
 
 double VisionManager::measureRepeatability(const vector<KeyPoint>& keypoints1, const vector<KeyPoint>& keypoints2, const Mat& homography1to2, const Size& image2size)
 {
-    float length = 1.5;
     Image im1to2(image2size, CV_8U, Scalar(0) );
     vector<KeyPoint> keypoints1to2;
     warpPoint(homography1to2, keypoints1, keypoints1to2);
-    drawSquareOnImage(im1to2, keypoints1to2, 255, length);
-    Image im2(image2size, CV_8U, Scalar(0) );
-    drawSquareOnImage(im2, keypoints2, 255, length);
+    drawSquareOnImage(im1to2, keypoints1to2, 255);
+    Image im2(image2size, CV_8U, Scalar(0));
+    drawSquareOnImage(im2, keypoints2, 255);
     // Intersect images
     Image imInt;
     bitwise_and(im1to2,im2, imInt);
-//    imshow("a", im1to2);
-//    imshow("b", im2);
-//    imshow("c", imInt);
-//    waitKey();
-    Contours contInt;
+//        imshow("a", im1to2);
+//        imshow("b", im2);
+//        imshow("c", imInt);
+//        waitKey();
+    Contours contInt, cont1, cont2;
+    // Find intersection contours
     findContours( imInt, contInt, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
+    // Find im1to2 contours (due to length AND keypoints' precision, # of keypoints may be less than designated)
+    findContours( im1to2, cont1, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
+    findContours( im2, cont2, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
     double nRepeated = 2 * contInt.size();
-    double nTotal = keypoints1.size()+keypoints2.size();
+    double nTotal = cont1.size()+cont2.size();
     return nRepeated/nTotal;
 }
 
 void VisionManager::drawXOnImage(Image &image, const vector<KeyPoint> &points, Scalar color, int scale, int thickness)
 {
     // for all keypoints
-    for (unsigned int idx=0; idx<points.size(); ++idx)
+    for (uint idx=0; idx<points.size(); ++idx)
     {
 
         // draw a cross at each keypoint location
@@ -131,7 +130,7 @@ void VisionManager::drawXOnImage(Image &image, const vector<KeyPoint> &points, S
 
 void VisionManager::drawSquareOnImage(Mat &image, const vector<KeyPoint> &points, Scalar color, float length)
 {
-    for (unsigned int idx=0; idx<points.size(); ++idx)
+    for (uint idx=0; idx<points.size(); ++idx)
     {
         Point2f point = points[idx].pt;
         Point2f border1(point.x-length,point.y-length), border2(point.x+length,point.y+length);
@@ -141,21 +140,28 @@ void VisionManager::drawSquareOnImage(Mat &image, const vector<KeyPoint> &points
 }
 
 
-
-vector<KeyPoint> VisionManager::inspectWithHarris(Mat im, Mat mask)
+vector<KeyPoint> VisionManager::inspect(Mat im, Mat mask, FeatureDetectorType fdt)
 {
     vector<KeyPoint> keyPoints;
-    HarrisCornerDetector fd;
-    fd.detect(im, keyPoints, mask);
+    if(fdt == fdtSift)
+    {
+        Ptr<FeatureDetector> fd = FeatureDetector::create("SIFT");
+        fd->detect(im, keyPoints, mask);
+    }
+    else if (fdt == fdtStar)
+    {
+        Ptr<FeatureDetector> fd = FeatureDetector::create("STAR");
+        fd->detect(im, keyPoints, mask);
+    }
+    else if (fdt == fdtBrief)
+    {
+        Ptr<FeatureDetector> fd = FeatureDetector::create("BRIEF");
+        fd->detect(im, keyPoints, mask);
+    }
+    else if (fdt == fdtHarris)
+    {
+        HarrisCornerDetector hcd;
+        hcd.detect(im, keyPoints, mask);
+    }
     return keyPoints;
 }
-
-vector<KeyPoint> VisionManager::inspectWithSift(Mat im, Mat mask)
-{
-    vector<KeyPoint> keyPoints;
-    Ptr<FeatureDetector> fd = FeatureDetector::create("STAR");
-    fd->detect(im, keyPoints);
-//    delete fd;
-    return keyPoints;
-}
-
