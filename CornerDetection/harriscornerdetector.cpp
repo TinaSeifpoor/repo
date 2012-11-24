@@ -9,10 +9,10 @@ typedef cv::Mat Image;
 void HarrisCornerDetector::calcSmoothDeriv(const Image src, Image *Ix2, Image *Ixy, Image *Iy2, double sigma, int kernelSize) const
 {
     Image iX, iY;
-    Sobel(src, iX, CV_64F, 1, 0);
+    Sobel(src, iX, CV_64F, 1, 0, CV_SCHARR);
     GaussianBlur( iX, iX, Size(kernelSize,kernelSize), sigma, sigma);
 
-    Sobel(src, iY, CV_64F, 0, 1);
+    Sobel(src, iY, CV_64F, 0, 1, CV_SCHARR);
     GaussianBlur( iY, iY, Size(kernelSize,kernelSize), sigma, sigma);
 
     cv::pow(iX,2,*Ix2);
