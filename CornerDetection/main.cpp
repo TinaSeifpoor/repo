@@ -18,12 +18,15 @@ int main()
             grafittiHomographyPathList,
             kuzeyImagePathListScale;
 
+    // Image lists go from most similar to most distinct for
+    // easily recognizable repeatability values
+
     kuzeyImagePathListGauss.push_back("./data/kuzey.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG03.jpg");
     kuzeyImagePathListGauss.push_back("./data/kuzeyG05.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG07.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG09.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG11.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG10.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG20.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG40.jpg");
+    kuzeyImagePathListGauss.push_back("./data/kuzeyG80.jpg");
 
     imagePathListList.push_back(kuzeyImagePathListGauss);
     homographyPathListList.push_back(stringList());
@@ -54,10 +57,10 @@ int main()
     homographyPathListList.push_back(grafittiHomographyPathList);
 
     kuzeyImagePathListScale.push_back("./data/kuzey.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS90.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS80.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS85.jpg");
     kuzeyImagePathListScale.push_back("./data/kuzeyS60.jpg");
     kuzeyImagePathListScale.push_back("./data/kuzeyS40.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS30.jpg");
     kuzeyImagePathListScale.push_back("./data/kuzeyS20.jpg");
 
     imagePathListList.push_back(kuzeyImagePathListScale);
@@ -78,15 +81,6 @@ int main()
     nameList.push_back("Star");
     stringList header;
     header.push_back("Repeatability Report");
-    header.push_back("Repeatability List goes as");
-    header.push_back("Kuzey Gauss03 - Kuzey Gauss05");
-    header.push_back("Kuzey Gauss07 - Kuzey Gauss09");
-    header.push_back("Kuzey Gauss11 - Kuzey Quality05");
-    header.push_back("Kuzey Quality10 - Kuzey Quality30");
-    header.push_back("Kuzey Quality60 - Kuzey Quality80");
-    header.push_back("Grafitti2 - Grafitti3");
-    header.push_back("Grafitti4 - Grafitti5");
-    header.push_back("Grafitti6");
     mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.xml",header);
 
     return 0;

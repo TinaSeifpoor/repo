@@ -42,7 +42,7 @@ private:
     KeyPoints inspect(Image im, Image mask, FeatureDetectorType fdt);
 
     // Group key points
-    void drawSquareOnImage(Image &image, const KeyPoints &points, Scalar color= Scalar(255), float length=.5);
+    void drawSquareOnImage(Image &image, const KeyPoints &points, Scalar color= Scalar(255), float length=1);
     //
     // Display key points
     void drawXOnImage(Image &image, const KeyPoints &points, Scalar color= Scalar(255,255,0), int scale=1, int thickness=1);

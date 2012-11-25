@@ -69,7 +69,7 @@ MeasureInterestPointDetectors::ImageList MeasureInterestPointDetectors::readImag
 
 MeasureInterestPointDetectors::HomographyList MeasureInterestPointDetectors::readHomographyList(stringList homographyPathList)
 {
-    // For ifstream...
+    // Due to ifstream...
     using namespace std;
 
     HomographyList homographyList;

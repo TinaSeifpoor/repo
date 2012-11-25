@@ -1,18 +1,18 @@
 #include "harriscornerdetector.h"
 
 
-void HarrisCornerDetector::calcSmoothDeriv(const Image imSrc, Image *ImX2, Image *ImXY, Image *ImY2, double sigma, uint kernelSize) const
+void HarrisCornerDetector::calcSmoothDeriv(const Image imSrc, Image *ImX2, Image *ImXY, Image *ImY2, double sigma, uint smoothKernelSize, uint medianKernelSize) const
 {
     using namespace cv;
-//    Image imMedian;
-//    medianBlur(imSrc, imMedian, kernelSize);
+    Image imMedian;
+    medianBlur(imSrc, imMedian, smoothKernelSize);
     Image imSmooth;
-    GaussianBlur(imSrc, imSmooth, Size(kernelSize,kernelSize), sigma, sigma);
+    GaussianBlur(imMedian, imSmooth, Size(medianKernelSize,medianKernelSize), sigma, sigma);
     Image imX, imY;
     Scharr(imSmooth, imX, CV_64F, 1, 0);
-    GaussianBlur(imX, imX, Size(kernelSize,kernelSize), sigma, sigma);
+    GaussianBlur(imX, imX, Size(smoothKernelSize,smoothKernelSize), sigma, sigma);
     Scharr(imSmooth, imY, CV_64F, 0, 1);
-    GaussianBlur(imY, imY, Size(kernelSize,kernelSize), sigma, sigma);
+    GaussianBlur(imY, imY, Size(smoothKernelSize,smoothKernelSize), sigma, sigma);
 
     cv::pow(imX,2,*ImX2);
     *ImXY = imX.mul(imY);
@@ -92,14 +92,14 @@ HarrisCornerDetector::KeyPoints HarrisCornerDetector::findLocalMaximaInSquare(co
                 {
                     if ((*itPoi).response<val)
                     {
-                        keyPoints.insert(itPoi, cv::KeyPoint((float)idxCol,(float)idxRow, (float)length, (float)-1,(float)val));
+                        keyPoints.insert(itPoi, KeyPoint((float)idxCol,(float)idxRow, (float)length, (float)-1,(float)val));
                         pointAdded=true;
                         break;
                     }
                 }
                 if(!pointAdded)
                 {
-                    keyPoints.push_back(cv::KeyPoint((float)idxCol,(float)idxRow, (float)length, (float)-1,(float)val));
+                    keyPoints.push_back(KeyPoint((float)idxCol,(float)idxRow, (float)length, (float)-1,(float)val));
                 }
                 if (nKeyPoints)
                 {
