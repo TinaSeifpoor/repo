@@ -2,36 +2,40 @@
 #include <fstream>
 using std::string;
 
-MeasureInterestPointDetectors::MeasureInterestPointDetectors(stringList kuzeyImagePathListGauss, stringList kuzeyImagePathListQuality,
-                                   stringList grafittiImagePathList, stringList grafittiHomographyPathList)
-{
-    this->kuzeyImageListGauss = this->readImageList(kuzeyImagePathListGauss);
-    this->kuzeyImageListQuality = this->readImageList(kuzeyImagePathListQuality);
-    this->grafittiImageList = this->readImageList(grafittiImagePathList);
-    this->grafittiHomographyList = this->readHomographyList(grafittiHomographyPathList);
-}
-
 MeasureInterestPointDetectors::RepeatabilityMatrix MeasureInterestPointDetectors::measureRepeatability(FeatureDetectorType fdt)
 {
-    RepeatabilityMatrix repeatabilityMatrix(5,3, CV_64F);
+    RepeatabilityMatrix repeatabilityMatrix(this->imageListList[0].size()-1,this->imageListList.size(), CV_64F);
 
     VisionManager vm;
-    uint idxSet = 0;
-    Homography identity = Homography::eye(3, 3, CV_64F);
-    for (uint idx=1; idx<this->kuzeyImageListGauss.size(); ++idx)
-        repeatabilityMatrix.at<double>(idx-1,idxSet) = vm.testFeatureDetectorRepeatability(kuzeyImageListGauss[0], kuzeyImageListGauss[idx], identity, fdt);
-    ++idxSet;
-
-    for (uint idx=1; idx<this->kuzeyImageListQuality.size(); ++idx)
-        repeatabilityMatrix.at<double>(idx-1,idxSet) = vm.testFeatureDetectorRepeatability(kuzeyImageListQuality[0], kuzeyImageListQuality[idx], identity, fdt);
-    ++idxSet;
-
-    for (uint idx=1; idx<this->grafittiImageList.size(); ++idx)
-        repeatabilityMatrix.at<double>(idx-1,idxSet) = vm.testFeatureDetectorRepeatability(grafittiImageList[0], grafittiImageList[idx], grafittiHomographyList[idx-1], fdt);
-    ++idxSet;
-
+    for (uint idxSet=0; idxSet<this->imageListList.size(); ++idxSet)
+        for (uint idxIns=1; idxIns<this->imageListList[idxSet].size(); ++idxIns)
+            repeatabilityMatrix.at<double>(idxIns-1,idxSet) = vm.testFeatureDetectorRepeatability(this->imageListList[idxSet][0],
+                                                                                                  this->imageListList[idxSet][idxIns],
+                                                                                                  this->homographyListList[idxSet][idxIns-1], fdt);
 
     return repeatabilityMatrix;
+}
+
+void MeasureInterestPointDetectors::loadData(stringListList imagePathListList, stringListList homographyPathListList)
+{
+    for (uint idxSet=0; idxSet<imagePathListList.size(); ++idxSet)
+    {
+        HomographyList homographyList;
+        imageListList.push_back(this->readImageList(imagePathListList[idxSet]));
+        if (!homographyPathListList[idxSet].empty())
+        {
+            homographyList = this->readHomographyList(homographyPathListList[idxSet]);
+        }
+        else
+        {
+            Homography homography=Homography::eye(3,3,CV_64F);
+            for (uint idxIm=1; idxIm<imagePathListList[idxSet].size(); ++idxIm)
+            {
+                homographyList.push_back(homography);
+            }
+        }
+        homographyListList.push_back(homographyList);
+    }
 }
 
 void MeasureInterestPointDetectors::writeRepeatabilityOutput(RepeatabilityMatrixList repMatList, stringList nameList, string filePath, stringList header)
