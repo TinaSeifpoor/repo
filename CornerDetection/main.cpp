@@ -12,23 +12,24 @@ int main()
     stringListList homographyPathListList;
 
 
-    stringList kuzeyImagePathListGauss,
+    stringList kuzeyImagePathListGaussNoise,
             kuzeyImagePathListQuality,
             grafittiImagePathList,
             grafittiHomographyPathList,
-            kuzeyImagePathListScale;
+            kuzeyImagePathListScale,
+            kuzeyImagePathListGaussSmooth;
 
     // Image lists go from most similar to most distinct for
     // easily recognizable repeatability values
 
-    kuzeyImagePathListGauss.push_back("./data/kuzey.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG05.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG10.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG20.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG40.jpg");
-    kuzeyImagePathListGauss.push_back("./data/kuzeyG80.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzey.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzeyN05.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzeyN10.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzeyN20.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzeyN40.jpg");
+    kuzeyImagePathListGaussNoise.push_back("./data/kuzeyN80.jpg");
 
-    imagePathListList.push_back(kuzeyImagePathListGauss);
+    imagePathListList.push_back(kuzeyImagePathListGaussNoise);
     homographyPathListList.push_back(stringList());
 
     kuzeyImagePathListQuality.push_back("./data/kuzey.jpg");
@@ -64,6 +65,16 @@ int main()
     kuzeyImagePathListScale.push_back("./data/kuzeyS20.jpg");
 
     imagePathListList.push_back(kuzeyImagePathListScale);
+    homographyPathListList.push_back(stringList());
+
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzey.jpg");
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzeyG03.jpg");
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzeyG05.jpg");
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzeyG07.jpg");
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzeyG09.jpg");
+    kuzeyImagePathListGaussSmooth.push_back("./data/kuzeyG11.jpg");
+
+    imagePathListList.push_back(kuzeyImagePathListGaussSmooth);
     homographyPathListList.push_back(stringList());
 
 

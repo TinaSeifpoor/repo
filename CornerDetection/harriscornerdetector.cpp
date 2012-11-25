@@ -10,16 +10,14 @@ void HarrisCornerDetector::calcSmoothDeriv(const Image imSrc, Image *ImX2, Image
     GaussianBlur(imMedian, imSmooth, Size(medianKernelSize,medianKernelSize), sigma, sigma);
     Image imX, imY;
     Scharr(imSmooth, imX, CV_64F, 1, 0);
-    GaussianBlur(imX, imX, Size(smoothKernelSize,smoothKernelSize), sigma, sigma);
     Scharr(imSmooth, imY, CV_64F, 0, 1);
-    GaussianBlur(imY, imY, Size(smoothKernelSize,smoothKernelSize), sigma, sigma);
 
     cv::pow(imX,2,*ImX2);
     *ImXY = imX.mul(imY);
     cv::pow(imY,2,*ImY2);
 }
 
-HarrisCornerDetector::Image HarrisCornerDetector::cornerHarrisM(const Image Ix2, const Image Ixy, const Image Iy2, double k) const
+HarrisCornerDetector::Image HarrisCornerDetector::cornerHarrisM(const Image Ix2, const Image Ixy, const Image Iy2, double k, uint smoothKernelSize, double sigma) const
 {
     using namespace cv;
     Image det, tra, har;
@@ -28,6 +26,7 @@ HarrisCornerDetector::Image HarrisCornerDetector::cornerHarrisM(const Image Ix2,
     add(Ix2,Iy2,Ix2PIy2);
     tra = -k*Ix2PIy2.mul(Ix2PIy2);
     subtract(det, tra, har);
+    GaussianBlur(har, har, Size(smoothKernelSize,smoothKernelSize), sigma, sigma);
     return har;
 }
 
