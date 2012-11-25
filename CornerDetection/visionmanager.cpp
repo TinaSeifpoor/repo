@@ -1,8 +1,6 @@
 #include "visionmanager.h"
-#include <fstream>
 #include <opencv2/nonfree/features2d.hpp>
-//using namespace cv;
-//using namespace std;
+
 
 VisionManager::Repeatability VisionManager::testFeatureDetectorRepeatability(Image im1, Image im2, Homography h1to2, VisionManager::FeatureDetectorType fdt)
 {
@@ -20,7 +18,18 @@ VisionManager::Repeatability VisionManager::testFeatureDetectorRepeatability(Ima
 
     keyPoints1=this->inspect(im1, imMask1, fdt),
     keyPoints2=this->inspect(im2, imMask2, fdt);
+
     Repeatability repeatability = measureRepeatability(keyPoints1, keyPoints2, h1to2, imMask1.size());
+
+    std::cout << "Repeatability : " << repeatability << " for method: " << fdt << std::endl;
+    #ifdef Debug
+    {
+        imshow("Repeatability", im2);
+        cv::waitKey();
+    }
+    #endif
+
+
 
     return repeatability;
 }
@@ -119,8 +128,8 @@ VisionManager::KeyPoints VisionManager::inspect(Mat im, Mat mask, FeatureDetecto
     }
     else if (fdt == fdtHarris)
     {
-        HarrisCornerDetector hcd;
-        hcd.detect(im, keyPoints, mask);
+        HarrisCornerDetector fd;
+        fd.detect(im, keyPoints, mask);
     }
     return keyPoints;
 }

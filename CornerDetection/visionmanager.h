@@ -4,6 +4,7 @@
 
 class VisionManager
 {
+    // All definitions
     typedef cv::Mat Image;
     typedef std::vector<cv::Point> ContourPoints;
     typedef std::vector<ContourPoints> Contours;
@@ -17,6 +18,7 @@ class VisionManager
     typedef cv::Scalar Scalar;
     typedef cv::Mat Mat;
     typedef cv::KeyPoint KeyPoint;
+    // All definitions
 
 public:
     enum FeatureDetectorType

@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     visionmanager.cpp \
     harriscornerdetector.cpp \
     measureinterestpointdetectors.cpp
+#DEFINES += Debug
 
 INCLUDEPATH += E:/OpenCV2.4.2/OpenCV/build/include/
 

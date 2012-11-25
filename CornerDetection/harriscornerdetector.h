@@ -6,18 +6,23 @@
 
 class HarrisCornerDetector: public cv::FeatureDetector
 {
+    // All definitions
     typedef cv::Mat Image;
+    typedef std::vector<cv::KeyPoint> KeyPoints;
+    typedef unsigned int uint;
+    // All definitions
+
 public:
-    void detect( const cv::Mat& image, std::vector<cv::KeyPoint>& keyPoints,
-                                        const cv::Mat& mask=cv::Mat() ) const;
+    void detect( const Image& image, KeyPoints& keyPoints,
+                                        const Image& mask=Image() ) const;
 
 
 private:
-    void detectImpl( const cv::Mat& image, std::vector<cv::KeyPoint>& keypoints, const cv::Mat& mask=cv::Mat() ) const;
-    void calcSmoothDeriv(const Image src, Image *ImX2, Image *ImXY, Image *ImY2, double sigma=2.31, unsigned int kernelSize=11) const;
+    void detectImpl( const Image& image, KeyPoints& keypoints, const Image& mask=Image() ) const;
+    void calcSmoothDeriv(const Image src, Image *ImX2, Image *ImXY, Image *ImY2, double sigma=2.31, uint kernelSize=11) const;
     Image cornerHarrisM(const Image Ix2,const  Image Ixy,const  Image Iy2, double k=0.04) const;
-    std::vector<cv::KeyPoint> findLocalMaximaInSquare(const Image src, const cv::Mat& mask,
-                                                      unsigned int length=3, double minTh=500, unsigned int nPoints=100) const;
+    std::vector<cv::KeyPoint> findLocalMaximaInSquare(const Image src, const Image& mask,
+                                                      uint length=3, double minTh=500, uint nPoints=100) const;
 };
 
 #endif // MYFEATUREDETECTOR_H

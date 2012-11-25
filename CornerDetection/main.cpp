@@ -29,11 +29,11 @@ int main()
     homographyPathListList.push_back(stringList());
 
     kuzeyImagePathListQuality.push_back("./data/kuzey.jpg");
-    kuzeyImagePathListQuality.push_back("./data/kuzeyQ05.jpg");
-    kuzeyImagePathListQuality.push_back("./data/kuzeyQ10.jpg");
-    kuzeyImagePathListQuality.push_back("./data/kuzeyQ30.jpg");
-    kuzeyImagePathListQuality.push_back("./data/kuzeyQ60.jpg");
     kuzeyImagePathListQuality.push_back("./data/kuzeyQ80.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ60.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ30.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ10.jpg");
+    kuzeyImagePathListQuality.push_back("./data/kuzeyQ05.jpg");
 
     imagePathListList.push_back(kuzeyImagePathListQuality);
     homographyPathListList.push_back(stringList());
@@ -54,11 +54,11 @@ int main()
     homographyPathListList.push_back(grafittiHomographyPathList);
 
     kuzeyImagePathListScale.push_back("./data/kuzey.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS20.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS40.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS60.jpg");
-    kuzeyImagePathListScale.push_back("./data/kuzeyS80.jpg");
     kuzeyImagePathListScale.push_back("./data/kuzeyS90.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS80.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS60.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS40.jpg");
+    kuzeyImagePathListScale.push_back("./data/kuzeyS20.jpg");
 
     imagePathListList.push_back(kuzeyImagePathListScale);
     homographyPathListList.push_back(stringList());
@@ -71,11 +71,11 @@ int main()
 
     stringList nameList;
     repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtSift));
-    nameList.push_back("Sift Repeatability");
+    nameList.push_back("Sift");
     repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtHarris));
-    nameList.push_back("Harris Repeatability");
+    nameList.push_back("Harris");
     repeatabilityMatrixList.push_back(mipd.measureRepeatability(VisionManager::fdtStar));
-    nameList.push_back("Star Repeatability");
+    nameList.push_back("Star");
     stringList header;
     header.push_back("Repeatability Report");
     header.push_back("Repeatability List goes as");
@@ -87,7 +87,7 @@ int main()
     header.push_back("Grafitti2 - Grafitti3");
     header.push_back("Grafitti4 - Grafitti5");
     header.push_back("Grafitti6");
-    mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.yml",header);
+    mipd.writeRepeatabilityOutput(repeatabilityMatrixList, nameList, "repeatabilityResults.xml",header);
 
     return 0;
 }

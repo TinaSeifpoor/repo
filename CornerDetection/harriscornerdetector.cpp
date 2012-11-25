@@ -1,15 +1,11 @@
 #include "harriscornerdetector.h"
-using std::string;
-using std::vector;
-using namespace cv;
-typedef unsigned int uint;
-typedef std::vector<cv::KeyPoint> KeyPoints;
-
-typedef cv::Mat Image;
 
 
 void HarrisCornerDetector::calcSmoothDeriv(const Image imSrc, Image *ImX2, Image *ImXY, Image *ImY2, double sigma, uint kernelSize) const
 {
+    using namespace cv;
+//    Image imMedian;
+//    medianBlur(imSrc, imMedian, kernelSize);
     Image imSmooth;
     GaussianBlur(imSrc, imSmooth, Size(kernelSize,kernelSize), sigma, sigma);
     Image imX, imY;
@@ -23,8 +19,9 @@ void HarrisCornerDetector::calcSmoothDeriv(const Image imSrc, Image *ImX2, Image
     cv::pow(imY,2,*ImY2);
 }
 
-Image HarrisCornerDetector::cornerHarrisM(const Image Ix2, const Image Ixy, const Image Iy2, double k) const
+HarrisCornerDetector::Image HarrisCornerDetector::cornerHarrisM(const Image Ix2, const Image Ixy, const Image Iy2, double k) const
 {
+    using namespace cv;
     Image det, tra, har;
     subtract(Ix2.mul(Iy2), Ixy.mul(Ixy), det);
     Image Ix2PIy2;
@@ -34,8 +31,10 @@ Image HarrisCornerDetector::cornerHarrisM(const Image Ix2, const Image Ixy, cons
     return har;
 }
 
-KeyPoints HarrisCornerDetector::findLocalMaximaInSquare(const Image src, const Mat &mask, uint length, double minTh, uint nKeyPoints) const
+HarrisCornerDetector::KeyPoints HarrisCornerDetector::findLocalMaximaInSquare(const Image src, const Image &mask,
+                                                                              uint length, double minTh, uint nKeyPoints) const
 {
+    using namespace cv;
     // Label banned items with ban
     uchar ban=255;
     uint nRows = src.rows,
@@ -120,23 +119,24 @@ KeyPoints HarrisCornerDetector::findLocalMaximaInSquare(const Image src, const M
 }
 
 
-void HarrisCornerDetector::detect(const Mat &image, KeyPoints &keyPoints, const Mat &mask) const
+void HarrisCornerDetector::detect(const Image &image, KeyPoints &keyPoints, const Image &mask) const
 {
-
+    using namespace cv;
     uint nChannels = image.channels();
-    Mat imageGray;
+    Image imageGray;
     // TODO should consider calculating key points from color space, like lab instead of just gray
     if (nChannels == 3)
-        cv::cvtColor(image, imageGray, CV_BGR2GRAY);
+        cvtColor(image, imageGray, CV_BGR2GRAY);
     else
         image.copyTo(imageGray);
     this->detectImpl(imageGray, keyPoints, mask);
     return;
 }
 
-void HarrisCornerDetector::detectImpl(const Mat &image, KeyPoints &keypoints, const Mat &mask) const
+void HarrisCornerDetector::detectImpl(const Image &image, KeyPoints &keypoints, const Image &mask) const
 {
-    Mat Ix2, Ixy, Iy2;
+    using namespace cv;
+    Image Ix2, Ixy, Iy2;
     calcSmoothDeriv(image, &Ix2, &Ixy, &Iy2);
     keypoints = findLocalMaximaInSquare(cornerHarrisM(Ix2, Ixy, Iy2), mask);
 }

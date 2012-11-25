@@ -4,6 +4,7 @@
 
 class MeasureInterestPointDetectors
 {
+    // All definitions
     typedef std::vector<const std::string> stringList;
     typedef std::vector<stringList> stringListList;
     typedef std::vector<double> RepeatabilityList;
@@ -18,6 +19,7 @@ class MeasureInterestPointDetectors
     typedef unsigned int uint;
     typedef std::string string;
     typedef VisionManager::FeatureDetectorType FeatureDetectorType;
+    // All definitions
 
 public:
     MeasureInterestPointDetectors(){}
