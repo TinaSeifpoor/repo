@@ -1,19 +1,18 @@
 #include "extractleafcontour.h"
 
 using std::vector;
+using cv::Size;
 
 ExtractLeafContour::ExtractLeafContour()
 {
 }
 
-Contour ExtractLeafContour::segmentExteriorLeafContour(cv::Mat im)
+Contour ExtractLeafContour::segmentExteriorLeafContour(cv::Mat imRGB)
 {
-    Im imGray;
+    Im imHSV;
     ContourAnalysis ca;
-    if (im.channels()==3)
-        cvtColor(im, imGray, CV_RGB2GRAY);
-    else
-        im.copyTo(imGray,im);
+    cv::cvtColor(imRGB, imHSV, CV_RGB2HSV);
+    Im im, imGray;
     Im imTh;
     imTh = this->binThreshold(imGray);
     Contour leafExteriorContour, leafExteriorContourCandidates;
@@ -118,4 +117,13 @@ vector<float> ExtractLeafContour::smoothGauss1D(vector<float> v, float sigma, fl
         vOut[i] = value;
     }
     return vOut;
+}
+
+Im ExtractLeafContour::accessChannel(Im im, int idx)
+{
+    Im imChannel(im.rowRange(0,im.rows-1),im.colRange(0,im.cols-1));
+    for (int i=0;i<im.rows;++i)
+        for (int j=0;j<im.cols;++j)
+            imChannel.at<cv::Vec3b>(i,j) = im.at<cv::Vec3b>(i,j)[idx];
+    return imChannel;
 }

@@ -24,7 +24,7 @@ int main(int & argc, char ** argv)
         QFileInfo instanceFileInfo = instanceDescriptor.first().value<QFileInfo>();
         Im instanceImage = cv::imread(instanceFileInfo.filePath().toAscii().constData());
         elc.segmentExteriorLeafContour(instanceImage);
-
+//        cv::imshow()
     }
 
     QFileInfo resultFile(outputDir, "results.csv");

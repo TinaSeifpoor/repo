@@ -13,7 +13,7 @@ private:
     float getBinThVal(Im histData);
     std::vector<float> localMinima(std::vector<float> v);
     std::vector<float> smoothGauss1D (std::vector<float> pdf, float sigma, float size);
-
+    Im accessChannel(Im im, int idx);
 
 };
 
