@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>862</width>
+    <height>693</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>350</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Forest Properties</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QListView" name="listViewForest"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButtonLoadForest">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Load Forest</string>
+          </property>
+          <property name="shortcut">
+           <string>F10</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButtonSaveForest">
+          <property name="text">
+           <string>Save Forest</string>
+          </property>
+          <property name="shortcut">
+           <string>F9</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabInput">
+       <attribute name="title">
+        <string>Images</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="checkBoxOnline">
+          <property name="text">
+           <string>Online</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLineEdit" name="lineEditTh">
+          <property name="text">
+           <string>0.7</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButtonSelectImage">
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QListView" name="listViewLoadedImages">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditKeyPressed</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pushButtonClearLoadedImages">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1" rowspan="2">
+     <widget class="QScrollArea" name="scrollAreaForImage">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>486</width>
+         <height>651</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="ImageWindow" name="labelImage">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPlainTextEdit" name="plainTextEditLog">
+      <property name="maximumSize">
+       <size>
+        <width>350</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLoad_Features">
+   <property name="text">
+    <string>Load Features</string>
+   </property>
+  </action>
+  <action name="actionAdd_Forest">
+   <property name="text">
+    <string>Add Forest</string>
+   </property>
+  </action>
+  <action name="actionAdd_Forest_2">
+   <property name="text">
+    <string>Add Forest</string>
+   </property>
+  </action>
+  <action name="actionLoad_Forest">
+   <property name="text">
+    <string>Load Forest</string>
+   </property>
+  </action>
+  <action name="actionSave_Forest">
+   <property name="text">
+    <string>Save Forest</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionPredict">
+   <property name="text">
+    <string>Predict</string>
+   </property>
+  </action>
+  <action name="actionPredict_features">
+   <property name="text">
+    <string>Predict features</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ImageWindow</class>
+   <extends>QLabel</extends>
+   <header>imagewindow.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
