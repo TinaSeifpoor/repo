@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "control.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,11 +20,10 @@ private slots:
     void on_actionSave_as_triggered();
     void on_actionLoad_triggered();
     void on_actionExit_triggered();
-    void on_wImageContainerList_itemSelected(QString imagePath);
+    void on_actionCopy_triggered();
 
 private:
     Ui::MainWindow *ui;
-    Control *control;
     QString currentClassesFilePath;
 };
 

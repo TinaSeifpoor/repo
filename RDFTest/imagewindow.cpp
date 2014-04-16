@@ -4,7 +4,7 @@ using namespace cv;
 ImageWindow::ImageWindow(QWidget* parent) :
     QLabel(parent) {}
 
-void ImageWindow::showImage(Image im)
+void ImageWindow::showImage(const Image im)
 {
     Image rgb;
     if (im.channels()==3)
@@ -15,9 +15,12 @@ void ImageWindow::showImage(Image im)
     this->setPixmap(QPixmap::fromImage(imQ));
 }
 
-void ImageWindow::showImageNKeypoints(Image im, KeyPoints keyPoints)
+void ImageWindow::showImageNKeypoints(const Image im, const KeyPoints keyPoints)
 {
+    if (im.empty())
+        return;
     Image imOut,rgb;
+    im.copyTo(imOut);
     drawKeypoints(im, keyPoints, imOut, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     if (imOut.channels()==3)
         cvtColor(imOut, rgb, CV_BGR2RGB);

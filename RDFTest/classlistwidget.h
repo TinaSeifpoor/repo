@@ -6,14 +6,20 @@
 #include "imagelistwidget.h"
 class ClassListWidget : public QListWidget
 {
+    Q_OBJECT
 public:
     ClassListWidget(QWidget* parent);
     void addClass(QString className);
-    void removeClass(ClassObject className);
+    void addClass(ClassObject* classObj);
     void setImageListWidget(ImageListWidget* ilw);
 
+public slots:
+    void addImage(QString imagePath);
+
 private slots:
-    void on_doubleClicked(const QModelIndex &index);
+    void on_doubleClicked(QModelIndex index);
+    void on_copy_triggered();
+    void on_paste_triggered();
 
 private:
     ClassObject* getClass(const QModelIndex &index);
@@ -21,6 +27,7 @@ private:
     int getRowFromName(QString className);
     ImageListWidget *imageListWidget;
     InstanceListWidget *instanceListWidget;
+    QStringList classNameList;
 };
 
 #endif // CLASSLISTVIEW_H

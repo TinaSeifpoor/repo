@@ -11,8 +11,8 @@ public:
     explicit ImageWindow(QWidget* parent = 0);
 
 public slots:
-    void showImage(Image im);
-    void showImageNKeypoints(Image im, KeyPoints keyPoints);
+    void showImage(const Image im);
+    void showImageNKeypoints(const Image im, const KeyPoints keyPoints);
 
 signals:
     void clicked(double x, double y);

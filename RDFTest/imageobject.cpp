@@ -1,17 +1,25 @@
 #include "imageobject.h"
 #include "common.h"
 #include "instanceobject.h"
-#include "featureextractor.h"
 
 #include <QFileInfo>
 #include <QVector>
+#include <QStringList>
 #include "common.h"
 #include "opencv2/nonfree/features2d.hpp"
+
+Q_DECLARE_METATYPE(cv::Mat)
+
 class ImageObjectPrivate {
 public:
+    ImageObjectPrivate(){
+        qRegisterMetaType<cv::Mat>("cv::Mat");
+        qRegisterMetaTypeStreamOperators<cv::Mat>("cv::Mat");
+    }
+
     QString path;
     Image image;
-    QVector<InstanceObject*> data;
+    QHash<QString, InstanceObject*> data;
     void extract();
     QString name;
     bool isValid;
@@ -36,11 +44,12 @@ void ImageObjectPrivate::extract(){
             else
                 image.copyTo(imageGray);
 
-            SIFT fd(0, 5, 0.1, 10, 1.6);
+//            SIFT fd(0, 5, 0.1, 10, 1.6);
+            MSER fd;
             fd.detect(imageGray, keyPoints, imMask);
 
             for (unsigned int idx=0; idx<keyPoints.size(); ++idx) {
-                this->data << new InstanceObject(image, keyPoints.at(idx), idx);
+                this->data.insert(QString::number(idx),new InstanceObject(image, keyPoints.at(idx), idx));
             }
             isValid= true;
         }
@@ -60,6 +69,21 @@ ImageObject::ImageObject(QString imagePath):d(new ImageObjectPrivate)
     d->extract();
 }
 
+ImageObject::ImageObject(QVariantHash ini)
+{
+    d->name = ini.value("Name").toString();
+    d->image = ini.value("Image").value<cv::Mat>();
+
+    QVariantHash instanceHash = ini.value("InstanceList").toHash();
+
+    QStringList keys = instanceHash.keys();
+
+    foreach (QString key, keys) {
+        InstanceObject* obj = new InstanceObject(d->image, instanceHash);
+        d->data.insert(key, obj);
+    }
+}
+
 QString ImageObject::name() const
 {
     return d->name;
@@ -67,10 +91,11 @@ QString ImageObject::name() const
 
 InstanceObject *ImageObject::at(int idx)
 {
-    if (idx<d->data.count() && idx > -1)
-        return d->data.at(idx);
+    if (d->data.contains(QString::number(idx)))
+        return d->data.value(QString::number(idx));
     else
-        return 0;
+        return 0
+;
 }
 
 int ImageObject::count() const
@@ -86,6 +111,22 @@ cv::Mat ImageObject::image() const
 bool ImageObject::isValid() const
 {
     return d->isValid;
+}
+
+QVariantHash ImageObject::toIni() const
+{
+    QVariantHash output;
+    QStringList keys = d->data.keys();
+    QVariantHash imageHash;
+    imageHash.insert("Image",QVariant::fromValue<cv::Mat>(this->image()));
+    QVariantHash instanceHash;
+
+    foreach (QString key, keys) {
+        instanceHash.unite(d->data.value(key)->toIni());
+    }
+    imageHash.insert("InstanceList", instanceHash);
+    output.insertMulti(this->name(), imageHash);
+    return output;
 }
 
 

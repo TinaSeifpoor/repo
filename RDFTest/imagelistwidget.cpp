@@ -1,7 +1,9 @@
 #include "imagelistwidget.h"
 #include "classobject.h"
 #include "imageobject.h"
+#include "imagewindow.h"
 #include "instancelistwidget.h"
+#include <QDragLeaveEvent>
 class ImageObjectWidgetItem:public QListWidgetItem {
     ImageObject* imageObject;
 public:
@@ -57,7 +59,6 @@ void ImageListWidget::on_doubleClicked(QModelIndex index)
     this->ilw->set(i);
     this->iw->showImage(i->image());
 }
-
 
 ImageObject* ImageListWidget::getImage(int row)
 {

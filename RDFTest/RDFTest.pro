@@ -17,36 +17,27 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-CONFIG +=   opencv\
-            rdfmodule
+CONFIG +=   opencv
 
 opencv += 2.4.5
 
 SOURCES += main.cpp \
-    imagecontainer.cpp \
     mainwindow.cpp \
-    control.cpp \
-    imagecontainerlist.cpp \
     imagewindow.cpp \
-    featureextractor.cpp \
     browsesettingsdialog.cpp \
     imagelistwidget.cpp \
     instancelistwidget.cpp \
     classobject.cpp \
     imageobject.cpp \
     instanceobject.cpp \
-    instanceextractor.cpp \
-    classlistwidget.cpp
+    classlistwidget.cpp \
+    filesystembrowser.cpp
 
 
-HEADERS += imagecontainer.h \
+HEADERS += \
     mainwindow.h \
-    control.h \
-    imagecontainerlist.h \
-    keypointextractor.h \
     common.h \
     imagewindow.h \
-    featureextractor.h \
     browsesettingsdialog.h \
     classlistwidget.h \
     imagelistwidget.h \
@@ -54,8 +45,9 @@ HEADERS += imagecontainer.h \
     classobject.h \
     imageobject.h \
     instanceobject.h \
-    instanceextractor.h
+    filesystembrowser.h
 
 FORMS += \
     mainwindow.ui \
-    browsesettingsdialog.ui
+    browsesettingsdialog.ui \
+    filesystembrowser.ui
