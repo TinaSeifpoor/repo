@@ -14,6 +14,7 @@ public:
     QVector<InstanceObject*> data;
     void extract();
     QString name;
+    bool isValid;
 };
 
 void ImageObjectPrivate::extract(){
@@ -27,7 +28,7 @@ void ImageObjectPrivate::extract(){
             uint nChannels = image.channels();
             Image imageGray;
             uint nCols = image.cols,
-                 nRows = image.rows;
+                    nRows = image.rows;
             Image imMask = Image(nRows, nCols, CV_8UC1, Scalar(255));
 
             if (nChannels == 3)
@@ -39,16 +40,17 @@ void ImageObjectPrivate::extract(){
             fd.detect(imageGray, keyPoints, imMask);
 
             for (unsigned int idx=0; idx<keyPoints.size(); ++idx) {
-//                InstanceObject o(keyPoint);
                 this->data << new InstanceObject(image, keyPoints.at(idx), idx);
-//                this->data << o;
             }
+            isValid= true;
         }
         else {
             qWarning(QString("File can't be read: %1").arg(fileInfo.absoluteFilePath()).toLatin1().constData());
+            isValid = false;
         }
     } else {
         qWarning(QString("File does not exist: %1").arg(fileInfo.absoluteFilePath()).toLatin1().constData());
+        isValid = false;
     }
 }
 
@@ -79,6 +81,11 @@ int ImageObject::count() const
 cv::Mat ImageObject::image() const
 {
     return d->image;
+}
+
+bool ImageObject::isValid() const
+{
+    return d->isValid;
 }
 
 

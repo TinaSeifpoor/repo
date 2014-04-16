@@ -15,6 +15,7 @@ public:
     InstanceObject* at(int idx);
     int count() const;
     cv::Mat image() const;
+    bool isValid() const;
 
 private:
     friend class ImageObjectPrivate;

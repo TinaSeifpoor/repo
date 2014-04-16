@@ -39,7 +39,11 @@ void ImageListWidget::setImageWindow(ImageWindow *iw)
 
 void ImageListWidget::add(QString imagePath)
 {
-    this->add(new ImageObject(imagePath));
+    ImageObject* obj = new ImageObject(imagePath);
+    if (obj->isValid())
+        this->add(obj);
+    else
+        delete obj;
 }
 
 void ImageListWidget::add(ImageObject* im)
