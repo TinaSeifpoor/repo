@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QString currentClassesFilePath;
+    QString currentWorkFolder;
 };
 
 #endif // MAINWINDOW_H

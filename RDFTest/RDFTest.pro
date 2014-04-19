@@ -31,7 +31,9 @@ SOURCES += main.cpp \
     imageobject.cpp \
     instanceobject.cpp \
     classlistwidget.cpp \
-    filesystembrowser.cpp
+    filesystembrowser.cpp \
+    xml.cpp \
+    common.cpp
 
 
 HEADERS += \
@@ -45,7 +47,8 @@ HEADERS += \
     classobject.h \
     imageobject.h \
     instanceobject.h \
-    filesystembrowser.h
+    filesystembrowser.h \
+    xml.h
 
 FORMS += \
     mainwindow.ui \

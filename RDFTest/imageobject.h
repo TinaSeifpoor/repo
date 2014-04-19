@@ -12,15 +12,19 @@ class ImageObject
 {
 public:
     ImageObject(QString imagePath);
-    ImageObject(QVariantHash ini);
+    ImageObject(QVariantHash data);
 
     QString name() const;
     InstanceObject* at(int idx);
     int count() const;
     cv::Mat image() const;
     bool isValid() const;
+    QString path() const;
 
-    QVariantHash toIni() const;
+    void addInstance(InstanceObject* obj);
+
+    void setName(QString name);
+    QVariantHash toHash() const;
 
 private:
     friend class ImageObjectPrivate;

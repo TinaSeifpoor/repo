@@ -9,11 +9,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QStringList args = QApplication::arguments();
+    if (args.count()>1) {
+        this->currentWorkFolder = args.at(1);
+    } else {
+        this->currentWorkFolder = "./data";
+    }
+    QDir dir(this->currentWorkFolder);
+    dir.mkpath(this->currentWorkFolder);
+    ui->wFileSystemBrowser->setPath(this->currentWorkFolder);
+
     connect (ui->wFileSystemBrowser, SIGNAL(imageSelected(QString)), ui->lwClasses, SLOT(addImage(QString)));
-//    connect (ui->wImageContainerList, SIGNAL(itemSelected(QString)), this->control, SLOT(setImage(QString)));
-//    connect (this->control, SIGNAL(showImageNKeypoints(Image,KeyPoints)), ui->lblImageWindow, SLOT(showImageNKeypoints(Image,KeyPoints)));
-    QSettings settings("TestSoftware", "TestCompany");
-//    ui->leFolderBrowser->setText(settings.value("imageFolder", "../../images").toString());
     ui->lwClasses->setImageListWidget(ui->lwImages);
     ui->lwImages->setImageWindow(ui->lblImageWindow);
     ui->lwImages->setInstanceListWidget(ui->lwInstances);

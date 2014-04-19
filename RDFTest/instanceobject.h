@@ -11,12 +11,16 @@ class InstanceObject
 public:
     InstanceObject(cv::Mat im, cv::KeyPoint keyPoint, QString name);
     InstanceObject(cv::Mat im, cv::KeyPoint keyPoint, int idx);
-    InstanceObject(cv::Mat im, QVariantHash ini);
+    InstanceObject(cv::Mat im, QVariantHash data);
     QString name() const;
     cv::KeyPoint getKeyPoint() const;
     cv::Mat getSourceImage() const;
 
-    QVariantHash toIni() const;
+    QVariantHash toHash() const;
+
+    void setName(QString name);
+
+    bool isValid() const;
 
 private:
     friend class InstanceObjectPrivate;

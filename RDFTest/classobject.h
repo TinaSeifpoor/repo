@@ -12,8 +12,9 @@ class ClassObject
 {
 public:
     ClassObject(QString name);
-    ClassObject(QVariantHash ini);
+    ClassObject(QVariantHash data);
     void addImage(QString path);
+    void addImage(ImageObject* im);
     void removeImage(QString path);
     void removeImage(int idx);
     ImageObject* at(int idx);
@@ -23,7 +24,7 @@ public:
 
     void setName(QString newName);
 
-    QVariantHash toIni() const;
+    QVariantHash toHash() const;
 
 private:
     friend class ClassObjectPrivate;

@@ -15,6 +15,7 @@ public:
     explicit FileSystemBrowser(QWidget *parent = 0);
     ~FileSystemBrowser();
 
+    void setPath(QString path);
 signals:
     void imageSelected(QString);
 private slots:
@@ -24,6 +25,7 @@ private slots:
 
     void on_lePath_returnPressed();
 
+    void on_addAllAction_triggered();
 private:
     Ui::FileSystemBrowser *ui;
 };

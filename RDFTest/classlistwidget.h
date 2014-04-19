@@ -20,6 +20,9 @@ private slots:
     void on_doubleClicked(QModelIndex index);
     void on_copy_triggered();
     void on_paste_triggered();
+    void on_remove_triggered();
+    void on_addClass_triggered();
+    void on_itemChanged(QListWidgetItem* item);
 
 private:
     ClassObject* getClass(const QModelIndex &index);

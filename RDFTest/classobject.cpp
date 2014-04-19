@@ -14,10 +14,10 @@ ClassObject::ClassObject(QString name):d(new ClassObjectPrivate)
     d->className = name;
 }
 
-ClassObject::ClassObject(QVariantHash ini):d(new ClassObjectPrivate)
+ClassObject::ClassObject(QVariantHash data):d(new ClassObjectPrivate)
 {
-    d->className = ini.value("Name").toString();
-    QVariantHash imageListHash = ini.value("ImageList").toHash();
+    d->className = data.value("Name").toString();
+    QVariantHash imageListHash = data.value("ImageList").toHash();
     QStringList keyList = imageListHash.keys();
     foreach (QString key, keyList) {
         ImageObject* obj = new ImageObject(imageListHash.value(key).toHash());
@@ -31,6 +31,13 @@ void ClassObject::addImage(QString path)
         d->imageList.insert(path, new ImageObject(path));
 }
 
+void ClassObject::addImage(ImageObject *im)
+{
+    if (im)
+        if (im->isValid())
+            d->imageList.insert(im->path(), im);
+}
+
 
 QString ClassObject::name() const
 {
@@ -42,7 +49,7 @@ void ClassObject::setName(QString newName)
     d->className = newName;
 }
 
-QVariantHash ClassObject::toIni() const
+QVariantHash ClassObject::toHash() const
 {
     QVariantHash output;
     QStringList keys = d->imageList.keys();
@@ -51,7 +58,7 @@ QVariantHash ClassObject::toIni() const
     QVariantHash imageListHash;
 
     foreach (QString key, keys) {
-        imageListHash.insertMulti(key, d->imageList.value(key)->toIni());
+        imageListHash.unite(d->imageList.value(key)->toHash());
     }
     classHash.insert("ImageList", imageListHash);
     output.insert(this->name(),classHash);

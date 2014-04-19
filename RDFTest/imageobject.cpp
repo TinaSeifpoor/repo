@@ -12,12 +12,10 @@ Q_DECLARE_METATYPE(cv::Mat)
 
 class ImageObjectPrivate {
 public:
-    ImageObjectPrivate(){
-        qRegisterMetaType<cv::Mat>("cv::Mat");
-        qRegisterMetaTypeStreamOperators<cv::Mat>("cv::Mat");
-    }
+    ImageObjectPrivate(){}
 
-    QString path;
+    QString imagePath;
+    QString xmlPath;
     Image image;
     QHash<QString, InstanceObject*> data;
     void extract();
@@ -27,9 +25,9 @@ public:
 
 void ImageObjectPrivate::extract(){
     using namespace cv;
-    QFileInfo fileInfo(path);
+    QFileInfo fileInfo(imagePath);
     if (fileInfo.exists()) {
-        this->name = fileInfo.fileName();
+        this->name = fileInfo.completeBaseName();
         this->image = cv::imread(fileInfo.filePath().toStdString());
         if (!image.empty()) {
             KeyPoints keyPoints;
@@ -44,7 +42,7 @@ void ImageObjectPrivate::extract(){
             else
                 image.copyTo(imageGray);
 
-//            SIFT fd(0, 5, 0.1, 10, 1.6);
+            //            SIFT fd(0, 5, 0.1, 10, 1.6);
             MSER fd;
             fd.detect(imageGray, keyPoints, imMask);
 
@@ -65,22 +63,32 @@ void ImageObjectPrivate::extract(){
 
 ImageObject::ImageObject(QString imagePath):d(new ImageObjectPrivate)
 {
-    d->path = imagePath;
+    d->imagePath = imagePath;
     d->extract();
 }
 
-ImageObject::ImageObject(QVariantHash ini)
+ImageObject::ImageObject(QVariantHash data):d(new ImageObjectPrivate)
 {
-    d->name = ini.value("Name").toString();
-    d->image = ini.value("Image").value<cv::Mat>();
+    QStringList dataKeys = data.keys();
+    if (!data.contains("Name") ||
+            !data.contains("Path")) {
+        d->isValid = false;
+        return;
+    }
 
-    QVariantHash instanceHash = ini.value("InstanceList").toHash();
+    d->name = data.value("Name").toString();
+    d->imagePath = data.value("Path").toString();
+    d->image = cv::imread(d->imagePath.toStdString());
 
-    QStringList keys = instanceHash.keys();
+    if (data.contains("InstanceList")) {
+        QVariantHash instanceHash = data.value("InstanceList").toHash();
 
-    foreach (QString key, keys) {
-        InstanceObject* obj = new InstanceObject(d->image, instanceHash);
-        d->data.insert(key, obj);
+        QStringList keys = instanceHash.keys();
+
+        foreach (QString key, keys) {
+            InstanceObject* obj = new InstanceObject(d->image, instanceHash);
+            d->data.insert(key, obj);
+        }
     }
 }
 
@@ -95,7 +103,7 @@ InstanceObject *ImageObject::at(int idx)
         return d->data.value(QString::number(idx));
     else
         return 0
-;
+                ;
 }
 
 int ImageObject::count() const
@@ -113,16 +121,40 @@ bool ImageObject::isValid() const
     return d->isValid;
 }
 
-QVariantHash ImageObject::toIni() const
+QString ImageObject::path() const
+{
+    return d->imagePath;
+}
+
+void ImageObject::addInstance(InstanceObject *obj)
+{
+    QString objName = obj->name();
+    if (d->data.contains(objName)) {
+        obj->setName(objName+"_");
+        this->addInstance(obj);
+        return;
+    } else {
+        d->data.insert(obj->name(), obj);
+    }
+
+}
+
+void ImageObject::setName(QString name)
+{
+    d->name = name;
+}
+
+QVariantHash ImageObject::toHash() const
 {
     QVariantHash output;
     QStringList keys = d->data.keys();
     QVariantHash imageHash;
-    imageHash.insert("Image",QVariant::fromValue<cv::Mat>(this->image()));
+    imageHash.insert("Path", d->imagePath);
+    imageHash.insert("Name", d->name);
     QVariantHash instanceHash;
 
     foreach (QString key, keys) {
-        instanceHash.unite(d->data.value(key)->toIni());
+        instanceHash.unite(d->data.value(key)->toHash());
     }
     imageHash.insert("InstanceList", instanceHash);
     output.insertMulti(this->name(), imageHash);

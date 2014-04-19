@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QDataStream>
 #include <QBuffer>
+#include "xml.h"
 class ClassObjectWidgetItem:public QListWidgetItem {
     ClassObject* classObject;
 public:
@@ -18,15 +19,24 @@ public:
 ClassListWidget::ClassListWidget(QWidget *parent):
     QListWidget(parent)
 {
+    this->setEditTriggers(QListWidget::EditKeyPressed);
     QAction* copy = new QAction(this);
     QAction* paste = new QAction(this);
+    QAction* remove = new QAction(this);
+    QAction* addClass = new QAction(this);
     copy->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_C));
     paste->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
+    remove->setShortcut(QKeySequence(Qt::Key_Delete));
+    addClass->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
     this->addAction(copy);
     this->addAction(paste);
+    this->addAction(remove);
+    this->addAction(addClass);
     connect (copy, SIGNAL(triggered()), this, SLOT(on_copy_triggered()));
     connect (paste, SIGNAL(triggered()), this, SLOT(on_paste_triggered()));
-
+    connect (remove, SIGNAL(triggered()), this, SLOT(on_remove_triggered()));
+    connect (addClass, SIGNAL(triggered()), this, SLOT(on_addClass_triggered()));
+    connect (this, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(on_itemChanged(QListWidgetItem*)));
     connect (this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(on_doubleClicked(QModelIndex)));
 }
 
@@ -37,7 +47,9 @@ void ClassListWidget::addClass(QString className)
         this->addClass(className);
     } else {
         this->classNameList << className;
-        this->addItem(new ClassObjectWidgetItem(new ClassObject(className)));
+        ClassObjectWidgetItem* it = new ClassObjectWidgetItem(new ClassObject(className));
+        it->setFlags(it->flags() | Qt::ItemIsEditable);
+        this->addItem(it);
     }
 }
 
@@ -50,7 +62,9 @@ void ClassListWidget::addClass(ClassObject *classObj)
         this->addClass(classObj);
     } else {
         this->classNameList << classObj->name();
-        this->addItem(new ClassObjectWidgetItem(classObj));
+        ClassObjectWidgetItem* it = new ClassObjectWidgetItem(classObj);
+        it->setFlags(it->flags() | Qt::ItemIsEditable);
+        this->addItem(it);
     }
 }
 
@@ -61,42 +75,24 @@ void ClassListWidget::on_doubleClicked(QModelIndex index)
 
 void ClassListWidget::on_copy_triggered()
 {
-    if(!this->selectedItems().isEmpty()) {
+    QList<QListWidgetItem*> items = this->selectedItems();
+    if(!items.isEmpty()) {
         QVariantHash data;
-        foreach (QListWidgetItem* item, this->selectedItems()) {
+        foreach (QListWidgetItem* item, items) {
             ClassObject* obj = static_cast<ClassObjectWidgetItem*>(item)->get();
-            data.unite(obj->toIni());
+            data.unite(obj->toHash());
         }
-        QByteArray byteArray;
-        {
-               QBuffer buffer(&byteArray);
-               buffer.open(QIODevice::WriteOnly);
-
-               QDataStream out(&buffer);
-               out << data;
-//               if (out.status()==QDataStream::Ok) {
-//                   qDebug("test2");
-//               }
-        }
-        QString string(byteArray.toBase64());
-
-//        qDebug(nData.keys().first().toLatin1().constData());
-        QApplication::clipboard()->setText(string);
-    }
+        QString dataText;
+        XML::writeXMLData(dataText, data);
+        QApplication::clipboard()->setText(dataText);
+     }
 }
 
 void ClassListWidget::on_paste_triggered()
 {
     QString string = QApplication::clipboard()->text();
-    QByteArray byteArray = QByteArray::fromBase64(string.toUtf8());
     QVariantHash data;
-    {
-        QBuffer buffer(&byteArray);
-        buffer.open(QIODevice::ReadOnly);
-
-        QDataStream in(&buffer);
-        in >> data;
-    }
+    XML::readXMLData(string, &data);
     if (!data.isEmpty()) {
         QStringList keyList = data.keys();
         foreach (QString key, keyList) {
@@ -104,6 +100,27 @@ void ClassListWidget::on_paste_triggered()
             this->addClass(obj);
         }
     }
+}
+
+void ClassListWidget::on_remove_triggered()
+{
+    QList<QListWidgetItem*> items = this->selectedItems();
+
+    if(!items.isEmpty()) {
+        this->classNameList.removeOne(items.first()->text());
+        delete items.first();
+    }
+}
+
+void ClassListWidget::on_addClass_triggered()
+{
+    this->addClass("1");
+}
+
+void ClassListWidget::on_itemChanged(QListWidgetItem *item)
+{
+    ClassObject* obj = static_cast<ClassObjectWidgetItem*>(item)->get();
+    obj->setName(item->text());
 }
 
 ClassObject *ClassListWidget::getClass(const QModelIndex &index)
