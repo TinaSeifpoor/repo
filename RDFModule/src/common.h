@@ -23,8 +23,4 @@ struct ForestProperties
     TreeProperties treeProperties;
 };
 
-
-
-#define log2 0.30102999566398119521373889472449
-
 #endif // COMMON_H

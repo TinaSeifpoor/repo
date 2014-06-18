@@ -8,10 +8,9 @@ class Node
 {
 public:
     Node();
-    void train(Source* samples, TreeProperties properties, Source* samplesTrue, Source* samplesFalse);
+    void train(const Source* samples, const TreeProperties properties, Source* samplesTrue, Source* samplesFalse);
 
-private:
-    bool splitFunction();
+    double entropy(std::vector<unsigned int> sampleHistogram);
 };
 
 #endif // NODE_H
