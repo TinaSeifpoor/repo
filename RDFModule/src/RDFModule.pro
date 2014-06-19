@@ -27,7 +27,8 @@ HEADERS +=  rdfmodule.h\
             forest.h \
             tree.h \
             decisiontreetrainer.h \
-            node.h
+            node.h \
+    vectorindexsorter.h
 
 DESTDIR = ../lib
 

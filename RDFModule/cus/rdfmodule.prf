@@ -1,0 +1,2 @@
+INCLUDEPATH += "D:/Projects/RDF/include"
+LIBS += -LD:/Projects/RDF/lib
