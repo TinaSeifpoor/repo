@@ -1,7 +1,5 @@
 #include "sourcetest.h"
-#include "features.h"
-#include "listrandomsorter.h"
-#include "sample.h"
+#include "../../RDFModule/src/listrandomsorter.h"
 class SourceTestPrivate {
 public:
     SourceTestPrivate() {}
@@ -9,11 +7,10 @@ public:
     unsigned int nFeatures;
     unsigned int nClasses;
     QFileInfoList fileInfoList;
-    Features* features;
-    QList<Sample> sampleList;
+    const FeaturesTest* features;
 };
 
-SourceTest::SourceTest(QFileInfoList fileInfoList, Features* features):
+SourceTest::SourceTest(QFileInfoList fileInfoList, const FeaturesTest* features):
     d(new SourceTestPrivate)
 {
     d->fileInfoList = fileInfoList;
@@ -37,12 +34,14 @@ unsigned int SourceTest::countClasses() const
 
 Source *SourceTest::baggedSamples(double sampleRatio, double featureRatio) const
 {
-    return new SourceTest(randomlySortList(sampleRatio,d->fileInfoList),d->features->randomlySort(featureRatio));
+    QFileInfoList baggedSampleList = randomlySortList(sampleRatio,d->fileInfoList);
+    FeaturesTest* ft = new FeaturesTest(d->features->randomlySortedList(featureRatio));
+    return new SourceTest(baggedSampleList,ft);
 }
 
-Features *SourceTest::getFeatures() const
+const Features *SourceTest::getFeatures() const
 {
-    return d->features;
+    return dynamic_cast<const Features*>(d->features);
 }
 
 std::vector<double> SourceTest::getFeatureValues(unsigned int idxFeature) const
@@ -53,7 +52,8 @@ std::vector<double> SourceTest::getFeatureValues(unsigned int idxFeature) const
     std::vector<double>::iterator featureValuesEnd = featureValues.end();
 
     for (int i=0;featureValuesIt!=featureValuesEnd;++featureValuesIt, ++i) {
-        *(featureValuesIt) = d->features->getFeatureValue(idxFeature, d->sampleList.at(i));
+        // set source
+        *(featureValuesIt) = d->features->getFeatureValue(idxFeature);
     }
     return std::vector<double>();
 }
