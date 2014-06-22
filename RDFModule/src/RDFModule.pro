@@ -18,7 +18,8 @@ SOURCES +=  rdfmodule.cpp \
             forest.cpp \
             tree.cpp \
             decisiontreetrainer.cpp \
-            node.cpp
+            node.cpp \
+    features.cpp
 
 HEADERS +=  rdfmodule.h\
             rdfmodule_global.h \
@@ -28,7 +29,9 @@ HEADERS +=  rdfmodule.h\
             tree.h \
             decisiontreetrainer.h \
             node.h \
-    vectorindexsorter.h
+    vectorindexsorter.h \
+    features.h \
+    feature.h
 
 DESTDIR = ../lib
 

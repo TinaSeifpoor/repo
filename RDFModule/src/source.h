@@ -14,7 +14,7 @@ public:
     virtual unsigned int countFeatures() const = 0;
     virtual unsigned int countClasses() const = 0;
     virtual Source* baggedSamples(double sampleRatio, double featureRatio) const = 0;
-    virtual Features* getFeatures() const =0;
+    virtual const Features* getFeatures() const =0;
     virtual std::vector<double> getFeatureValues(unsigned int idxFeature) const=0;
     virtual QList<ClassID> getSampleClasses() const = 0;
 };
