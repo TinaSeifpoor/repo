@@ -1,27 +1,31 @@
 #include "featurestest.h"
 #include "featuretest.h"
-FeaturesTest::FeaturesTest():
-    Features()
+#include "sourcetest.h"
+FeaturesTest::FeaturesTest()
 {
+    this->init();
     (*this) << new FeatureTest;
 }
 
-FeaturesTest::FeaturesTest(QList<Feature *> featureList):Features(featureList)
+Features *FeaturesTest::copy(QList<Feature *> featureList) const
 {
+    return new FeaturesTest(featureList);
 }
 
-double FeaturesTest::getFeatureValue(int featureIdx) const
-{
-//    QPair<Feature*, int> featurePair = at(featureIdx);
 
-//    ft = dynamic_cast<FeatureTest*>(featurePair.first);
-//    ft->parameterValue(i, sample);
-    return 5;
+FeaturesTest::FeaturesTest(Feature *feature)
+{
+    this->init();
+    (*this) << feature;
+}
+FeaturesTest::FeaturesTest(QList<Feature* > features)
+{
+    this->init();
+    for (int i=0; i<features.count(); ++i)
+        (*this) << features.at(i);
 }
 
-QPair<Feature *, int> FeaturesTest::at(int featureIdx) const
+void FeaturesTest::calculateFeatureValues(FeatureIdx featureIdx)
 {
-//    return qMakePair<Feature *,int>(getFullList().at(featureIdx),5);
-    QPair<Feature*,int> a;
-    return a;
+    dynamic_cast<FeatureTest*>(Features::at(featureIdx))->setSource(getSamples(),featureIdx);
 }

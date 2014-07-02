@@ -6,10 +6,11 @@ class FeaturesTest : public Features
 {
 public:
     FeaturesTest();
-    FeaturesTest(QList<Feature*> featureList);
 
-    double getFeatureValue(int featureIdx) const;
-    QPair<Feature *, int> at(int featureIdx) const;
+    Features* copy(QList<Feature *> featureList) const;
+    FeaturesTest(Feature *feature);
+    FeaturesTest(QList<Feature *> features);
+    void calculateFeatureValues(FeatureIdx featureIdx);
 };
 
 #endif // FEATURESTEST_H

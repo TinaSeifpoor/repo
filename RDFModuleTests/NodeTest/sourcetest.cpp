@@ -1,64 +1,69 @@
 #include "sourcetest.h"
 #include "../../RDFModule/src/listrandomsorter.h"
-class SourceTestPrivate {
-public:
-    SourceTestPrivate() {}
-    unsigned int nSamples;
-    unsigned int nFeatures;
-    unsigned int nClasses;
-    QFileInfoList fileInfoList;
-    const FeaturesTest* features;
-};
+#include "../../RDFModule/src/features.h"
+//class SourceTestPrivate {
+//public:
+//    SourceTestPrivate() {}
+//    Features* features;
+//    QFileInfoList fileInfoList;
+//    QList<ClassID> classIDList;
+//    QList<ClassID> uniqueClassIDList;
+//};
 
-SourceTest::SourceTest(QFileInfoList fileInfoList, const FeaturesTest* features):
-    d(new SourceTestPrivate)
-{
-    d->fileInfoList = fileInfoList;
-    d->features = features;
-}
+//SourceTest::SourceTest(QList<Sample> sampleList, Features *features):
+//    d(new SourceTestPrivate)
+//{
+//    d->sampleList = sampleList;
+//    d->features = features;
+//}
 
-unsigned int SourceTest::countSamples() const
-{
-    return d->nSamples;
-}
+//unsigned int SourceTest::countSamples() const
+//{
+//    return d->sampleList.count();
+//}
 
-unsigned int SourceTest::countFeatures() const
-{
-    return d->nFeatures;
-}
+//unsigned int SourceTest::countClasses() const
+//{
+//    if (d->uniqueClassIDList.isEmpty() && !d->sampleList.isEmpty()){
+//        this->countClasses();
+//    }
+//    return d->uniqueClassIDList.count();
+//}
 
-unsigned int SourceTest::countClasses() const
-{
-    return d->nClasses;
-}
+//Source *SourceTest::baggedSamples(double sampleRatio) const
+//{
 
-Source *SourceTest::baggedSamples(double sampleRatio, double featureRatio) const
-{
-    QFileInfoList baggedSampleList = randomlySortList(sampleRatio,d->fileInfoList);
-    FeaturesTest* ft = new FeaturesTest(d->features->randomlySortedList(featureRatio));
-    return new SourceTest(baggedSampleList,ft);
-}
+//}
 
-const Features *SourceTest::getFeatures() const
-{
-    return dynamic_cast<const Features*>(d->features);
-}
+//const Features *SourceTest::getFeatures() const
+//{
+//    return dynamic_cast<const Features*>(d->features);
+//}
 
-std::vector<double> SourceTest::getFeatureValues(unsigned int idxFeature) const
-{
-    std::vector<double> featureValues;
-    featureValues.resize(d->nSamples);
-    std::vector<double>::iterator featureValuesIt = featureValues.begin();
-    std::vector<double>::iterator featureValuesEnd = featureValues.end();
+//std::vector<double> SourceTest::getFeatureValues(unsigned int idxFeature) const
+//{
+//    std::vector<double> featureValues;
+//    featureValues.resize(d->sampleList.count());
+//    std::vector<double>::iterator featureValuesIt = featureValues.begin();
+//    std::vector<double>::iterator featureValuesEnd = featureValues.end();
 
-    for (int i=0;featureValuesIt!=featureValuesEnd;++featureValuesIt, ++i) {
-        // set source
-        *(featureValuesIt) = d->features->getFeatureValue(idxFeature);
-    }
-    return std::vector<double>();
-}
+//    d->features->setSource(&d->sampleList);
+//    for (int i=0;featureValuesIt!=featureValuesEnd;++featureValuesIt, ++i) {
+//        // set source
+//        *(featureValuesIt) = d->features->getFeatureValue(idxFeature);
+//    }
+//    return featureValues;
+//}
 
-QList<ClassID> SourceTest::getSampleClasses() const
-{
-    return QList<ClassID>();
-}
+//QList<ClassID> SourceTest::getSampleClasses() const
+//{
+//    if (d->classIDList.isEmpty() && !d->sampleList.isEmpty()) {
+//        for (int i=0; i<d->sampleList.count(); ++i) {
+//            ClassID c = d->sampleList.at(i).sampleClass;
+//            if (!d->uniqueClassIDList.contains(c))
+//                d->uniqueClassIDList.append(c);
+//            d->classIDList.append(c);
+//        }
+//    }
+//    return d->classIDList;
+//}
