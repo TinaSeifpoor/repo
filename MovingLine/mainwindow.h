@@ -4,6 +4,7 @@
 #include <QMainWindow>
 class QTimer;
 class MovingLine;
+class QSignalMapper;
 namespace Ui {
 class MainWindow;
 }
@@ -16,17 +17,26 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void miss();
-    void hit();
-    void frame();
+signals:
+    void frameSignalToSend();
+    void frameSignalReceive();
+    void mouseClick(QPointF pos);
 
+private slots:
+    void miss(int);
+    void hit(int);
+    void frame();
     void on_pushButton_toggled(bool checked);
+    void genBall();
 
 private:
     Ui::MainWindow *ui;
     QTimer* fps;
-    MovingLine *w;
+    QSignalMapper* ballHitMapper, *ballMissMapper;
+    QList<MovingLine*> lines;
+    void mousePressEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *ev);
+    int fpsCounter;
 };
 
 #endif // MAINWINDOW_H

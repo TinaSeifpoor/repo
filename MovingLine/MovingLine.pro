@@ -14,11 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         movingline.cpp \
-    clickablecircle.cpp \
     mainwindow.cpp
 
 HEADERS  += movingline.h \
-    clickablecircle.h \
     mainwindow.h
 
 FORMS += \

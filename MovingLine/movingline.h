@@ -8,7 +8,7 @@ class MovingLine : public QObject
 {
     Q_OBJECT
 public:
-    MovingLine(QGraphicsItem *parent = 0, QGraphicsScene *scene=0);
+    MovingLine(QGraphicsItem *parent = 0, QGraphicsScene *scene=0, uint expireTime=150, double radius=20);
     ~MovingLine();
 
 signals:
@@ -20,6 +20,7 @@ public slots:
     void randomize();
     void onMiss();
     void onHit();
+    void mouseClick(QPointF pos);
 
 private:
     friend class MovingLinePrivate;

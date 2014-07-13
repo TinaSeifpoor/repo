@@ -1,7 +1,7 @@
 #include "movingline.h"
 #include <QPainter>
 #include "qmath.h"
-#include "clickablecircle.h"
+#include <QGraphicsScene>
 class MovingLinePrivate: public QGraphicsItem {
 public:
     QRectF _boundingRect;
@@ -11,31 +11,23 @@ public:
     QPointF speed;
     int counter;
     int frameLimit;
-    ClickableCircle* circle;
+    QColor color;
+    double radius;
+    uint expireTime;
     friend class MovingLine;
     MovingLinePrivate(QGraphicsItem *parent, QGraphicsScene *scene,MovingLine* ml):p(ml),
         QGraphicsItem(parent,scene),
         counter(0),
-        circle(new ClickableCircle(p,this,scene)),
         frameLimit(200)
     {
+        color.setRed(qrand()%255);
+        color.setGreen(qrand()%255);
+        color.setBlue(qrand()%255);
+        points << QPointF(qrand()%300,qrand()%300);
         for (int i=0; i<50; ++i) {
-            points << QPointF(50,50);
+            points << points.last();
         }
-        if (_boundingRect.isEmpty() && !points.isEmpty()) {
-            foreach (QPointF point, points) {
-                if (point.x() < _boundingRect.left()) {
-                    _boundingRect.setLeft(point.x());
-                } else if (point.x() > _boundingRect.right()) {
-                    _boundingRect.setRight(point.x());
-                }
-                if (point.y() < _boundingRect.top()) {
-                    _boundingRect.setTop(point.y());
-                } else if (point.y() > _boundingRect.bottom()) {
-                    _boundingRect.setBottom(point.y());
-                }
-            }
-        }
+        _boundingRect = scene->sceneRect();
     }
 
 
@@ -44,13 +36,30 @@ public:
         Q_UNUSED(option);
         Q_UNUSED(widget);
 
-        QPainterPath paintPath;
-        paintPath.addPolygon(QPolygonF(points));
-        QPen pen = painter->pen();
-        pen.setStyle(Qt::SolidLine);
-        pen.setColor(QColor(200,60,60,240));
-        painter->setPen(pen);
-        painter->drawPath(paintPath);
+//        QPainterPath tailPath;
+//        tailPath.addPolygon(QPolygonF(points));
+//        QPen tailPen = painter->pen();
+//        tailPen.setStyle(Qt::SolidLine);
+//        QColor tailColor = color;
+//        tailColor.setAlpha(100);
+//        tailPen.setColor(tailColor);
+//        painter->setPen(tailPen);
+//        painter->drawPath(tailPath);
+
+        QPainterPath laserPath;
+        laserPath.addEllipse(points.last(),radius,radius);
+        QPen laserPen = painter->pen();
+        laserPen.setStyle(Qt::SolidLine);
+        QColor laserColor = color;
+        laserColor.setAlpha(this->counter);
+        laserPen.setColor(laserColor);
+        QBrush brush = painter->brush();
+        brush.setColor(laserColor);
+        brush.setStyle(Qt::SolidPattern);
+        painter->setBrush(brush);
+        painter->setPen(laserPen);
+        painter->drawPath(laserPath);
+
     }
 
 
@@ -58,7 +67,7 @@ public:
 
     QRectF boundingRect() const
     {
-        return _boundingRect;
+        return this->scene()->sceneRect();
     }
 
     double rand(){
@@ -67,10 +76,12 @@ public:
 
 };
 
-MovingLine::MovingLine(QGraphicsItem *parent, QGraphicsScene *scene):
+MovingLine::MovingLine(QGraphicsItem *parent, QGraphicsScene *scene, uint expireTime, double radius):
     d(new MovingLinePrivate(parent,scene,this))
 {
-    d->speed = QPointF(1,1);
+    d->speed = QPointF((((double)(qrand()%10000)/5000)-1),(((double)(qrand()%10000)/5000)-1));
+    d->radius = radius;
+    d->expireTime=expireTime;
 }
 
 MovingLine::~MovingLine()
@@ -82,18 +93,18 @@ void MovingLine::frame()
 {
     QPointF currentPoint = d->points.last();
     currentPoint+=d->speed;
-    if (currentPoint.x()>300) {
-        currentPoint.setX(600-currentPoint.x());
+    if ((currentPoint.x()+d->radius)>d->sceneBoundingRect().right()) {
+        currentPoint.setX(d->sceneBoundingRect().right()-d->radius);
         d->speed.setX(-d->speed.x());
-    } else if (currentPoint.x()<0) {
-        currentPoint.setX(-currentPoint.x());
+    } else  if (currentPoint.x()<d->radius) {
+        currentPoint.setX(d->radius);
         d->speed.setX(-d->speed.x());
     }
-    if (currentPoint.y()>300) {
-        currentPoint.setY(600-currentPoint.y());
+    if ((currentPoint.y()+d->radius)>d->sceneBoundingRect().bottom()) {
+        currentPoint.setY(d->sceneBoundingRect().bottom()-d->radius);
         d->speed.setY(-d->speed.y());
-    } else if (currentPoint.y()<0) {
-        currentPoint.setY(-currentPoint.y());
+    } else if (currentPoint.y()<d->radius) {
+        currentPoint.setY(d->radius);
         d->speed.setY(-d->speed.y());
     }
 
@@ -104,21 +115,9 @@ void MovingLine::frame()
     d->speed.setX(newTotalSpeed/totalSpeed*d->speed.x());
     d->speed.setY(newTotalSpeed/totalSpeed*d->speed.y());
 
-    if (d->counter%d->frameLimit==0) {
-        d->circle->setCenter(currentPoint);
-        randomize();
-        if (d->frameLimit>10)
-            --d->frameLimit;
-    }
-    if (currentPoint.x() < d->_boundingRect.left()) {
-        d->_boundingRect.setLeft(currentPoint.x());
-    } else if (currentPoint.x() > d->_boundingRect.right()) {
-        d->_boundingRect.setRight(currentPoint.x());
-    }
-    if (currentPoint.y() < d->_boundingRect.top()) {
-        d->_boundingRect.setTop(currentPoint.y());
-    } else if (currentPoint.y() > d->_boundingRect.bottom()) {
-        d->_boundingRect.setBottom(currentPoint.y());
+    if (d->counter%d->expireTime==d->expireTime-1) {
+        emit miss();
+        return;
     }
 
 
@@ -126,15 +125,19 @@ void MovingLine::frame()
     d->points.remove(0);
     d->prepareGeometryChange();
     ++d->counter;
-
 }
 
 void MovingLine::randomize()
 {
     double totalSpeed = qSqrt(d->speed.x()*d->speed.x()+d->speed.y()*d->speed.y());
-    int lim = totalSpeed*1000;
-    d->speed.setX((double)(qrand()%lim)/1000);
-    d->speed.setY(qSqrt(totalSpeed*totalSpeed-d->speed.x()*d->speed.x()));
+    double deg = qrand()%720;
+    double degNorm = deg/720*3.1416;
+    d->speed.setX(totalSpeed*sin(degNorm));
+    if (qrand()%2)
+        d->speed.setX(-d->speed.x());
+    d->speed.setY(totalSpeed*cos(degNorm));
+    if (qrand()%2)
+        d->speed.setY(-d->speed.y());
 }
 
 void MovingLine::onMiss()
@@ -145,6 +148,15 @@ void MovingLine::onMiss()
 void MovingLine::onHit()
 {
     emit hit();
+}
+
+void MovingLine::mouseClick(QPointF pos)
+{
+    QPainterPath laserPath;
+    laserPath.addEllipse(d->points.last(),d->radius,d->radius);
+    if (laserPath.boundingRect().contains(pos)) {
+        emit hit();
+    }
 }
 
 
