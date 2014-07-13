@@ -7,7 +7,7 @@ public:
     QRectF _boundingRect;
 
     MovingLine* p;
-    QVector<QPointF> points;
+    QPointF center;
     QPointF speed;
     int counter;
     int frameLimit;
@@ -23,11 +23,7 @@ public:
         color.setRed(qrand()%255);
         color.setGreen(qrand()%255);
         color.setBlue(qrand()%255);
-        points << QPointF(qrand()%300,qrand()%300);
-        for (int i=0; i<50; ++i) {
-            points << points.last();
-        }
-        _boundingRect = scene->sceneRect();
+        center= QPointF(qrand()%300,qrand()%300);
     }
 
 
@@ -47,7 +43,7 @@ public:
 //        painter->drawPath(tailPath);
 
         QPainterPath laserPath;
-        laserPath.addEllipse(points.last(),radius,radius);
+        laserPath.addEllipse(center,radius,radius);
         QPen laserPen = painter->pen();
         laserPen.setStyle(Qt::SolidLine);
         QColor laserColor = color;
@@ -67,7 +63,9 @@ public:
 
     QRectF boundingRect() const
     {
-        return this->scene()->sceneRect();
+        QPainterPath laserPath;
+        laserPath.addEllipse(center,radius,radius);
+        return laserPath.boundingRect();
     }
 
     double rand(){
@@ -91,17 +89,17 @@ MovingLine::~MovingLine()
 
 void MovingLine::frame()
 {
-    QPointF currentPoint = d->points.last();
+    QPointF currentPoint = d->center;
     currentPoint+=d->speed;
-    if ((currentPoint.x()+d->radius)>d->sceneBoundingRect().right()) {
-        currentPoint.setX(d->sceneBoundingRect().right()-d->radius);
+    if ((currentPoint.x()+d->radius)>d->scene()->sceneRect().right()) {
+        currentPoint.setX(d->scene()->sceneRect().right()-d->radius);
         d->speed.setX(-d->speed.x());
     } else  if (currentPoint.x()<d->radius) {
         currentPoint.setX(d->radius);
         d->speed.setX(-d->speed.x());
     }
-    if ((currentPoint.y()+d->radius)>d->sceneBoundingRect().bottom()) {
-        currentPoint.setY(d->sceneBoundingRect().bottom()-d->radius);
+    if ((currentPoint.y()+d->radius)>d->scene()->sceneRect().bottom()) {
+        currentPoint.setY(d->scene()->sceneRect().bottom()-d->radius);
         d->speed.setY(-d->speed.y());
     } else if (currentPoint.y()<d->radius) {
         currentPoint.setY(d->radius);
@@ -120,9 +118,9 @@ void MovingLine::frame()
         return;
     }
 
-
-    d->points.push_back(currentPoint);
-    d->points.remove(0);
+    d->center = currentPoint;
+//    d->points.push_back(currentPoint);
+//    d->points.remove(0);
     d->prepareGeometryChange();
     ++d->counter;
 }
@@ -153,7 +151,7 @@ void MovingLine::onHit()
 void MovingLine::mouseClick(QPointF pos)
 {
     QPainterPath laserPath;
-    laserPath.addEllipse(d->points.last(),d->radius,d->radius);
+    laserPath.addEllipse(d->center,d->radius,d->radius);
     if (laserPath.boundingRect().contains(pos)) {
         emit hit();
     }

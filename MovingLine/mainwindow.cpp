@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     ballHitMapper(new QSignalMapper(this)),
     ballMissMapper(new QSignalMapper(this)),
-    fpsCounter(0)
+    ballChance(9500)
 {
     qsrand(QDateTime::currentMSecsSinceEpoch());
     ui->setupUi(this);
@@ -40,7 +40,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::genBall()
 {
-    MovingLine* w = new MovingLine(0,ui->graphicsView->scene());
+    MovingLine* w = new MovingLine(0,ui->graphicsView->scene(), qrand()%150+150);
     connect(this, SIGNAL(frameSignalToSend()), w, SLOT(frame()));
     connect(this, SIGNAL(mouseClick(QPointF)), w, SLOT(mouseClick(QPointF)));
     connect(w, SIGNAL(hit()), ballHitMapper, SLOT(map()));
@@ -57,7 +57,6 @@ void MainWindow::miss(int idx)
         delete this->lines.at(idx);
         this->lines.replace(idx,0);
     }
-    genBall();
 }
 
 void MainWindow::hit(int idx)
@@ -67,12 +66,13 @@ void MainWindow::hit(int idx)
         delete this->lines.at(idx);
         this->lines.replace(idx,0);
     }
-    genBall();
 }
 
 void MainWindow::frame()
 {
-    if (++fpsCounter%200==0)
+    if (ballChance>1000)
+        --ballChance;
+    if (qrand()%10000>ballChance)
         genBall();
     ui->sbScore->setValue(ui->sbScore->value()+ui->sbFrame->value());
 }

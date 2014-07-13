@@ -36,7 +36,7 @@ private:
     QList<MovingLine*> lines;
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
-    int fpsCounter;
+    int ballChance;
 };
 
 #endif // MAINWINDOW_H
