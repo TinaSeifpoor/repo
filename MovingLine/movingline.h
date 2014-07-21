@@ -3,30 +3,28 @@
 
 #include <QGraphicsItem>
 
-class MovingLinePrivate;
-class MovingLine : public QObject
+class BallPrivate;
+class Ball : public QObject
 {
     Q_OBJECT
 public:
-    MovingLine(QGraphicsItem *parent = 0, QGraphicsScene *scene=0, uint expireTime=150, double radius=20);
-    ~MovingLine();
+    Ball(QGraphicsScene *scene=0,
+               uint expireTime=150, double radius=20, double health=1,
+               qint64 idx=-1);
+    ~Ball();
 
 signals:
-    void miss();
-    void hit();
+    void miss(qint16);
+    void hit(qint16);
 
 public slots:
     void frame();
     void randomize();
-    void onMiss();
-    void onHit();
     void mouseClick(QPointF pos);
 
 private:
-    friend class MovingLinePrivate;
-    MovingLinePrivate* d;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QRectF boundingRect() const;
+    friend class BallPrivate;
+    BallPrivate* d;
 };
 
 #endif // MOVINGLINE_H

@@ -8,9 +8,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    ballHitMapper(new QSignalMapper(this)),
-    ballMissMapper(new QSignalMapper(this)),
-    ballChance(9500)
+    ballChance(9900)
 {
     qsrand(QDateTime::currentMSecsSinceEpoch());
     ui->setupUi(this);
@@ -24,12 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(fps, SIGNAL(timeout()), SIGNAL(frameSignalReceive()));
     connect(this, SIGNAL(frameSignalReceive()), SIGNAL(frameSignalToSend()));
     connect(this, SIGNAL(frameSignalToSend()), SLOT(frame()));
-    connect(ballHitMapper, SIGNAL(mapped(int)), this, SLOT(hit(int)));
-    connect(ballMissMapper, SIGNAL(mapped(int)), this, SLOT(miss(int)));
-    genBall();
-    genBall();
-    genBall();
-    genBall();
     genBall();
 }
 
@@ -38,34 +30,54 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::genBall()
+void MainWindow::genBall(int count)
 {
-    MovingLine* w = new MovingLine(0,ui->graphicsView->scene(), qrand()%150+150);
-    connect(this, SIGNAL(frameSignalToSend()), w, SLOT(frame()));
-    connect(this, SIGNAL(mouseClick(QPointF)), w, SLOT(mouseClick(QPointF)));
-    connect(w, SIGNAL(hit()), ballHitMapper, SLOT(map()));
-    ballHitMapper->setMapping(w, this->lines.count());
-    connect(w, SIGNAL(miss()), ballMissMapper, SLOT(map()));
-    ballMissMapper->setMapping(w, this->lines.count());
-    this->lines << w;
+    for (int i=0; i<count; ++i) {
+        qint16 idx=-1;
+        if (!this->availableBalls.isEmpty()) {
+            idx = this->availableBalls.takeFirst();
+        } else {
+            idx = this->balls.count();
+        }
+        Ball* ball = new Ball(ui->graphicsView->scene(), qrand()%150+75, 20, qrand()%3+1, idx);
+        connect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
+        connect(this, SIGNAL(mouseClick(QPointF)), ball, SLOT(mouseClick(QPointF)));
+        connect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()), Qt::QueuedConnection);
+        connect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
+        connect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()),Qt::QueuedConnection);
+        connect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
+        if (this->balls.count()>idx) {
+            this->balls.replace(idx, ball);
+        } else {
+            this->balls << ball;
+        }
+    }
 }
 
-void MainWindow::miss(int idx)
+void MainWindow::removeBall(qint16 idx)
+{
+    Ball *ball = balls.at(idx);
+    if (ball) {
+        disconnect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
+        disconnect(this, SIGNAL(mouseClick(QPointF)), ball, SLOT(mouseClick(QPointF)));
+        disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()));
+        disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)));
+        disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()));
+        disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)));
+        delete ball;
+        this->balls.replace(idx,0);
+        this->availableBalls.append(idx);
+    }
+}
+
+void MainWindow::miss()
 {
     ui->sbScore->setValue(ui->sbScore->value()+ui->sbMiss->value());
-    if (lines.at(idx)) {
-        delete this->lines.at(idx);
-        this->lines.replace(idx,0);
-    }
 }
 
-void MainWindow::hit(int idx)
+void MainWindow::hit()
 {
     ui->sbScore->setValue(ui->sbScore->value()+ui->sbClick->value());
-    if (lines.at(idx)) {
-        delete this->lines.at(idx);
-        this->lines.replace(idx,0);
-    }
 }
 
 void MainWindow::frame()

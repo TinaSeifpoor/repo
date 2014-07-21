@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 class QTimer;
-class MovingLine;
+class Ball;
 class QSignalMapper;
 namespace Ui {
 class MainWindow;
@@ -23,17 +23,18 @@ signals:
     void mouseClick(QPointF pos);
 
 private slots:
-    void miss(int);
-    void hit(int);
+    void miss();
+    void hit();
     void frame();
     void on_pushButton_toggled(bool checked);
-    void genBall();
+    void genBall(int count=1);
+    void removeBall(qint16 idx);
 
 private:
     Ui::MainWindow *ui;
     QTimer* fps;
-    QSignalMapper* ballHitMapper, *ballMissMapper;
-    QList<MovingLine*> lines;
+    QList<Ball*> balls;
+    QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
     int ballChance;

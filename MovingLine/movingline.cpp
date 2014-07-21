@@ -2,130 +2,122 @@
 #include <QPainter>
 #include "qmath.h"
 #include <QGraphicsScene>
-class MovingLinePrivate: public QGraphicsItem {
+class BallPrivate {
 public:
-    QRectF _boundingRect;
-
-    MovingLine* p;
+    QGraphicsEllipseItem* ellipse;
+    Ball* p;
     QPointF center;
     QPointF speed;
     int counter;
-    int frameLimit;
     QColor color;
     double radius;
     uint expireTime;
-    friend class MovingLine;
-    MovingLinePrivate(QGraphicsItem *parent, QGraphicsScene *scene,MovingLine* ml):p(ml),
-        QGraphicsItem(parent,scene),
-        counter(0),
-        frameLimit(200)
+    double health;
+    qint64 idx;
+    friend class Ball;
+    BallPrivate(Ball* ml):p(ml),
+        counter(0)
     {
         color.setRed(qrand()%255);
         color.setGreen(qrand()%255);
         color.setBlue(qrand()%255);
-        center= QPointF(qrand()%300,qrand()%300);
+        center= QPointF(qrand()%250+25,qrand()%250+25);
     }
 
+    ~BallPrivate() {
+        ellipse->scene()->removeItem(ellipse);
+        delete ellipse;
+    }
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-    {
-        Q_UNUSED(option);
-        Q_UNUSED(widget);
+    double rand() const{
+        return (double)(qrand()%300)/300; // 0.5 mean uniform random variable between 0 and 1
+    }
 
-//        QPainterPath tailPath;
-//        tailPath.addPolygon(QPolygonF(points));
-//        QPen tailPen = painter->pen();
-//        tailPen.setStyle(Qt::SolidLine);
-//        QColor tailColor = color;
-//        tailColor.setAlpha(100);
-//        tailPen.setColor(tailColor);
-//        painter->setPen(tailPen);
-//        painter->drawPath(tailPath);
+    double r() const {
+        return ((double)(qrand()%10000)/5000)-1; // zero mean uniform random variable between -1 and 1
+    }
 
-        QPainterPath laserPath;
-        laserPath.addEllipse(center,radius,radius);
-        QPen laserPen = painter->pen();
-        laserPen.setStyle(Qt::SolidLine);
-        QColor laserColor = color;
+    void setDraw() {
+        QPen laserPen = ellipse->pen();
+        QColor laserColor = laserPen.color();
         laserColor.setAlpha(this->counter);
         laserPen.setColor(laserColor);
-        QBrush brush = painter->brush();
+        ellipse->setPen(laserPen);
+
+        QBrush brush = ellipse->brush();
         brush.setColor(laserColor);
-        brush.setStyle(Qt::SolidPattern);
-        painter->setBrush(brush);
-        painter->setPen(laserPen);
-        painter->drawPath(laserPath);
-
+        if (health>3)
+            brush.setStyle(Qt::SolidPattern);
+        else if (health > 1)
+            brush.setStyle(Qt::CrossPattern);
+        else
+            brush.setStyle(Qt::Dense3Pattern);
+        ellipse->setBrush(brush);
     }
 
 
-
-
-    QRectF boundingRect() const
-    {
-        QPainterPath laserPath;
-        laserPath.addEllipse(center,radius,radius);
-        return laserPath.boundingRect();
-    }
-
-    double rand(){
-        return (double)(qrand()%300)/300;
-    }
 
 };
 
-MovingLine::MovingLine(QGraphicsItem *parent, QGraphicsScene *scene, uint expireTime, double radius):
-    d(new MovingLinePrivate(parent,scene,this))
+Ball::Ball(QGraphicsScene *scene,
+                       uint expireTime, double radius, double health, qint64 idx):
+    d(new BallPrivate(this))
 {
-    d->speed = QPointF((((double)(qrand()%10000)/5000)-1),(((double)(qrand()%10000)/5000)-1));
+    d->health=health;
+    d->idx=idx;
     d->radius = radius;
+    d->speed = QPointF(d->r()/2,d->r()/2);
     d->expireTime=expireTime;
+    d->ellipse = scene->addEllipse(d->center.x(), d->center.y(), radius,radius);
+    //
+    QPen laserPen = d->ellipse->pen();
+    laserPen.setStyle(Qt::SolidLine);
+    QColor laserColor = d->color;
+    laserColor.setAlpha(d->counter);
+    laserPen.setColor(laserColor);
+    d->ellipse->setPen(laserPen);
+    //
+
+    d->setDraw();
 }
 
-MovingLine::~MovingLine()
+Ball::~Ball()
 {
     delete d;
 }
 
-void MovingLine::frame()
+void Ball::frame()
 {
-    QPointF currentPoint = d->center;
-    currentPoint+=d->speed;
-    if ((currentPoint.x()+d->radius)>d->scene()->sceneRect().right()) {
-        currentPoint.setX(d->scene()->sceneRect().right()-d->radius);
-        d->speed.setX(-d->speed.x());
-    } else  if (currentPoint.x()<d->radius) {
-        currentPoint.setX(d->radius);
-        d->speed.setX(-d->speed.x());
+    if (d->counter%d->expireTime==d->expireTime-1) {
+        emit miss(d->idx);
+        return;
     }
-    if ((currentPoint.y()+d->radius)>d->scene()->sceneRect().bottom()) {
-        currentPoint.setY(d->scene()->sceneRect().bottom()-d->radius);
-        d->speed.setY(-d->speed.y());
-    } else if (currentPoint.y()<d->radius) {
-        currentPoint.setY(d->radius);
-        d->speed.setY(-d->speed.y());
-    }
+    d->ellipse->moveBy(d->speed.x(), d->speed.y());
+    QRectF sceneRect = d->ellipse->mapRectFromScene(d->ellipse->scene()->sceneRect());
+    QRectF ellipseRect = d->ellipse->rect();
+        if (    ellipseRect.left() < sceneRect.left() ||
+                ellipseRect.right() > sceneRect.right()) {
+            d->speed.setX(-d->speed.x());
+            d->ellipse->moveBy(2*d->speed.x(),0);
+        }
+        if (    ellipseRect.top() < sceneRect.top() ||
+                ellipseRect.bottom() > sceneRect.bottom()) {
+            d->speed.setY(-d->speed.y());
+            d->ellipse->moveBy(0,2*d->speed.y());
+        }
 
     double totalSpeed = qSqrt(d->speed.x()*d->speed.x()+d->speed.y()*d->speed.y());
 
-    double newTotalSpeed = totalSpeed+d->rand()/20;
+    double newTotalSpeed = totalSpeed+d->rand()/100;
 
     d->speed.setX(newTotalSpeed/totalSpeed*d->speed.x());
     d->speed.setY(newTotalSpeed/totalSpeed*d->speed.y());
 
-    if (d->counter%d->expireTime==d->expireTime-1) {
-        emit miss();
-        return;
-    }
-
-    d->center = currentPoint;
-//    d->points.push_back(currentPoint);
-//    d->points.remove(0);
-    d->prepareGeometryChange();
     ++d->counter;
+    d->setDraw();
 }
 
-void MovingLine::randomize()
+void Ball::randomize()
 {
     double totalSpeed = qSqrt(d->speed.x()*d->speed.x()+d->speed.y()*d->speed.y());
     double deg = qrand()%720;
@@ -138,23 +130,18 @@ void MovingLine::randomize()
         d->speed.setY(-d->speed.y());
 }
 
-void MovingLine::onMiss()
+void Ball::mouseClick(QPointF pos)
 {
-    emit miss();
-}
-
-void MovingLine::onHit()
-{
-    emit hit();
-}
-
-void MovingLine::mouseClick(QPointF pos)
-{
-    QPainterPath laserPath;
-    laserPath.addEllipse(d->center,d->radius,d->radius);
-    if (laserPath.boundingRect().contains(pos)) {
-        emit hit();
+    QPointF mappedPos = d->ellipse->mapFromScene(pos);
+    QRectF rect = d->ellipse->boundingRect();
+    if (d->ellipse->contains(mappedPos)) {
+        --d->health;
+        d->setDraw();
+        randomize();
+        if (d->health<1)
+            emit hit(d->idx);
     }
 }
+
 
 
