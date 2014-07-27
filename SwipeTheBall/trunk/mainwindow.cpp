@@ -1,20 +1,53 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "movingline.h"
+#include "ball.h"
 #include <QTimer>
 #include <QDateTime>
 #include <QSignalMapper>
 #include <QMouseEvent>
+#include <QSettings>
+#include "attack.h"
+
+struct Settings {
+    int ballVanishMinTime;
+    int ballVanishTime;
+    int minRadius;
+    int radius;
+    int minHealth;
+    int health;
+    int maulDamage;
+    int swipeDamage;
+    int ballChance;
+} gameSettings;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    ballChance(9900)
+    attack(new Attack())
 {
+    QSettings settings("settings.ini",QSettings::IniFormat);
+    settings.beginGroup("BallVanishSettings");
+    gameSettings.ballVanishTime = settings.value("BallVanishTime").toInt();
+    gameSettings.ballVanishMinTime = settings.value("BallVanishTimeMin").toInt();
+    settings.endGroup();
+    settings.beginGroup("RadiusSettings");
+    gameSettings.radius = settings.value("Radius").toInt();
+    gameSettings.minRadius = settings.value("RadiusMin").toInt();
+    settings.endGroup();
+    settings.beginGroup("HealthSettings");
+    gameSettings.health = settings.value("Health").toInt();
+    gameSettings.minHealth = settings.value("HealthMin").toInt();
+    settings.endGroup();
+    settings.beginGroup("DamageSettings");
+    gameSettings.swipeDamage = settings.value("Swipe").toInt();
+    gameSettings.maulDamage = settings.value("Maul").toInt();
+    settings.endGroup();
+    settings.beginGroup("SpawnSettings");
+    gameSettings.ballChance = settings.value("BallChance").toInt();
+    settings.endGroup();
     qsrand(QDateTime::currentMSecsSinceEpoch());
     ui->setupUi(this);
 
     QGraphicsScene* scene = new QGraphicsScene;
-    scene->setSceneRect(0,0,300,300);
     ui->graphicsView->setScene(scene);
 
     this->fps = new QTimer;
@@ -23,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(frameSignalReceive()), SIGNAL(frameSignalToSend()));
     connect(this, SIGNAL(frameSignalToSend()), SLOT(frame()));
     genBall();
+    scene->setSceneRect(0,0,600,600);
 }
 
 MainWindow::~MainWindow()
@@ -39,9 +73,12 @@ void MainWindow::genBall(int count)
         } else {
             idx = this->balls.count();
         }
-        Ball* ball = new Ball(ui->graphicsView->scene(), qrand()%150+75, 20, qrand()%3+1, idx);
+        Ball* ball = new Ball(ui->graphicsView->scene(), qrand()%gameSettings.ballVanishTime+gameSettings.ballVanishMinTime,
+                              qrand()%gameSettings.radius+gameSettings.minRadius, qrand()%gameSettings.health+gameSettings.minHealth,
+                              gameSettings.maulDamage, gameSettings.swipeDamage, idx);
         connect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
-        connect(this, SIGNAL(mouseClick(QPointF)), ball, SLOT(mouseClick(QPointF)));
+        connect(attack, SIGNAL(attackMaul(QRegion)), ball, SLOT(attackMaul(QRegion)));
+        connect(attack, SIGNAL(attackSwipe(QLineF)), ball, SLOT(attackSwipe(QLineF)));
         connect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()), Qt::QueuedConnection);
         connect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
         connect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()),Qt::QueuedConnection);
@@ -59,7 +96,7 @@ void MainWindow::removeBall(qint16 idx)
     Ball *ball = balls.at(idx);
     if (ball) {
         disconnect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
-        disconnect(this, SIGNAL(mouseClick(QPointF)), ball, SLOT(mouseClick(QPointF)));
+        //        disconnect(this, SIGNAL(regularHit(QPointF)), ball, SLOT(regularHit(QPointF)));
         disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()));
         disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)));
         disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()));
@@ -82,9 +119,7 @@ void MainWindow::hit()
 
 void MainWindow::frame()
 {
-    if (ballChance>1000)
-        --ballChance;
-    if (qrand()%10000>ballChance)
+    if (qrand()%10000>gameSettings.ballChance)
         genBall();
     ui->sbScore->setValue(ui->sbScore->value()+ui->sbFrame->value());
 }
@@ -100,12 +135,6 @@ void MainWindow::on_pushButton_toggled(bool checked)
 
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    emit mouseClick(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())));
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *ev)
-{
-    if (QApplication::mouseButtons()&Qt::LeftButton) {
-        mousePressEvent(ev);
-    }
+    attack->press(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())),
+                  ev->buttons());
 }

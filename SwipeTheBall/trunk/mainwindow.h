@@ -5,6 +5,7 @@
 class QTimer;
 class Ball;
 class QSignalMapper;
+class Attack;
 namespace Ui {
 class MainWindow;
 }
@@ -20,7 +21,7 @@ public:
 signals:
     void frameSignalToSend();
     void frameSignalReceive();
-    void mouseClick(QPointF pos);
+    void regularHit(QPointF pos);
 
 private slots:
     void miss();
@@ -36,8 +37,8 @@ private:
     QList<Ball*> balls;
     QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
-    void mouseMoveEvent(QMouseEvent *ev);
-    int ballChance;
+
+    Attack* attack;
 };
 
 #endif // MAINWINDOW_H

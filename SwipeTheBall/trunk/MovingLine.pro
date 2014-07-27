@@ -13,11 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        movingline.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    ball.cpp \
+    attack.cpp
 
-HEADERS  += movingline.h \
-    mainwindow.h
+HEADERS  += \
+    mainwindow.h \
+    ball.h \
+    attack.h
 
 FORMS += \
     mainwindow.ui
