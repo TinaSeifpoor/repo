@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
     genBall();
     scene->setSceneRect(0,0,600,600);
     QPixmap pim(":/images/BG");
-        scene->setBackgroundBrush(pim.scaled(600,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    scene->setBackgroundBrush(pim.scaled(600,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 }
 
 MainWindow::~MainWindow()

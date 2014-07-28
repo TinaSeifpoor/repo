@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>713</height>
+    <width>783</width>
+    <height>718</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -180,8 +180,8 @@
      <widget class="QGraphicsView" name="graphicsView">
       <property name="minimumSize">
        <size>
-        <width>600</width>
-        <height>600</height>
+        <width>605</width>
+        <height>605</height>
        </size>
       </property>
       <property name="maximumSize">

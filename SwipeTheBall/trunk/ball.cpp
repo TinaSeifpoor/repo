@@ -2,9 +2,11 @@
 #include <QPainter>
 #include "qmath.h"
 #include <QGraphicsScene>
+static QVector<QRgb> colorTable;
+
 class BallPrivate {
 public:
-    QGraphicsEllipseItem* ellipse;
+    QGraphicsPixmapItem* ellipse;
     Ball* p;
     QPointF center;
     QPointF speed;
@@ -24,6 +26,7 @@ public:
         color.setGreen(qrand()%255);
         color.setBlue(qrand()%255);
         center= QPointF(qrand()%550+25,qrand()%550+25);
+//        center = QPointF(5,5);
     }
 
     ~BallPrivate() {
@@ -39,18 +42,28 @@ public:
         return ((double)(qrand()%10000)/5000)-1; // zero mean uniform random variable between -1 and 1
     }
 
-    void setDraw() {
-        QPen laserPen = ellipse->pen();
-        QColor laserColor = laserPen.color();
-        laserColor.setAlpha(180);
-        laserPen.setColor(laserColor);
-        ellipse->setPen(laserPen);
+    //    void setDraw() {
 
-        QBrush brush = ellipse->brush();
-        brush.setColor(laserColor);
-            brush.setStyle((Qt::BrushStyle)((int)health));
-        ellipse->setBrush(brush);
-    }
+
+    //        QImage im(":/images/ball");
+    //        im.setColor(0,ellipse->pen().color().rgb());
+    //        im.setColor(255,QColor(150,150,150,150).rgb());
+    //        QPixmap pim=QPixmap::fromImage(im);
+
+    //            ellipse->setBrush(pim.scaled(radius*2, radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+
+
+    ////        QPen laserPen = ellipse->pen();
+    ////        QColor laserColor = laserPen.color();
+    ////        laserColor.setAlpha(180);
+    ////        laserPen.setColor(laserColor);
+    ////        ellipse->setPen(laserPen);
+
+    ////        QBrush brush = ellipse->brush();
+    ////        brush.setColor(laserColor);
+    ////            brush.setStyle((Qt::BrushStyle)((int)health));
+    ////        ellipse->setBrush(brush);
+    //    }
 
     double dist(QPointF p1, QPointF p2) {
         double xDiff =p1.x() - p2.x();
@@ -73,17 +86,16 @@ Ball::Ball(QGraphicsScene *scene,
     d->maulDamage = maulDamage;
     d->speed = QPointF(d->r()/2,d->r()/2);
     d->expireTime=expireTime;
-    d->ellipse = scene->addEllipse(d->center.x()-d->radius, d->center.y()-d->radius, radius*2,radius*2);
-    //
-    QPen laserPen = d->ellipse->pen();
-    laserPen.setStyle(Qt::SolidLine);
-    QColor laserColor = d->color;
-    laserColor.setAlpha(d->counter);
-    laserPen.setColor(laserColor);
-    d->ellipse->setPen(laserPen);
-    //
 
-    d->setDraw();
+    QImage im(":/images/ball");
+    d->color.setAlpha(200);
+    im.setColor(0,d->color.rgb());
+    QPixmap pim=QPixmap::fromImage(im);
+
+    d->ellipse = scene->addPixmap(pim.scaled(radius*2, radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    d->ellipse->moveBy(d->center.x()-radius, d->center.y()-radius);
+
+//    d->setDraw();
 }
 
 Ball::~Ball()
@@ -123,7 +135,7 @@ void Ball::frame()
     d->speed.setY(newTotalSpeed/totalSpeed*d->speed.y());
 
     ++d->counter;
-    d->setDraw();
+//    d->setDraw();
 }
 
 void Ball::randomize()
@@ -146,7 +158,7 @@ void Ball::attackMaul(QRegion reg)
     QRegion a = QRegion(rect, QRegion::Ellipse);
     if (reg.intersects(a)) {
         d->health-=d->maulDamage;
-        d->setDraw();
+//        d->setDraw();
         randomize();
         if (d->health<1)
             emit hit(d->idx);
@@ -172,7 +184,7 @@ void Ball::attackSwipe(QLineF reg)
     }
     if (dist<(d->radius*d->radius)) {
         d->health-=d->swipeDamage;
-        d->setDraw();
+//        d->setDraw();
         randomize();
         if (d->health<1)
             emit hit(d->idx);
