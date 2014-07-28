@@ -15,12 +15,25 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     ball.cpp \
-    attack.cpp
+    attack.cpp \
+    swipeanimation.cpp \
+    frametimer.cpp \
+    animationfactory.cpp \
+    maulanimation.cpp
 
 HEADERS  += \
     mainwindow.h \
     ball.h \
-    attack.h
+    attack.h \
+    swipeanimation.h \
+    frametimer.h \
+    animationfactory.h \
+    maulanimation.h
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += \
+    res.qrc
+
+OTHER_FILES +=

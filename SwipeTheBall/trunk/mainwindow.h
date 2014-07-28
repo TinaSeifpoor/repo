@@ -4,8 +4,8 @@
 #include <QMainWindow>
 class QTimer;
 class Ball;
-class QSignalMapper;
 class Attack;
+class AnimationFactory;
 namespace Ui {
 class MainWindow;
 }
@@ -37,8 +37,25 @@ private:
     QList<Ball*> balls;
     QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *ev);
 
     Attack* attack;
+    AnimationFactory* animationFactory;
+
+    struct Settings {
+        int ballVanishMinTime;
+        int ballVanishTime;
+        int minRadius;
+        int radius;
+        int minHealth;
+        int health;
+        int maulDamage;
+        int swipeDamage;
+        int ballChance;
+        double maulRadius;
+        double swipeLength1;
+        double swipeLength2;
+    } gameSettings;
 };
 
 #endif // MAINWINDOW_H

@@ -20,7 +20,6 @@ signals:
 public slots:
     void frame();
     void randomize();
-//    void mouseClick(QPointF pos);
     void attackMaul(QRegion reg);
     void attackSwipe(QLineF reg);
 

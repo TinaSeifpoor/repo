@@ -42,18 +42,13 @@ public:
     void setDraw() {
         QPen laserPen = ellipse->pen();
         QColor laserColor = laserPen.color();
-        laserColor.setAlpha(250);
+        laserColor.setAlpha(180);
         laserPen.setColor(laserColor);
         ellipse->setPen(laserPen);
 
         QBrush brush = ellipse->brush();
         brush.setColor(laserColor);
-        if (health>3)
-            brush.setStyle(Qt::SolidPattern);
-        else if (health > 1)
-            brush.setStyle(Qt::CrossPattern);
-        else
-            brush.setStyle(Qt::Dense3Pattern);
+            brush.setStyle((Qt::BrushStyle)((int)health));
         ellipse->setBrush(brush);
     }
 
@@ -146,8 +141,9 @@ void Ball::randomize()
 
 void Ball::attackMaul(QRegion reg)
 {
-    QRect a = QRect(0,0,d->radius, d->radius);
-    a.moveCenter(d->center.toPoint());
+    QRect rect = QRect(0,0,d->radius*2, d->radius*2);
+    rect.moveCenter(d->center.toPoint());
+    QRegion a = QRegion(rect, QRegion::Ellipse);
     if (reg.intersects(a)) {
         d->health-=d->maulDamage;
         d->setDraw();
@@ -166,8 +162,14 @@ void Ball::attackSwipe(QLineF reg)
                 ((p.y()-v.y()) * (w.y()-v.y())));
     double dist = d->dist(v,w);
     t/=dist;
-    QPointF z(v.x()+t*(w.x()-v.x()), v.y()+t*(w.y()-v.y()));
-    dist = d->dist(p,z);
+    if (t<0) {
+        dist = d->dist(v,p);
+    } else if (t>1) {
+        dist = d->dist(w,p);
+    } else {
+        QPointF z(v.x()+t*(w.x()-v.x()), v.y()+t*(w.y()-v.y()));
+        dist = d->dist(p,z);
+    }
     if (dist<(d->radius*d->radius)) {
         d->health-=d->swipeDamage;
         d->setDraw();
