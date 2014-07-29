@@ -18,10 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.setValue("BallVanishTime",150);
         settings.setValue("BallVanishTimeMin",250);
         settings.endGroup();
-        settings.beginGroup("RadiusSettings");
-        settings.setValue("Radius",50);
-        settings.setValue("RadiusMin",10);
-        settings.endGroup();
         settings.beginGroup("HealthSettings");
         settings.setValue("Health",10);
         settings.setValue("HealthMin",1);
@@ -36,16 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.setValue("MaulRadius",30);
         settings.endGroup();
         settings.beginGroup("SpawnSettings");
-        settings.setValue("BallChance",9950);
+        settings.setValue("BallChance",9900);
+        settings.endGroup();
+        settings.beginGroup("WindowSettings");
+        settings.setValue("Width",500);
+        settings.setValue("Height",300);
         settings.endGroup();
     }
     settings.beginGroup("BallVanishSettings");
     gameSettings.ballVanishTime = settings.value("BallVanishTime").toInt();
     gameSettings.ballVanishMinTime = settings.value("BallVanishTimeMin").toInt();
-    settings.endGroup();
-    settings.beginGroup("RadiusSettings");
-    gameSettings.radius = settings.value("Radius").toInt();
-    gameSettings.minRadius = settings.value("RadiusMin").toInt();
     settings.endGroup();
     settings.beginGroup("HealthSettings");
     gameSettings.health = settings.value("Health").toInt();
@@ -63,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent) :
     settings.beginGroup("SpawnSettings");
     gameSettings.ballChance = settings.value("BallChance").toInt();
     settings.endGroup();
+    settings.beginGroup("WindowSettings");
+    gameSettings.width = settings.value("Width").toInt();
+    gameSettings.height = settings.value("Height").toInt();
+    settings.endGroup();
     qsrand(QDateTime::currentMSecsSinceEpoch());
 
 
@@ -76,15 +76,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(attack, SIGNAL(attackSwipe(QLineF)), animationFactory, SLOT(swipe(QLineF)));
 
     this->fps = new QTimer;
-    fps->start(30);
+    fps->start(20);
     connect(fps, SIGNAL(timeout()), SIGNAL(frameSignalReceive()));
     connect(this, SIGNAL(frameSignalReceive()), SIGNAL(frameSignalToSend()));
     connect(this, SIGNAL(frameSignalToSend()), SLOT(frame()));
     connect(this, SIGNAL(frameSignalToSend()), animationFactory, SIGNAL(frame()));
     genBall();
-    scene->setSceneRect(0,0,600,600);
+    scene->setSceneRect(0,0,gameSettings.width, gameSettings.height);
+    ui->graphicsView->setMinimumSize(gameSettings.width+5, gameSettings.height+5);
     QPixmap pim(":/images/BG");
-    scene->setBackgroundBrush(pim.scaled(600,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    scene->setBackgroundBrush(pim.scaled(gameSettings.width, gameSettings.height,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 }
 
 MainWindow::~MainWindow()
@@ -95,27 +96,9 @@ MainWindow::~MainWindow()
 void MainWindow::genBall(int count)
 {
     for (int i=0; i<count; ++i) {
-        qint16 idx=-1;
-        if (!this->availableBalls.isEmpty()) {
-            idx = this->availableBalls.takeFirst();
-        } else {
-            idx = this->balls.count();
-        }
         Ball* ball = new Ball(ui->graphicsView->scene(), qrand()%gameSettings.ballVanishTime+gameSettings.ballVanishMinTime,
-                              qrand()%gameSettings.radius+gameSettings.minRadius, qrand()%gameSettings.health+gameSettings.minHealth,
-                              gameSettings.maulDamage, gameSettings.swipeDamage, idx);
-        connect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
-        connect(attack, SIGNAL(attackMaul(QRegion)), ball, SLOT(attackMaul(QRegion)));
-        connect(attack, SIGNAL(attackSwipe(QLineF)), ball, SLOT(attackSwipe(QLineF)));
-        connect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()), Qt::QueuedConnection);
-        connect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
-        connect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()),Qt::QueuedConnection);
-        connect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
-        if (this->balls.count()>idx) {
-            this->balls.replace(idx, ball);
-        } else {
-            this->balls << ball;
-        }
+                              qrand()%gameSettings.health+gameSettings.minHealth, gameSettings.maulDamage, gameSettings.swipeDamage);
+        this->newBall(ball);
     }
 }
 
@@ -129,7 +112,8 @@ void MainWindow::removeBall(qint16 idx)
         disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)));
         disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()));
         disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)));
-        delete ball;
+        disconnect(ball, SIGNAL(newBall(Ball*)), this, SLOT(newBall(Ball*)));
+        ball->deleteLater();
         this->balls.replace(idx,0);
         this->availableBalls.append(idx);
     }
@@ -171,4 +155,31 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
 {
     attack->release(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())),
                   ev->buttons());
+}
+
+
+void MainWindow::newBall(Ball *ball)
+{
+    qint16 idx=-1;
+    if (!this->availableBalls.isEmpty()) {
+        idx = this->availableBalls.takeFirst();
+    } else {
+        idx = this->balls.count();
+    }
+    ball->setIndex(idx);
+
+    connect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
+    connect(attack, SIGNAL(attackMaul(QRegion)), ball, SLOT(attackMaul(QRegion)));
+    connect(attack, SIGNAL(attackSwipe(QLineF)), ball, SLOT(attackSwipe(QLineF)));
+    connect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()), Qt::QueuedConnection);
+    connect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
+    connect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()),Qt::QueuedConnection);
+    connect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
+    connect(ball, SIGNAL(newBall(Ball*)), this, SLOT(newBall(Ball*)), Qt::QueuedConnection);
+    if (this->balls.count()>idx) {
+        this->balls.replace(idx, ball);
+    } else {
+        this->balls << ball;
+    }
+
 }

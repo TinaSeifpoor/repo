@@ -23,6 +23,8 @@ signals:
     void frameSignalReceive();
     void regularHit(QPointF pos);
 
+public slots:
+    void newBall(Ball* ball);
 private slots:
     void miss();
     void hit();
@@ -45,8 +47,6 @@ private:
     struct Settings {
         int ballVanishMinTime;
         int ballVanishTime;
-        int minRadius;
-        int radius;
         int minHealth;
         int health;
         int maulDamage;
@@ -55,6 +55,8 @@ private:
         double maulRadius;
         double swipeLength1;
         double swipeLength2;
+        int width;
+        int height;
     } gameSettings;
 };
 

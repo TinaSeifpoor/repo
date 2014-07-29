@@ -180,8 +180,8 @@
      <widget class="QGraphicsView" name="graphicsView">
       <property name="minimumSize">
        <size>
-        <width>605</width>
-        <height>605</height>
+        <width>555</width>
+        <height>555</height>
        </size>
       </property>
       <property name="maximumSize">

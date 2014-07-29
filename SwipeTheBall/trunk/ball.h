@@ -9,13 +9,15 @@ class Ball : public QObject
     Q_OBJECT
 public:
     Ball(QGraphicsScene *scene=0,
-               uint expireTime=150, double radius=20, double health=1, int maulDamage=3, int swipeDamage=1,
+               uint expireTime=150, double health=1, int maulDamage=3, int swipeDamage=1,
                qint64 idx=-1);
     ~Ball();
+    void setIndex(qint64 idx=-1);
 
 signals:
     void miss(qint16);
     void hit(qint16);
+    void newBall(Ball*);
 
 public slots:
     void frame();

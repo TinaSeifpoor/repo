@@ -3,7 +3,6 @@
 #include "qmath.h"
 #include <QGraphicsScene>
 static QVector<QRgb> colorTable;
-
 class BallPrivate {
 public:
     QGraphicsPixmapItem* ellipse;
@@ -18,6 +17,7 @@ public:
     qint64 idx;
     int maulDamage;
     int swipeDamage;
+    QPixmap pim;
     friend class Ball;
     BallPrivate(Ball* ml):p(ml),
         counter(0)
@@ -25,8 +25,6 @@ public:
         color.setRed(qrand()%255);
         color.setGreen(qrand()%255);
         color.setBlue(qrand()%255);
-        center= QPointF(qrand()%550+25,qrand()%550+25);
-//        center = QPointF(5,5);
     }
 
     ~BallPrivate() {
@@ -40,6 +38,11 @@ public:
 
     double r() const {
         return ((double)(qrand()%10000)/5000)-1; // zero mean uniform random variable between -1 and 1
+    }
+
+    double radiusFromHealth() {
+        radius = (8+health)*2;
+        return radius;
     }
 
     //    void setDraw() {
@@ -71,36 +74,69 @@ public:
         return xDiff*xDiff + yDiff*yDiff;
     }
 
+    void attack(int damage) {
+        for (int i=0; i<damage; ++i) {
+            --health;
+//            if (health) {
+//                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
+//                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
+//            }
+
+        }
+        p->randomize();
+        if (health<=0)
+            emit p->hit(idx);
+        radiusFromHealth();
+        ellipse->setPixmap(pim.scaled(radius*2,radius*2,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    }
 
 
 };
 
 Ball::Ball(QGraphicsScene *scene,
-           uint expireTime, double radius, double health, int maulDamage, int swipeDamage,qint64 idx):
+           uint expireTime, double health, int maulDamage, int swipeDamage,qint64 idx):
     d(new BallPrivate(this))
 {
     d->health=health;
     d->idx=idx;
-    d->radius = radius;
+    d->radiusFromHealth();
     d->swipeDamage = swipeDamage;
     d->maulDamage = maulDamage;
     d->speed = QPointF(d->r()/2,d->r()/2);
     d->expireTime=expireTime;
 
+//        center= QPointF(qrand()%this->ellipse->scene()->sceneRect().width()+25,qrand()%550+25);
+    //        center = QPointF(5,5);
+
+
+
     QImage im(":/images/ball");
     d->color.setAlpha(200);
     im.setColor(0,d->color.rgb());
-    QPixmap pim=QPixmap::fromImage(im);
+    d->pim=QPixmap::fromImage(im);
 
-    d->ellipse = scene->addPixmap(pim.scaled(radius*2, radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
-    d->ellipse->moveBy(d->center.x()-radius, d->center.y()-radius);
+    d->ellipse = scene->addPixmap(d->pim.scaled(d->radius*2, d->radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 
-//    d->setDraw();
+    d->center.setX(qrand()%(int)(scene->sceneRect().width()-d->radius*4)+d->radius*2);
+    d->center.setY(qrand()%(int)(scene->sceneRect().height()-d->radius*4)+d->radius*2);
+
+
+    d->ellipse->moveBy(d->center.x()-d->radius, d->center.y()-d->radius);
+
+
+
+
+    //    d->setDraw();
 }
 
 Ball::~Ball()
 {
     delete d;
+}
+
+void Ball::setIndex(qint64 idx)
+{
+    d->idx = idx;
 }
 
 void Ball::frame()
@@ -111,7 +147,7 @@ void Ball::frame()
     }
     d->ellipse->moveBy(d->speed.x(), d->speed.y());
     d->center += d->speed;
-    QRectF sceneRect = QRectF(0,0,600,600);
+    QRectF sceneRect = d->ellipse->scene()->sceneRect();
     QRectF ellipseRect(QPointF(d->center.x()-d->radius, d->center.y()-d->radius),
                        QPointF(d->center.x()+d->radius, d->center.y()+d->radius));
     if (    ellipseRect.left() < sceneRect.left() ||
@@ -135,7 +171,7 @@ void Ball::frame()
     d->speed.setY(newTotalSpeed/totalSpeed*d->speed.y());
 
     ++d->counter;
-//    d->setDraw();
+    //    d->setDraw();
 }
 
 void Ball::randomize()
@@ -157,11 +193,7 @@ void Ball::attackMaul(QRegion reg)
     rect.moveCenter(d->center.toPoint());
     QRegion a = QRegion(rect, QRegion::Ellipse);
     if (reg.intersects(a)) {
-        d->health-=d->maulDamage;
-//        d->setDraw();
-        randomize();
-        if (d->health<1)
-            emit hit(d->idx);
+        d->attack(d->maulDamage);
     }
 }
 
@@ -183,10 +215,6 @@ void Ball::attackSwipe(QLineF reg)
         dist = d->dist(p,z);
     }
     if (dist<(d->radius*d->radius)) {
-        d->health-=d->swipeDamage;
-//        d->setDraw();
-        randomize();
-        if (d->health<1)
-            emit hit(d->idx);
+        d->attack(d->swipeDamage);
     }
 }
