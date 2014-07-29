@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = MovingLine
+TARGET = SwipeTheBall
 TEMPLATE = app
 
 
@@ -36,4 +36,5 @@ FORMS += \
 RESOURCES += \
     res.qrc
 
-OTHER_FILES +=
+OTHER_FILES += \
+    stb.rc

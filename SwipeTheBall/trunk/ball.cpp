@@ -42,7 +42,7 @@ public:
     }
 
     double radiusFromHealth() {
-        radius = (8+health)*2;
+        radius = (4 + health)*8;
         return radius;
     }
 

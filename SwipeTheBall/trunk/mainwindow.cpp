@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QMouseEvent>
 #include <QSettings>
+#include <QGestureEvent>
 #include "attack.h"
 #include "animationfactory.h"
 
@@ -27,16 +28,16 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.setValue("Maul",4);
         settings.endGroup();
         settings.beginGroup("RadiusSettings");
-        settings.setValue("SwipeShort",20);
-        settings.setValue("SwipeLong",80);
-        settings.setValue("MaulRadius",30);
+        settings.setValue("SwipeShort",80);
+        settings.setValue("SwipeLong",320);
+        settings.setValue("MaulRadius",120);
         settings.endGroup();
         settings.beginGroup("SpawnSettings");
         settings.setValue("BallChance",9900);
         settings.endGroup();
         settings.beginGroup("WindowSettings");
-        settings.setValue("Width",500);
-        settings.setValue("Height",300);
+        settings.setValue("Width",713);
+        settings.setValue("Height",1219);
         settings.endGroup();
     }
     settings.beginGroup("BallVanishSettings");
@@ -67,9 +68,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->setupUi(this);
+}
 
+void MainWindow::initMainWindow()
+{
+    gameSettings.width = this->width() ;
+    gameSettings.height = this->height();
+    grabMouse();
+//    grabGesture(Qt::SwipeGesture);
     QGraphicsScene* scene = new QGraphicsScene;
     ui->graphicsView->setScene(scene);
+    ui->graphicsView->installEventFilter(this);
+    scene->installEventFilter(this);
     attack= new Attack(gameSettings.maulRadius, gameSettings.swipeLength1, gameSettings.swipeLength2);
     animationFactory = new AnimationFactory(scene);
     connect(attack, SIGNAL(attackMaul(QRegion)), animationFactory, SLOT(maul(QRegion)));
@@ -82,13 +92,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(frameSignalToSend()), SLOT(frame()));
     connect(this, SIGNAL(frameSignalToSend()), animationFactory, SIGNAL(frame()));
     genBall();
-    scene->setSceneRect(0,0,gameSettings.width, gameSettings.height);
-    ui->graphicsView->setMinimumSize(gameSettings.width+5, gameSettings.height+5);
-    ui->graphicsView->setMaximumSize(gameSettings.width+5, gameSettings.height+5);
-    this->setMinimumSize(ui->graphicsView->size());
-    this->setMaximumSize(ui->graphicsView->size());
+    QRect screenRect = this->rect();
+    screenRect-=QMargins(5,5,5,5);
+    scene->setSceneRect(screenRect);
+    ui->graphicsView->setGeometry(this->rect());
     QPixmap pim(":/images/BG");
-    scene->setBackgroundBrush(pim.scaled(gameSettings.width, gameSettings.height,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    scene->setBackgroundBrush(pim.scaled(screenRect.width(), screenRect.height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 }
 
 MainWindow::~MainWindow()
@@ -154,11 +163,34 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
                   ev->buttons());
 }
 
+void MainWindow::mouseMoveEvent(QMouseEvent *ev)
+{
+//    if (QApplication::mouseButtons()&Qt::LeftButton) {
+//        attack->swipe(0,ev->pos());
+//    }
+}
+
 void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
 {
     attack->release(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())),
                   ev->buttons());
 }
+
+//bool MainWindow::event(QEvent *event)
+//{
+//    if (event->type() == QEvent::Gesture)
+//        return gestureEvent(static_cast<QGestureEvent*>(event));
+//    return QWidget::event(event);
+//}
+
+//bool MainWindow::gestureEvent(QGestureEvent *event)
+//{
+//    if (QGesture*gesture = event->gesture(Qt::SwipeGesture)) {
+//        QSwipeGesture* swipe = static_cast<QSwipeGesture*>(gesture);
+//        swipe->swipeAngle();
+//        attack->swipe(swipe->swipeAngle(), ui->graphicsView->mapToScene(ui->graphicsView->mapFromGlobal(QCursor::pos())));
+//    }
+//}
 
 
 void MainWindow::newBall(Ball *ball)

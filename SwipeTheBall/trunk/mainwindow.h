@@ -6,6 +6,7 @@ class QTimer;
 class Ball;
 class Attack;
 class AnimationFactory;
+class QGestureEvent;
 namespace Ui {
 class MainWindow;
 }
@@ -16,6 +17,7 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void initMainWindow();
     ~MainWindow();
 
 signals:
@@ -39,7 +41,10 @@ private:
     QList<Ball*> balls;
     QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
+//    bool event(QEvent *event);
+//    bool gestureEvent(QGestureEvent* event);
 
     Attack* attack;
     AnimationFactory* animationFactory;
