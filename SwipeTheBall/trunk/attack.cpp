@@ -8,10 +8,10 @@ Attack::Attack(double maulRadius, double swipeLength1, double swipeLength2, QObj
 }
 
 void debugLine(QString lineName, QLineF line) {
-    qDebug(QString("P1: (%1,%2), P2: (%3,%4), Line: %5").
-           arg(line.p1().x()).arg(line.p1().y()).
-           arg(line.p2().x()).arg(line.p2().y()).
-           arg(lineName).toLatin1());
+//    qDebug(QString("P1: (%1,%2), P2: (%3,%4), Line: %5").
+//           arg(line.p1().x()).arg(line.p1().y()).
+//           arg(line.p2().x()).arg(line.p2().y()).
+//           arg(lineName).toLatin1());
 }
 
 void Attack::press(QPointF pos, Qt::MouseButtons buttons) {

@@ -84,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent) :
     genBall();
     scene->setSceneRect(0,0,gameSettings.width, gameSettings.height);
     ui->graphicsView->setMinimumSize(gameSettings.width+5, gameSettings.height+5);
+    ui->graphicsView->setMaximumSize(gameSettings.width+5, gameSettings.height+5);
+    this->setMinimumSize(ui->graphicsView->size());
+    this->setMaximumSize(ui->graphicsView->size());
     QPixmap pim(":/images/BG");
     scene->setBackgroundBrush(pim.scaled(gameSettings.width, gameSettings.height,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 }
@@ -102,16 +105,16 @@ void MainWindow::genBall(int count)
     }
 }
 
-void MainWindow::removeBall(qint16 idx)
+void MainWindow::removeBall(double,qint16 idx)
 {
     Ball *ball = balls.at(idx);
     if (ball) {
         disconnect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
         //        disconnect(this, SIGNAL(regularHit(QPointF)), ball, SLOT(regularHit(QPointF)));
-        disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()));
-        disconnect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)));
-        disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()));
-        disconnect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)));
+        disconnect(ball, SIGNAL(hit(double, qint16)), this, SLOT(hit(double)));
+        disconnect(ball, SIGNAL(hit(double, qint16)), this, SLOT(removeBall(double, qint16)));
+        disconnect(ball, SIGNAL(miss(double, qint16)), this, SLOT(miss(double)));
+        disconnect(ball, SIGNAL(miss(double, qint16)), this, SLOT(removeBall(double,qint16)));
         disconnect(ball, SIGNAL(newBall(Ball*)), this, SLOT(newBall(Ball*)));
         ball->deleteLater();
         this->balls.replace(idx,0);
@@ -119,21 +122,21 @@ void MainWindow::removeBall(qint16 idx)
     }
 }
 
-void MainWindow::miss()
+void MainWindow::miss(double health)
 {
-    ui->sbScore->setValue(ui->sbScore->value()+ui->sbMiss->value());
+    ui->sbScore->setValue(ui->sbScore->value()-health*5000);
 }
 
-void MainWindow::hit()
+void MainWindow::hit(double health)
 {
-    ui->sbScore->setValue(ui->sbScore->value()+ui->sbClick->value());
+    ui->sbScore->setValue(ui->sbScore->value()+600*health);
 }
 
 void MainWindow::frame()
 {
     if (qrand()%10000>gameSettings.ballChance)
         genBall();
-    ui->sbScore->setValue(ui->sbScore->value()+ui->sbFrame->value());
+//    ui->sbScore->setValue(ui->sbScore->value()+ui->sbFrame->value());
 }
 
 void MainWindow::on_pushButton_toggled(bool checked)
@@ -171,10 +174,10 @@ void MainWindow::newBall(Ball *ball)
     connect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
     connect(attack, SIGNAL(attackMaul(QRegion)), ball, SLOT(attackMaul(QRegion)));
     connect(attack, SIGNAL(attackSwipe(QLineF)), ball, SLOT(attackSwipe(QLineF)));
-    connect(ball, SIGNAL(hit(qint16)), this, SLOT(hit()), Qt::QueuedConnection);
-    connect(ball, SIGNAL(hit(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
-    connect(ball, SIGNAL(miss(qint16)), this, SLOT(miss()),Qt::QueuedConnection);
-    connect(ball, SIGNAL(miss(qint16)), this, SLOT(removeBall(qint16)), Qt::QueuedConnection);
+    connect(ball, SIGNAL(hit(double,qint16)), this, SLOT(hit(double)), Qt::QueuedConnection);
+    connect(ball, SIGNAL(hit(double,qint16)), this, SLOT(removeBall(double,qint16)), Qt::QueuedConnection);
+    connect(ball, SIGNAL(miss(double,qint16)), this, SLOT(miss(double)),Qt::QueuedConnection);
+    connect(ball, SIGNAL(miss(double,qint16)), this, SLOT(removeBall(double,qint16)), Qt::QueuedConnection);
     connect(ball, SIGNAL(newBall(Ball*)), this, SLOT(newBall(Ball*)), Qt::QueuedConnection);
     if (this->balls.count()>idx) {
         this->balls.replace(idx, ball);

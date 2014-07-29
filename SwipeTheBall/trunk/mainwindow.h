@@ -26,12 +26,12 @@ signals:
 public slots:
     void newBall(Ball* ball);
 private slots:
-    void miss();
-    void hit();
+    void miss(double health);
+    void hit(double health);
     void frame();
     void on_pushButton_toggled(bool checked);
     void genBall(int count=1);
-    void removeBall(qint16 idx);
+    void removeBall(double, qint16 idx);
 
 private:
     Ui::MainWindow *ui;

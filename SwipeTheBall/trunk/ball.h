@@ -15,8 +15,8 @@ public:
     void setIndex(qint64 idx=-1);
 
 signals:
-    void miss(qint16);
-    void hit(qint16);
+    void miss(double,qint16);
+    void hit(double,qint16);
     void newBall(Ball*);
 
 public slots:

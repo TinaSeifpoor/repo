@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="BG">res/background.jpg</file>
         <file alias="ball">res/ballofyarn.png</file>
+        <file alias="BG">res/background.png</file>
     </qresource>
 </RCC>

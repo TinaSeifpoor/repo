@@ -14,6 +14,7 @@ public:
     double radius;
     uint expireTime;
     double health;
+    double startHealth;
     qint64 idx;
     int maulDamage;
     int swipeDamage;
@@ -45,29 +46,6 @@ public:
         return radius;
     }
 
-    //    void setDraw() {
-
-
-    //        QImage im(":/images/ball");
-    //        im.setColor(0,ellipse->pen().color().rgb());
-    //        im.setColor(255,QColor(150,150,150,150).rgb());
-    //        QPixmap pim=QPixmap::fromImage(im);
-
-    //            ellipse->setBrush(pim.scaled(radius*2, radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
-
-
-    ////        QPen laserPen = ellipse->pen();
-    ////        QColor laserColor = laserPen.color();
-    ////        laserColor.setAlpha(180);
-    ////        laserPen.setColor(laserColor);
-    ////        ellipse->setPen(laserPen);
-
-    ////        QBrush brush = ellipse->brush();
-    ////        brush.setColor(laserColor);
-    ////            brush.setStyle((Qt::BrushStyle)((int)health));
-    ////        ellipse->setBrush(brush);
-    //    }
-
     double dist(QPointF p1, QPointF p2) {
         double xDiff =p1.x() - p2.x();
         double yDiff =p1.y() - p2.y();
@@ -85,7 +63,7 @@ public:
         }
         p->randomize();
         if (health<=0)
-            emit p->hit(idx);
+            emit p->hit(startHealth,idx);
         radiusFromHealth();
         ellipse->setPixmap(pim.scaled(radius*2,radius*2,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
@@ -97,6 +75,7 @@ Ball::Ball(QGraphicsScene *scene,
            uint expireTime, double health, int maulDamage, int swipeDamage,qint64 idx):
     d(new BallPrivate(this))
 {
+    d->startHealth = health;
     d->health=health;
     d->idx=idx;
     d->radiusFromHealth();
@@ -104,11 +83,6 @@ Ball::Ball(QGraphicsScene *scene,
     d->maulDamage = maulDamage;
     d->speed = QPointF(d->r()/2,d->r()/2);
     d->expireTime=expireTime;
-
-//        center= QPointF(qrand()%this->ellipse->scene()->sceneRect().width()+25,qrand()%550+25);
-    //        center = QPointF(5,5);
-
-
 
     QImage im(":/images/ball");
     d->color.setAlpha(200);
@@ -123,10 +97,6 @@ Ball::Ball(QGraphicsScene *scene,
 
     d->ellipse->moveBy(d->center.x()-d->radius, d->center.y()-d->radius);
 
-
-
-
-    //    d->setDraw();
 }
 
 Ball::~Ball()
@@ -142,7 +112,7 @@ void Ball::setIndex(qint64 idx)
 void Ball::frame()
 {
     if (d->counter%d->expireTime==d->expireTime-1) {
-        emit miss(d->idx);
+        emit miss(d->health,d->idx);
         return;
     }
     d->ellipse->moveBy(d->speed.x(), d->speed.y());
