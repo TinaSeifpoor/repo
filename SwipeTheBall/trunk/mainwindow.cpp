@@ -5,13 +5,16 @@
 #include <QDateTime>
 #include <QMouseEvent>
 #include <QSettings>
-#include <QGestureEvent>
+#include <QRect>
 #include "attack.h"
 #include "animationfactory.h"
+#include "scoreboard.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    init(false),
+    isPaused(false)
 {
     QSettings settings("settings.ini",QSettings::IniFormat);
     if (settings.allKeys().isEmpty()) {
@@ -24,13 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.setValue("HealthMin",1);
         settings.endGroup();
         settings.beginGroup("DamageSettings");
-        settings.setValue("Swipe",1);
-        settings.setValue("Maul",4);
+        settings.setValue("Swipe",2);
+        settings.setValue("Maul",5);
         settings.endGroup();
         settings.beginGroup("RadiusSettings");
-        settings.setValue("SwipeShort",80);
-        settings.setValue("SwipeLong",320);
-        settings.setValue("MaulRadius",120);
+        settings.setValue("SwipeShort",40);
+        settings.setValue("SwipeLong",500);
+        settings.setValue("MaulRadius",60);
         settings.endGroup();
         settings.beginGroup("SpawnSettings");
         settings.setValue("BallChance",9900);
@@ -65,17 +68,16 @@ MainWindow::MainWindow(QWidget *parent) :
     gameSettings.height = settings.value("Height").toInt();
     settings.endGroup();
     qsrand(QDateTime::currentMSecsSinceEpoch());
-
-
     ui->setupUi(this);
 }
 
 void MainWindow::initMainWindow()
 {
+    init = true;
     gameSettings.width = this->width() ;
     gameSettings.height = this->height();
     grabMouse();
-//    grabGesture(Qt::SwipeGesture);
+    //    grabGesture(Qt::SwipeGesture);
     QGraphicsScene* scene = new QGraphicsScene;
     ui->graphicsView->setScene(scene);
     ui->graphicsView->installEventFilter(this);
@@ -92,13 +94,8 @@ void MainWindow::initMainWindow()
     connect(this, SIGNAL(frameSignalToSend()), SLOT(frame()));
     connect(this, SIGNAL(frameSignalToSend()), animationFactory, SIGNAL(frame()));
     genBall();
-    QRect screenRect = this->rect();
-    screenRect-=QMargins(5,5,5,5);
-    scene->setSceneRect(screenRect);
-    ui->graphicsView->setGeometry(this->rect());
-    QPixmap pim(":/images/BG");
-    scene->setBackgroundBrush(pim.scaled(screenRect.width(), screenRect.height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
-    this->score = scene->addText("0",QFont("Helvetica [Cronyx]", 16));
+    this->score = new ScoreBoard(scene);
+    resizeEvent(0);
 }
 
 MainWindow::~MainWindow()
@@ -133,14 +130,12 @@ void MainWindow::removeBall(double,qint16 idx)
 
 void MainWindow::miss(double health)
 {
-    this->score->setPlainText(QString::number(this->score->toPlainText().toInt()-health*5000));
-//    ui->sbScore->setValue(ui->sbScore->value()-health*5000);
+    this->score->addScore(-health*5000);
 }
 
 void MainWindow::hit(double health)
 {
-    this->score->setPlainText(QString::number(this->score->toPlainText().toInt()+health*600));
-//    ui->sbScore->setValue(ui->sbScore->value()+600*health);
+    this->score->addScore(health*600);
 }
 
 void MainWindow::frame()
@@ -149,24 +144,65 @@ void MainWindow::frame()
         genBall();
 }
 
-void MainWindow::on_pushButton_toggled(bool checked)
-{
-    if (checked) {
-        disconnect(this, SIGNAL(frameSignalReceive()), this, SIGNAL(frameSignalToSend()));
-    } else {
-        connect(this, SIGNAL(frameSignalReceive()), SIGNAL(frameSignalToSend()));
-    }
-}
-
 void MainWindow::mousePressEvent(QMouseEvent *ev)
 {
-    attack->press(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())),
-                  ev->buttons());
+    QPointF pos = ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos()));
+    if (score->boundingRect().contains(pos)) {
+        return;
+    } else {
+        attack->press(pos);
+    }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
 {
-    attack->release(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())));
+    QPointF pos = ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos()));
+    if (score->boundingRect().contains(pos)) {
+        if (!isPaused)
+            this->pause();
+        else
+            this->resume();
+    } else {
+        attack->release(pos);
+    }
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (ev->type()==QEvent::WindowDeactivate) {
+        this->pause();
+    } else if (ev->type()== QEvent::WindowActivate) {
+//        this->resume();
+    }
+    return QMainWindow::eventFilter(obj,ev);
+}
+
+void MainWindow::pause()
+{
+    if (!isPaused)
+        disconnect(this, SIGNAL(frameSignalReceive()), this, SIGNAL(frameSignalToSend()));
+    this->isPaused=true;
+}
+
+void MainWindow::resume()
+{
+    if (isPaused)
+        connect(this, SIGNAL(frameSignalReceive()), SIGNAL(frameSignalToSend()));
+    this->isPaused=false;
+}
+
+void MainWindow::resizeEvent(QResizeEvent *)
+{
+    if (init) {
+        QRect screenRect = this->rect();
+        screenRect-=QMargins(5,5,5,5);
+        ui->graphicsView->scene()->setSceneRect(screenRect);
+
+        ui->graphicsView->setGeometry(this->rect());
+            QPixmap pim(":/images/BG");
+        ui->graphicsView->scene()->setBackgroundBrush(pim.scaled(ui->graphicsView->scene()->sceneRect().width(), ui->graphicsView->scene()->sceneRect().height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+        score->addScore(0);
+    }
 }
 
 void MainWindow::newBall(Ball *ball)

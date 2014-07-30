@@ -9,7 +9,7 @@ class Attack : public QObject {
     Q_OBJECT
 public:
     Attack(double maulRadius, double swipeLength1, double swipeLength2, QObject *parent=0);
-    void press(QPointF pos, Qt::MouseButtons buttons);
+    void press(QPointF pos);
     void swipe(qreal angle, QPointF pos);
     void release(QPointF pos);
 signals:

@@ -7,14 +7,14 @@ Attack::Attack(double maulRadius, double swipeLength1, double swipeLength2, QObj
 {
 }
 
-void Attack::press(QPointF pos, Qt::MouseButtons buttons) {
+void Attack::press(QPointF pos) {
     this->startPoint = pos;
 }
 
 void Attack::release(QPointF pos)
 {
     QLineF line(this->startPoint,pos);
-    if (line.length()<swipeLength1) {
+    if (line.length()<swipeLength2) {
         QRegion reg = QRegion(QRect(pos.toPoint()-QPoint(maulRadius,maulRadius),pos.toPoint()+QPoint(maulRadius,maulRadius)),QRegion::Ellipse);
         emit attackMaul(reg);
     } else {

@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     swipeanimation.cpp \
     frametimer.cpp \
     animationfactory.cpp \
-    maulanimation.cpp
+    maulanimation.cpp \
+    scoreboard.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -28,7 +29,8 @@ HEADERS  += \
     swipeanimation.h \
     frametimer.h \
     animationfactory.h \
-    maulanimation.h
+    maulanimation.h \
+    scoreboard.h
 
 FORMS += \
     mainwindow.ui
@@ -41,3 +43,8 @@ OTHER_FILES += \
     android/AndroidManifest.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+CONFIG(release, debug|release) {
+    DESTDIR = ../trunk/deploy
+}
+

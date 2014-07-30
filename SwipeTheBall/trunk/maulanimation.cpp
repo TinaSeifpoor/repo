@@ -13,7 +13,9 @@ MaulAnimation::MaulAnimation(QRegion reg, QGraphicsScene *scene){
 
 void MaulAnimation::deleteLine()
 {
-    item->scene()->removeItem(item);
-    delete item;
+    if (item)
+        if (item->scene())
+            item->scene()->removeItem(item);
     this->deleteLater();
+    delete item;
 }

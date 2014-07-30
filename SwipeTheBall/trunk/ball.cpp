@@ -38,7 +38,7 @@ public:
     }
 
     double r() const {
-        return ((double)(qrand()%10000)/5000)-1; // zero mean uniform random variable between -1 and 1
+        return ((double)(qrand()%10000)/1000); // zero mean uniform random variable between -2 and 2
     }
 
     double radiusFromHealth() {
@@ -55,16 +55,18 @@ public:
     void attack(int damage) {
         for (int i=0; i<damage; ++i) {
             --health;
-//            if (health) {
-//                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
-//                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
-//            }
         }
         p->randomize();
         if (health<=0)
             emit p->hit(startHealth,idx);
         radiusFromHealth();
         ellipse->setPixmap(pim.scaled(radius*2,radius*2,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        ellipse->setPos(center.x()-radius, center.y()-radius);
+    }
+
+    void resetPosition() {
+        center.setX(qrand()%(int)(ellipse->scene()->sceneRect().width()-radius*4)+radius*2);
+        center.setY(qrand()%(int)(ellipse->scene()->sceneRect().height()-radius*4)+radius*2);
         ellipse->setPos(center.x()-radius, center.y()-radius);
     }
 
@@ -81,22 +83,16 @@ Ball::Ball(QGraphicsScene *scene,
     d->radiusFromHealth();
     d->swipeDamage = swipeDamage;
     d->maulDamage = maulDamage;
-    d->speed = QPointF(d->r()/2,d->r()/2);
+    d->speed = QPointF(d->r(),0);
+    randomize();
     d->expireTime=expireTime;
 
     QImage im(":/images/ball");
     d->color.setAlpha(200);
     im.setColor(0,d->color.rgb());
     d->pim=QPixmap::fromImage(im);
-
     d->ellipse = scene->addPixmap(d->pim.scaled(d->radius*2, d->radius*2,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
-
-    d->center.setX(qrand()%(int)(scene->sceneRect().width()-d->radius*4)+d->radius*2);
-    d->center.setY(qrand()%(int)(scene->sceneRect().height()-d->radius*4)+d->radius*2);
-
-
-    d->ellipse->moveBy(d->center.x()-d->radius, d->center.y()-d->radius);
-
+    d->resetPosition();
 }
 
 Ball::~Ball()
@@ -122,15 +118,13 @@ void Ball::frame()
                        QPointF(d->center.x()+d->radius, d->center.y()+d->radius));
     if (    ellipseRect.left() < sceneRect.left() ||
             ellipseRect.right() > sceneRect.right()) {
-        d->speed.setX(-d->speed.x());
-        d->ellipse->moveBy(2*d->speed.x(),0);
-        d->center += QPointF(2*d->speed.x(),0);
+        d->resetPosition();
+        randomize();
     }
     if (    ellipseRect.top() < sceneRect.top() ||
             ellipseRect.bottom() > sceneRect.bottom()) {
-        d->speed.setY(-d->speed.y());
-        d->ellipse->moveBy(0,2*d->speed.y());
-        d->center += QPointF(0,2*d->speed.y());
+        d->resetPosition();
+        randomize();
     }
 
     double totalSpeed = qSqrt(d->speed.x()*d->speed.x()+d->speed.y()*d->speed.y());

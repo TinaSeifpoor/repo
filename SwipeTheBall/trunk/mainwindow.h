@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-class QTimer;
 class Ball;
 class Attack;
 class AnimationFactory;
+class ScoreBoard;
+class QTimer;
 class QGraphicsTextItem;
 namespace Ui {
 class MainWindow;
@@ -31,7 +32,6 @@ private slots:
     void miss(double health);
     void hit(double health);
     void frame();
-    void on_pushButton_toggled(bool checked);
     void genBall(int count=1);
     void removeBall(double, qint16 idx);
 
@@ -42,10 +42,13 @@ private:
     QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
-
+    bool eventFilter(QObject *obj, QEvent *ev);
+    void pause();
+    void resume();
+    void resizeEvent(QResizeEvent *);
     Attack* attack;
     AnimationFactory* animationFactory;
-    QGraphicsTextItem* score;
+    ScoreBoard* score;
     struct Settings {
         int ballVanishMinTime;
         int ballVanishTime;
@@ -60,6 +63,8 @@ private:
         int width;
         int height;
     } gameSettings;
+    bool init;
+    bool isPaused;
 };
 
 #endif // MAINWINDOW_H
