@@ -41,10 +41,7 @@ private:
     QList<Ball*> balls;
     QList<qint16> availableBalls;
     void mousePressEvent(QMouseEvent *ev);
-    void mouseMoveEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
-//    bool event(QEvent *event);
-//    bool gestureEvent(QGestureEvent* event);
 
     Attack* attack;
     AnimationFactory* animationFactory;

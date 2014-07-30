@@ -6,87 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>557</width>
-    <height>557</height>
+    <width>525</width>
+    <height>521</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Click The Ball</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSpinBox" name="sbScore">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>150</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>150</width>
-      <height>50</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>150</width>
-      <height>50</height>
-     </size>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="keyboardTracking">
-     <bool>false</bool>
-    </property>
-    <property name="minimum">
-     <number>-999999999</number>
-    </property>
-    <property name="maximum">
-     <number>999999999</number>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>150</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>150</width>
-      <height>50</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>150</width>
-      <height>16777215</height>
-     </size>
-    </property>
-    <property name="text">
-     <string>Pause</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>1</y>
+      <x>0</x>
+      <y>0</y>
       <width>555</width>
       <height>555</height>
      </rect>
@@ -104,9 +36,6 @@
      </size>
     </property>
    </widget>
-   <zorder>graphicsView</zorder>
-   <zorder>sbScore</zorder>
-   <zorder>pushButton</zorder>
   </widget>
   <action name="actionBall_Score">
    <property name="text">

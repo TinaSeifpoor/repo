@@ -59,13 +59,13 @@ public:
 //                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
 //                emit p->newBall(new Ball(ellipse->scene(),expireTime,radius,health,maulDamage,swipeDamage));
 //            }
-
         }
         p->randomize();
         if (health<=0)
             emit p->hit(startHealth,idx);
         radiusFromHealth();
         ellipse->setPixmap(pim.scaled(radius*2,radius*2,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        ellipse->setPos(center.x()-radius, center.y()-radius);
     }
 
 

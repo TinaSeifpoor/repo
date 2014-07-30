@@ -37,4 +37,7 @@ RESOURCES += \
     res.qrc
 
 OTHER_FILES += \
-    stb.rc
+    stb.rc \
+    android/AndroidManifest.xml
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

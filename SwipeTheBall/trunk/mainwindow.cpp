@@ -145,7 +145,6 @@ void MainWindow::frame()
 {
     if (qrand()%10000>gameSettings.ballChance)
         genBall();
-//    ui->sbScore->setValue(ui->sbScore->value()+ui->sbFrame->value());
 }
 
 void MainWindow::on_pushButton_toggled(bool checked)
@@ -163,35 +162,10 @@ void MainWindow::mousePressEvent(QMouseEvent *ev)
                   ev->buttons());
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent *ev)
-{
-//    if (QApplication::mouseButtons()&Qt::LeftButton) {
-//        attack->swipe(0,ev->pos());
-//    }
-}
-
 void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
 {
-    attack->release(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())),
-                  ev->buttons());
+    attack->release(ui->graphicsView->mapToScene(ui->graphicsView->mapFromParent(ev->pos())));
 }
-
-//bool MainWindow::event(QEvent *event)
-//{
-//    if (event->type() == QEvent::Gesture)
-//        return gestureEvent(static_cast<QGestureEvent*>(event));
-//    return QWidget::event(event);
-//}
-
-//bool MainWindow::gestureEvent(QGestureEvent *event)
-//{
-//    if (QGesture*gesture = event->gesture(Qt::SwipeGesture)) {
-//        QSwipeGesture* swipe = static_cast<QSwipeGesture*>(gesture);
-//        swipe->swipeAngle();
-//        attack->swipe(swipe->swipeAngle(), ui->graphicsView->mapToScene(ui->graphicsView->mapFromGlobal(QCursor::pos())));
-//    }
-//}
-
 
 void MainWindow::newBall(Ball *ball)
 {
