@@ -2,7 +2,7 @@
 #define MAULANIMATION_H
 
 class QGraphicsScene;
-class QGraphicsEllipseItem;
+class QGraphicsPixmapItem;
 #include <QRegion>
 class MaulAnimation : public QObject
 {
@@ -12,7 +12,7 @@ public:
 public slots:
     void deleteLine();
 private:
-    QGraphicsEllipseItem* item;
+    QGraphicsPixmapItem* item;
 };
 
 #endif // MAULANIMATION_H

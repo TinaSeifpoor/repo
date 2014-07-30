@@ -2,5 +2,6 @@
     <qresource prefix="/images">
         <file alias="ball">res/ballofyarn.png</file>
         <file alias="BG">res/background.png</file>
+        <file alias="Maul">res/paw.png</file>
     </qresource>
 </RCC>

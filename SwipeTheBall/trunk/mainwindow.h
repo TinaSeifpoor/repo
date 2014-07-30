@@ -6,7 +6,7 @@ class QTimer;
 class Ball;
 class Attack;
 class AnimationFactory;
-class QGestureEvent;
+class QGraphicsTextItem;
 namespace Ui {
 class MainWindow;
 }
@@ -45,7 +45,7 @@ private:
 
     Attack* attack;
     AnimationFactory* animationFactory;
-
+    QGraphicsTextItem* score;
     struct Settings {
         int ballVanishMinTime;
         int ballVanishTime;

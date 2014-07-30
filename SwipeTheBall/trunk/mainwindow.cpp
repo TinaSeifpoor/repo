@@ -98,6 +98,7 @@ void MainWindow::initMainWindow()
     ui->graphicsView->setGeometry(this->rect());
     QPixmap pim(":/images/BG");
     scene->setBackgroundBrush(pim.scaled(screenRect.width(), screenRect.height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+    this->score = scene->addText("0",QFont("Helvetica [Cronyx]", 16));
 }
 
 MainWindow::~MainWindow()
@@ -119,7 +120,6 @@ void MainWindow::removeBall(double,qint16 idx)
     Ball *ball = balls.at(idx);
     if (ball) {
         disconnect(this, SIGNAL(frameSignalToSend()), ball, SLOT(frame()));
-        //        disconnect(this, SIGNAL(regularHit(QPointF)), ball, SLOT(regularHit(QPointF)));
         disconnect(ball, SIGNAL(hit(double, qint16)), this, SLOT(hit(double)));
         disconnect(ball, SIGNAL(hit(double, qint16)), this, SLOT(removeBall(double, qint16)));
         disconnect(ball, SIGNAL(miss(double, qint16)), this, SLOT(miss(double)));
@@ -133,12 +133,14 @@ void MainWindow::removeBall(double,qint16 idx)
 
 void MainWindow::miss(double health)
 {
-    ui->sbScore->setValue(ui->sbScore->value()-health*5000);
+    this->score->setPlainText(QString::number(this->score->toPlainText().toInt()-health*5000));
+//    ui->sbScore->setValue(ui->sbScore->value()-health*5000);
 }
 
 void MainWindow::hit(double health)
 {
-    ui->sbScore->setValue(ui->sbScore->value()+600*health);
+    this->score->setPlainText(QString::number(this->score->toPlainText().toInt()+health*600));
+//    ui->sbScore->setValue(ui->sbScore->value()+600*health);
 }
 
 void MainWindow::frame()
