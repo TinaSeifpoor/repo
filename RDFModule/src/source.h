@@ -16,6 +16,7 @@ public:
     unsigned int countSamples() const;
     unsigned int countClasses() const;
     QList<ClassID> getSampleClasses() const;
+    QHash<unsigned int, ClassID> uniqueClasses() const;
     Sample* at(int idx) const;
 private:
     SourcePrivate* d;

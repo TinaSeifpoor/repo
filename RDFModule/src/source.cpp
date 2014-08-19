@@ -48,6 +48,15 @@ QList<ClassID> Source::getSampleClasses() const
     return d->classIDList;
 }
 
+QHash<unsigned int, ClassID> Source::uniqueClasses() const
+{
+    QHash<unsigned int, ClassID> uniqueClassHash;
+    for (int i=0; i<d->uniqueClassIDList.size(); ++i) {
+        uniqueClassHash.insert(i, d->uniqueClassIDList.at(i));
+    }
+    return uniqueClassHash;
+}
+
 Sample *Source::at(int idx) const
 {
     return &d->sampleList[idx];

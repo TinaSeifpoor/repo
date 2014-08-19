@@ -6,9 +6,36 @@
 QVector<double> log2LookUpTable;
 const int tableLength = 1000000;
 const double log2 = 0.69314718055994530941723212145818;
+double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples);
+
+struct NodePrivate {
+    // inputs
+    const Source* source;
+    const Features* features;
+    TreeProperties properties;
+
+    // outputs / postprocess
+    Source* sourceLeft;
+    Source* sourceRight;
+    unsigned int featureIdx;
+    double splitValue;
+};
 
 
-Node::Node()
+
+Node::Node(const Source *source, const Features *features, TreeProperties properties, Source *left, Source *right, double splitValue, unsigned int featureIdx):
+    d(new NodePrivate)
+{
+    d->source = source;
+    d->features = features;
+    d->properties = properties;
+    d->sourceLeft = left;
+    d->sourceRight = right;
+    d->splitValue = splitValue;
+    d->featureIdx = featureIdx;
+}
+
+Node *Node::train(const Source *source, const Features* features, const TreeProperties properties)
 {
     if (log2LookUpTable.isEmpty()) {
         for (int i=1; i<tableLength; ++i) {
@@ -16,15 +43,13 @@ Node::Node()
         }
         log2LookUpTable[0]=0;
     }
-}
-
-void Node::train(const Source *source, const Features* features, const TreeProperties properties, Source *sourceTrue, Source *sourceFalse)
-{
     Source* samplesForNode = source->baggedSamples(properties.baggingFactorSamples);
     Features* featuresForNode = features->randomlySortedList(properties.baggingFactorFeatures);
     QList<ClassID> sampleClasses = samplesForNode->getSampleClasses();
+    QHash<unsigned int, ClassID> uniqueClasses = samplesForNode->uniqueClasses();
     unsigned int nClasses = samplesForNode->countClasses();
     featuresForNode->setSource(samplesForNode);
+
 
     EntropyValue bestInformationGain = -INT_MAX;
 
@@ -35,7 +60,7 @@ void Node::train(const Source *source, const Features* features, const TreePrope
     std::vector<unsigned int>   sampleClassesHistogram;
             sampleClassesHistogram .resize(nClasses,0);
     for(int idx=0; idx<sampleClasses.size(); idx++) {
-        ++sampleClassesHistogram[sampleClasses.at(idx)];
+        ++sampleClassesHistogram[uniqueClasses.key(sampleClasses.at(idx))];
     }
     EntropyValue parent = entropy(sampleClassesHistogram, nSamples);
     for (unsigned int idxFeature=0; idxFeature<nFeatures; ++idxFeature) {
@@ -49,10 +74,10 @@ void Node::train(const Source *source, const Features* features, const TreePrope
             sampleClassesHistogramRight.resize(nClasses,0);
 
             for(unsigned int idxBeforeCurrent=0; idxBeforeCurrent<idxCurrent; idxBeforeCurrent++) {
-                ++sampleClassesHistogramLeft[sampleClasses.at(sortIdx.at(idxBeforeCurrent))];
+                ++sampleClassesHistogramLeft[uniqueClasses.key(sampleClasses.at(sortIdx.at(idxBeforeCurrent)))];
             }
             for(unsigned int idxAfterCurrent=idxCurrent; idxAfterCurrent<sortIdx.size(); idxAfterCurrent++) {
-                ++sampleClassesHistogramRight[sampleClasses.at(sortIdx.at(idxAfterCurrent))];
+                ++sampleClassesHistogramRight[uniqueClasses.key(sampleClasses.at(sortIdx.at(idxAfterCurrent)))];
             }
             EntropyValue    entropyLeftValue  = entropy(sampleClassesHistogramLeft ,nSamples),
                             entropyRightValue = entropy(sampleClassesHistogramRight,nSamples),
@@ -72,18 +97,47 @@ void Node::train(const Source *source, const Features* features, const TreePrope
     featuresForSplit->setSource(source);
     std::vector<double> featureValues = featuresForSplit->getFeatureValues(bestFeatureIdx);
 
-    QList<Sample> samplesTrue, samplesFalse;
+    QList<Sample> samplesLeft, samplesRight;
     for (unsigned int idxSample=0; idxSample<source->countSamples(); idxSample++) {
         if (featureValues.at(idxSample)<bestFeatureVal)
-            samplesTrue.append(*source->at(idxSample));
+            samplesLeft.append(*source->at(idxSample));
         else
-            samplesFalse.append(*source->at(idxSample));
+            samplesRight.append(*source->at(idxSample));
     }
-    sourceTrue = new Source(samplesTrue);
-    sourceFalse = new Source(samplesFalse);
+    return new Node(source, features, properties, new Source(samplesLeft), new Source(samplesRight), bestFeatureVal, bestFeatureIdx);
 }
 
-double Node::entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples){
+Node *Node::trainLeft(Node *parent)
+{
+    return Node::train(parent->leftSamples(), parent->features(), parent->treeProperties());
+}
+
+Node *Node::trainRight(Node *parent)
+{
+    return Node::train(parent->rightSamples(), parent->features(), parent->treeProperties());
+}
+
+const Features *Node::features() const
+{
+    return d->features;
+}
+
+TreeProperties Node::treeProperties() const
+{
+    return d->properties;
+}
+
+const Source *Node::leftSamples() const
+{
+    return d->sourceLeft;
+}
+
+const Source *Node::rightSamples() const
+{
+    return d->sourceRight;
+}
+
+double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples){
     int totalClasses = sampleHistogram.size();
     long double totalEntropy=0;
     for (int i=0; i<totalClasses; ++i) {
