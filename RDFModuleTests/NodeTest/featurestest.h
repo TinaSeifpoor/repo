@@ -1,6 +1,6 @@
 #ifndef FEATURESTEST_H
 #define FEATURESTEST_H
-#include "../../RDFModule/src/features.h"
+#include "features.h"
 #include <QFileInfo>
 class FeaturesTest : public Features
 {

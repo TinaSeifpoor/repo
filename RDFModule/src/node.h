@@ -10,7 +10,7 @@ class Node
 public:
     Node();
     double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples);
-    void train(const Source *samples, const Features *features, const TreeProperties properties, Source *samplesTrue, Source *samplesFalse);
+    void train(const Source *source, const Features *features, const TreeProperties properties, Source *sourceTrue, Source *sourceFalse);
 };
 
 #endif // NODE_H

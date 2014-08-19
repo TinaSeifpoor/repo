@@ -25,16 +25,15 @@ void Features::operator <<(const Feature *feature)
     }
 }
 
-double Features::getFeatureValue(const int linearIdx, bool *res) const
-{
-    if (d->features.size()>linearIdx) {
-        return d->features.at(linearIdx)->getParameterValue(res);
-    } else {
-        *res = false;
-        return INT_MIN;
-    }
-
-}
+//double Features::getFeatureValue(const int linearIdx, bool *res) const
+//{
+//    if (d->features.size()>linearIdx) {
+//        return d->features.at(linearIdx)->getParameterValue(res);
+//    } else {
+//        *res = false;
+//        return INT_MIN;
+//    }
+//}
 
 std::vector<double> Features::getFeatureValues(const int featureIdx, bool *res) const
 {

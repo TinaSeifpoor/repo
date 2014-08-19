@@ -2,6 +2,7 @@
 #define VECTORINDEXSORTER_H
 #include <vector>
 #include <algorithm>
+#include <cmath>
 template <typename T>
 std::vector<unsigned int> sort_indexes(const std::vector<T> &v) {
 

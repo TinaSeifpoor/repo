@@ -10,6 +10,12 @@ struct SourcePrivate {
 Source::Source(QList<Sample> samples):d(new SourcePrivate)
 {
     d->sampleList = samples;
+    for (int i=0; i<d->sampleList.count(); ++i) {
+        ClassID c = d->sampleList.at(i).sampleClass;
+        if (!d->uniqueClassIDList.contains(c))
+            d->uniqueClassIDList.append(c);
+        d->classIDList.append(c);
+    }
 }
 
 Source *Source::baggedSamples(double sampleRatio) const

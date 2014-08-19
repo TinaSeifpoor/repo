@@ -14,13 +14,16 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+INCLUDEPATH += ../../RDFModule/src
+
 
 SOURCES += main.cpp \
     ../../RDFModule/src/node.cpp \
     featuretest.cpp \
     ../../RDFModule/src/features.cpp \
     featurestest.cpp \
-    ../../RDFModule/src/source.cpp
+    ../../RDFModule/src/source.cpp \
+    initializer.cpp
 
 HEADERS += \
     ../../RDFModule/src/source.h \
@@ -30,4 +33,5 @@ HEADERS += \
     ../../RDFModule/src/listrandomsorter.h \
     ../../RDFModule/src/feature.h \
     ../../RDFModule/src/features.h \
-    featurestest.h
+    featurestest.h \
+    initializer.h
