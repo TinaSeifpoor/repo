@@ -7,19 +7,11 @@ typedef double FeatureValue;
 
 #include <QVariant>
 
-
-enum SplittingCriterion
-{
-    InformationGain,
-    GiniImpurity
-};
-
 struct TreeProperties
 {
     double  baggingFactorFeatures,
             baggingFactorSamples;
     unsigned int maxDepth;
-    SplittingCriterion criteria;
 };
 
 struct ForestProperties

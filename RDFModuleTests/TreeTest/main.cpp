@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
     TreeProperties pro;
     pro.baggingFactorFeatures = 1;
     pro.baggingFactorSamples = 1;
-    pro.criteria = GiniImpurity;
     pro.maxDepth = 3;
     Node* n0 = Node::train(&s,&f,pro);
     Node* n1 = Node::trainLeft(n0);
