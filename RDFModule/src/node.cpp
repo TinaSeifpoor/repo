@@ -3,9 +3,9 @@
 #include "vectorindexsorter.h"
 #include "features.h"
 #include "source.h"
-QVector<double> log2LookUpTable;
+//QVector<double> log2LookUpTable;
 const int tableLength = 1000000;
-const double log2 = 0.69314718055994530941723212145818;
+const double log2 = 1.44269504088896340736;
 double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples);
 
 struct NodePrivate {
@@ -37,12 +37,12 @@ Node::Node(const Source *source, const Features *features, TreeProperties proper
 
 Node *Node::train(const Source *source, const Features* features, const TreeProperties properties)
 {
-    if (log2LookUpTable.isEmpty()) {
-        for (int i=1; i<tableLength; ++i) {
-            log2LookUpTable << (log((long double)i/(long double)tableLength)/log2);
-        }
-        log2LookUpTable[0]=0;
-    }
+//    if (log2LookUpTable.isEmpty()) {
+//        for (int i=1; i<tableLength; ++i) {
+//            log2LookUpTable << (log((long double)i/(long double)tableLength)/log2);
+//        }
+//        log2LookUpTable[0]=0;
+//    }
     Source* samplesForNode = source->baggedSamples(properties.baggingFactorSamples);
     Features* featuresForNode = features->randomlySortedList(properties.baggingFactorFeatures);
     QList<ClassID> sampleClasses = samplesForNode->getSampleClasses();
@@ -142,8 +142,9 @@ double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples)
     long double totalEntropy=0;
     for (int i=0; i<totalClasses; ++i) {
         long double prob = ((double)sampleHistogram.at(i)/(double)nSamples);
-        totalEntropy -= prob*log2LookUpTable.at(prob*tableLength);
-//        totalEntropy -= prob*log(prob)/log2;
+//        totalEntropy -= prob*log2LookUpTable.at(prob*tableLength);
+        if (prob>0)
+            totalEntropy -= prob*log(prob)/log2;
     }
     return totalEntropy;
 }
