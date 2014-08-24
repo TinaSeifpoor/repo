@@ -20,7 +20,7 @@ void Features::init()
 void Features::operator <<(const Feature *feature)
 {
     unsigned int nFeature = feature->parameterRange();
-    for (int i=0; i<nFeature;++i) {
+    for (int i=0; i<(int)nFeature;++i) {
         d->features.append(feature->getIndex(i));
     }
 }
@@ -39,7 +39,7 @@ std::vector<double> Features::getFeatureValues(const int featureIdx, bool *res) 
 {
     if (d->features.size()>featureIdx) {
         std::vector<double> featureValues;
-        for (int idxSample=0; idxSample<d->samples->countSamples(); ++idxSample) {
+        for (int idxSample=0; idxSample<(int)d->samples->countSamples(); ++idxSample) {
             featureValues.push_back(d->samples->at(idxSample)->featureValues[featureIdx]);
         }
         if (res!=0)
@@ -64,7 +64,7 @@ const int Features::range() const
     return d->features.count();
 }
 
-Features* Features::randomlySortedList(double ratio) const
+Features* Features::baggedFeatures(double ratio) const
 {
     if (ratio==1) {
         return this->copy(d->features);

@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     ../../RDFModule/src/features.cpp \
     featurestest.cpp \
     ../../RDFModule/src/source.cpp \
-    initializer.cpp
+    initializer.cpp \
+    ../../RDFModule/src/forest.cpp \
+    ../../RDFModule/src/foresttrainer.cpp
 
 HEADERS += \
     ../../RDFModule/src/source.h \
@@ -34,4 +36,6 @@ HEADERS += \
     ../../RDFModule/src/feature.h \
     ../../RDFModule/src/features.h \
     featurestest.h \
-    initializer.h
+    initializer.h \
+    ../../RDFModule/src/forest.h \
+    ../../RDFModule/src/foresttrainer.h

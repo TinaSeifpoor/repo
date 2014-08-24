@@ -19,7 +19,8 @@ struct ForestProperties
     unsigned int    nTrees;
     double          baggingFactorFeatures,
                     baggingFactorSamples;
-    TreeProperties treeProperties;
+    TreeProperties  treeProperties;
+    unsigned int    nTrainers;
 };
 
 struct Sample {

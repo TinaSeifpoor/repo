@@ -9,21 +9,10 @@ struct NodePrivate;
 class Node
 {
 public:
-    //
-    static Node* train(const Source *source, const Features *features, const TreeProperties properties);
-
-    static Node* trainLeft(Node* parent);
-    static Node* trainRight(Node* parent);
-
-    const Features* features() const;
-    TreeProperties treeProperties() const;
-    const Source* leftSamples() const;
-    const Source* rightSamples() const;
-    double splitValue() const;
-    unsigned int featureIdx() const;
-
+    static Node* train(const Source *source, const Features *features, const TreeProperties properties, unsigned int linearIdx=0);
+    QString text() const;
 private:
-    Node(const Source *source, const Features *features, TreeProperties properties, Source* left, Source* right, double splitValue, unsigned int featureIdx);
+    Node(const unsigned int linearIdx, const Source *source, const Features *features, TreeProperties properties, Source* left, Source* right, double splitValue, unsigned int featureIdx, double parentEntropy, double leftEntropy, double rightEntropy, double informationGain);
     NodePrivate* d;
 };
 

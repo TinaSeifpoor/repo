@@ -15,7 +15,7 @@ public:
     double getFeatureValue(const int linearIdx, bool *res=0) const;
     std::vector<double> getFeatureValues(const int featureIdx, bool *res=0) const;
     void setSource(const Source *samples);
-    Features *randomlySortedList(double ratio) const;
+    Features *baggedFeatures(double ratio) const;
     virtual Features* copy(QList<Feature*> featureList) const=0;
     const int range() const;
 protected:
