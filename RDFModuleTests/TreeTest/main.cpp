@@ -30,11 +30,14 @@ int main(int argc, char *argv[])
     forestPro.baggingFactorSamples = 1;
     forestPro.nTrees = 500;
     forestPro.treeProperties = treePro;
+    qDebug("training forest...");
     Forest* forest = Forest::train(&s, &f, forestPro);
+    qDebug("forest trained");
     QFile file("d:/forest.xml");
     file.open(QFile::WriteOnly);
     file.write(forest->text().toLatin1());
     file.close();
+    qDebug("file written");
 //    Source sourceTrue, sourceFalse;
 //    n.train(&s,&f,pro,&sourceTrue, &sourceFalse);
     return 0;
