@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-typedef unsigned int ClassID;
+typedef int ClassID;
 typedef unsigned int FeatureIdx;
 typedef double FeatureValue;
 

@@ -5,12 +5,13 @@
 #include "forest.h"
 #include "featurestest.h"
 #include <QFile>
+#include <QDateTime>
 Q_DECLARE_METATYPE(QFileInfo);
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    srand(time(0));
+    srand(QDateTime::currentMSecsSinceEpoch());
 
 
     Initializer init;
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
     ForestProperties forestPro;
     forestPro.baggingFactorFeatures = 1;
     forestPro.baggingFactorSamples = 1;
-    forestPro.nTrees = 5;
+    forestPro.nTrees = 1;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");
     Forest* forest = Forest::train(&s, &f, forestPro);

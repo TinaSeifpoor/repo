@@ -4,7 +4,7 @@
 #include "features.h"
 #include "source.h"
 #include <QStringList>
-const QString nodeText("<Node %1>\r\n\t\t\t<Entropy>%2</Entropy>\r\n\t\t\t<FeatureIdx>%3</FeatureIdx>\r\n\t\t\t<SplitValue>%4</SplitValue>\r\n\t\t</Node>");
+const QString nodeText("<Node %1>\r\n\t\t\t<Entropy>%2</Entropy>\r\n\t\t\t<UniqueClasses>%3</UniqueClasses>\r\n\t\t\t<Classes>%4</Classes>\r\n\t\t\t<FeatureIdx>%5</FeatureIdx>\r\n\t\t\t<SplitValue>%6</SplitValue>\r\n\t\t</Node>");
 const int tableLength = 1000000;
 const double log2 = 1.44269504088896340736;
 double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples);
@@ -33,10 +33,21 @@ struct NodePrivate {
     unsigned int linearIdx;
 };
 
+QString fromClassList(QList<ClassID> list) {
+    QStringList out;
+    for (int i=0; i<list.count(); ++i) {
+        out << QString::number(list.at(i));
+    }
+    return out.join(",");
+}
+
 QString Node::text() const
 {
     QStringList nodeTexts;
-    nodeTexts << nodeText.arg(d->linearIdx).arg(d->parentEntropy).arg(d->featureIdx).arg(d->splitValue);
+    nodeTexts << nodeText.arg(d->linearIdx).arg(d->parentEntropy)
+                 .arg(fromClassList(d->m_source->uniqueClasses().values()))
+                 .arg(fromClassList(d->m_source->getSampleClasses()))
+                 .arg(d->featureIdx).arg(d->splitValue);
     if (d->left)
         nodeTexts << d->left->text();
     if (d->right)
