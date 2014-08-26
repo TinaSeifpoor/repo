@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     ForestProperties forestPro;
     forestPro.baggingFactorFeatures = 1;
     forestPro.baggingFactorSamples = 1;
-    forestPro.nTrees = 500;
+    forestPro.nTrees = 5;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");
     Forest* forest = Forest::train(&s, &f, forestPro);

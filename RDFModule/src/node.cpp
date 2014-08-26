@@ -4,7 +4,7 @@
 #include "features.h"
 #include "source.h"
 #include <QStringList>
-const QString nodeText("<Node %1>\r\n\t\t\t<FeatureIdx>%2</FeatureIdx>\r\n\t\t\t<SplitValue>%3</SplitValue>\r\n\t\t</Node>");
+const QString nodeText("<Node %1>\r\n\t\t\t<Entropy>%2</Entropy>\r\n\t\t\t<FeatureIdx>%3</FeatureIdx>\r\n\t\t\t<SplitValue>%4</SplitValue>\r\n\t\t</Node>");
 const int tableLength = 1000000;
 const double log2 = 1.44269504088896340736;
 double entropy(std::vector<unsigned int> sampleHistogram, unsigned int nSamples);
@@ -30,14 +30,13 @@ struct NodePrivate {
     double leftEntropy;
     double rightEntropy;
     double informationGain;
-    unsigned int depth;
     unsigned int linearIdx;
 };
 
 QString Node::text() const
 {
     QStringList nodeTexts;
-    nodeTexts << nodeText.arg(d->linearIdx).arg(d->featureIdx).arg(d->splitValue);
+    nodeTexts << nodeText.arg(d->linearIdx).arg(d->parentEntropy).arg(d->featureIdx).arg(d->splitValue);
     if (d->left)
         nodeTexts << d->left->text();
     if (d->right)
@@ -138,7 +137,7 @@ Node *Node::train(const Source *source, const Features* features, const TreeProp
                         new Source(samplesLeft), new Source(samplesRight),
                         bestFeatureVal, bestFeatureIdx,
                         parent, bestLeftEntropy, bestRightEntropy, bestInformationGain);
-    if (linearIdx<properties.maxDepth) {
+    if (linearIdx/2<properties.maxDepth) {
         current->d->trainLeft();
         current->d->trainRight();
     }

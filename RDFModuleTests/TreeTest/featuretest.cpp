@@ -3,12 +3,17 @@
 const int randomizer=50000;
 
 Q_DECLARE_METATYPE(QFileInfo);
-
+enum featureTestEnum {
+    feature1 = 1,
+    feature2 = 2,
+    feature3 = 4
+};
+Q_DECLARE_FLAGS(featureTestFlags, featureTestEnum)
 FeatureTest::FeatureTest(int index):
     index(index)
 {
     if (index ==-1)
-        range=10;
+        range=3;
     else {
         range=1;
     }
@@ -32,9 +37,18 @@ Feature *FeatureTest::getIndex(const unsigned int idx) const
 
 bool FeatureTest::setSource(const Source *samples, const FeatureIdx idxFeature) const
 {
+    featureTestEnum feature;
+    if (idxFeature==0) {
+        feature = feature1;
+    } else if (idxFeature==1) {
+        feature = feature2;
+    } else {
+        feature = feature3;
+    }
     for (uint idxSamples=0; idxSamples<samples->countSamples(); ++idxSamples) {
         Sample* sample = samples->at(idxSamples);
-        sample->featureValues[idxFeature] = getRand()/4+(double)((sample->sampleClass+idxFeature)%4);
+        int featureVal = sample->sampleClass&feature;
+        sample->featureValues[idxFeature] = (getRand()-0.5)+featureVal;
     }
     return true;
 }
