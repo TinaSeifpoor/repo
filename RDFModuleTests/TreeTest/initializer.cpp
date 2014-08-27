@@ -8,7 +8,7 @@ Initializer::Initializer()
 Source Initializer::getSource()
 {
     QList<Sample> samples;
-    int classCount = 8;
+    int classCount = 16;
     int sampleCount = 50;
     for (int i=0; i<classCount; ++i) {
         for (int j=0; j<sampleCount; ++j) {

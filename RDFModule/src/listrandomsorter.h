@@ -5,13 +5,13 @@
 template <typename T>
 QList<T> randomlySortList(double ratio, const QList<T> list) {
     unsigned int listSize = list.size();
-    std::vector<unsigned int> randomValuesToSort;
+    std::vector<int> randomValuesToSort;
     randomValuesToSort.resize(listSize);
     std::generate(randomValuesToSort.begin(), randomValuesToSort.end(), [&]{ return rand(); });
-    std::vector<unsigned int> idxSort = sort_indexes(randomValuesToSort);
-    std::vector<unsigned int>::iterator idxSortIt = idxSort.begin();
+    std::vector<int> idxSort = sort_indexes(randomValuesToSort);
+    std::vector<int>::iterator idxSortIt = idxSort.begin();
     unsigned int samplesToTake = ratio*listSize;
-    std::vector<unsigned int>::iterator idxSortEnd = idxSort.begin()+samplesToTake;
+    std::vector<int>::iterator idxSortEnd = idxSort.begin()+samplesToTake;
 
     QList<T> baggedList;
     for(;idxSortIt!=idxSortEnd;++idxSortIt) {

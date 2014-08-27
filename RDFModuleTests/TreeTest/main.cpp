@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     TreeProperties treePro;
     treePro.baggingFactorFeatures = 1;
     treePro.baggingFactorSamples = 1;
-    treePro.maxDepth = 3;
+    treePro.maxDepth = 4;
 
 
     ForestProperties forestPro;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     file.write(forest->text().toLatin1());
     file.close();
     qDebug("file written");
-//    Source sourceTrue, sourceFalse;
-//    n.train(&s,&f,pro,&sourceTrue, &sourceFalse);
+    delete forest;
+
     return 0;
 }

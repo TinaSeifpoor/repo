@@ -2,9 +2,9 @@
 #include "listrandomsorter.h"
 struct SourcePrivate {
     QList<Sample> sampleList;
-    Features* features;
     QList<ClassID> classIDList;
     QList<ClassID> uniqueClassIDList;
+
 };
 
 Source::Source(QList<Sample> samples):d(new SourcePrivate)
@@ -16,6 +16,11 @@ Source::Source(QList<Sample> samples):d(new SourcePrivate)
             d->uniqueClassIDList.append(c);
         d->classIDList.append(c);
     }
+}
+
+Source::~Source()
+{
+    delete d;
 }
 
 Source *Source::baggedSamples(double sampleRatio) const

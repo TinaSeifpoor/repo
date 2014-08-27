@@ -11,6 +11,7 @@ class Source // A file that contains a training matrix, a directory from which f
 {
 public:
     Source(QList<Sample> samples);
+    ~Source();
     Source* baggedSamples(double sampleRatio) const;
 
     unsigned int countSamples() const;

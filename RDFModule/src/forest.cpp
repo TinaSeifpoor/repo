@@ -18,6 +18,11 @@ extern Node* nodeTrainer(const Source *source, const Features *features, const F
 struct ForestPrivate {
     QList<Node*> forest;
     ForestProperties pro;
+    ~ForestPrivate() {
+        foreach (Node* node, forest) {
+            delete node;
+        }
+    }
 };
 
 Forest* Forest::train(const Source *source, const Features *features, const ForestProperties properties)
@@ -46,6 +51,11 @@ QString Forest::text() const
         treeTexts<<treeText.arg(i).arg(d->forest.at(i)->text());
 
     return forestText.arg(d->pro.baggingFactorFeatures).arg(d->pro.baggingFactorSamples).arg(d->pro.nTrees).arg(d->pro.treeProperties.baggingFactorFeatures).arg(d->pro.treeProperties.baggingFactorSamples).arg(d->pro.treeProperties.maxDepth).arg(treeTexts.join("\r\n\t"));
+}
+
+Forest::~Forest()
+{
+    delete d;
 }
 
 Forest::Forest()
