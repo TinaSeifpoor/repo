@@ -6,7 +6,7 @@ class Initializer
 {
 public:
     Initializer();
-    Source getSource();
+    Source* getSource();
 private:
     double getRand() const;
 };

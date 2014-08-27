@@ -25,8 +25,12 @@ Source::~Source()
 
 Source *Source::baggedSamples(double sampleRatio) const
 {
-    QList<Sample> baggedSampleList = randomlySortList(sampleRatio,d->sampleList);
-    return new Source(baggedSampleList);
+    if (sampleRatio == 1)
+        return new Source(d->sampleList);
+    else {
+        QList<Sample> baggedSampleList = randomlySortList(sampleRatio,d->sampleList);
+        return new Source(baggedSampleList);
+    }
 }
 
 

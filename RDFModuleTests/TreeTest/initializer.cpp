@@ -5,7 +5,7 @@ Initializer::Initializer()
 {
 }
 
-Source Initializer::getSource()
+Source* Initializer::getSource()
 {
     QList<Sample> samples;
     int classCount = 16;
@@ -18,5 +18,5 @@ Source Initializer::getSource()
             samples << s;
         }
     }
-    return Source(samples);
+    return new Source(samples);
 }

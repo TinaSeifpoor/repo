@@ -11,6 +11,7 @@ class Forest
 public:
     static Forest *train(const Source *source, const Features *features, const ForestProperties properties);
     QString text() const;
+    static Forest *fromText(QString text);
     ~Forest();
 
 private:

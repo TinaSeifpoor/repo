@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
 
     Initializer init;
-    Source s = init.getSource();
+    Source* s = init.getSource();
 
     FeaturesTest f;
 
@@ -32,14 +32,17 @@ int main(int argc, char *argv[])
     forestPro.nTrees = 1;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");
-    Forest* forest = Forest::train(&s, &f, forestPro);
+    Forest* forest = Forest::train(s, &f, forestPro);
     qDebug("forest trained");
     QFile file("d:/forest.xml");
     file.open(QFile::WriteOnly);
-    file.write(forest->text().toLatin1());
+    QString forestText = forest->text();
+    file.write(forestText.toLatin1());
     file.close();
     qDebug("file written");
     delete forest;
+
+    Forest* forest2 = Forest::fromText(forestText);
 
     return 0;
 }
