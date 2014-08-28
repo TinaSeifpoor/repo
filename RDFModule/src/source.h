@@ -14,10 +14,10 @@ public:
     ~Source();
     Source* baggedSamples(double sampleRatio) const;
 
-    unsigned int countSamples() const;
-    unsigned int countClasses() const;
+    int countSamples() const;
+    int countClasses() const;
     QList<ClassID> getSampleClasses() const;
-    QHash<unsigned int, ClassID> uniqueClasses() const;
+    QHash<int, ClassID> uniqueClasses() const;
     Sample* at(int idx) const;
 private:
     SourcePrivate* d;

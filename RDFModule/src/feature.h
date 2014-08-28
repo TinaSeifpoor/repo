@@ -4,8 +4,8 @@
 class Feature
 {
 public:
-    virtual unsigned int parameterRange() const=0;
-    virtual Feature* getIndex(const unsigned int idx) const=0;
+    virtual int parameterRange() const=0;
+    virtual Feature* getIndex(const int idx) const=0;
     virtual bool setSource(const Source *samples, const FeatureIdx idxFeature) const=0;
 };
 

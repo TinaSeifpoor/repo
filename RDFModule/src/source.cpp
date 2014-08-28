@@ -34,12 +34,12 @@ Source *Source::baggedSamples(double sampleRatio) const
 }
 
 
-unsigned int Source::countSamples() const
+int Source::countSamples() const
 {
     return d->sampleList.count();
 }
 
-unsigned int Source::countClasses() const
+int Source::countClasses() const
 {
     return d->uniqueClassIDList.count();
 }
@@ -57,9 +57,9 @@ QList<ClassID> Source::getSampleClasses() const
     return d->classIDList;
 }
 
-QHash<unsigned int, ClassID> Source::uniqueClasses() const
+QHash<int, ClassID> Source::uniqueClasses() const
 {
-    QHash<unsigned int, ClassID> uniqueClassHash;
+    QHash<int, ClassID> uniqueClassHash;
     for (int i=0; i<d->uniqueClassIDList.size(); ++i) {
         uniqueClassHash.insert(i, d->uniqueClassIDList.at(i));
     }

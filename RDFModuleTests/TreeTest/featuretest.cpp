@@ -20,12 +20,12 @@ FeatureTest::FeatureTest(int index):
     }
 }
 
-unsigned int FeatureTest::parameterRange() const
+int FeatureTest::parameterRange() const
 {
     return this->range;
 }
 
-Feature *FeatureTest::getIndex(const unsigned int idx) const
+Feature *FeatureTest::getIndex(const int idx) const
 {
     if (this->index==-1 && range>idx) {
         return new FeatureTest(idx);
@@ -48,7 +48,7 @@ bool FeatureTest::setSource(const Source *samples, const FeatureIdx idxFeature) 
     } else if (idxFeature==3) {
         feature = feature4;
     }
-    for (uint idxSamples=0; idxSamples<samples->countSamples(); ++idxSamples) {
+    for (int idxSamples=0; idxSamples<samples->countSamples(); ++idxSamples) {
         Sample* sample = samples->at(idxSamples);
         if (!sample->featureValues.contains(idxFeature)) {
             int featureVal = sample->sampleClass&feature;

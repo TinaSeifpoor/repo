@@ -6,13 +6,13 @@ class FeatureTest : public Feature
 {
 public:
     explicit FeatureTest(int index=-1);
-    unsigned int parameterRange() const;
-    Feature* getIndex(const unsigned int idx) const;
+    int parameterRange() const;
+    Feature* getIndex(const int idx) const;
     bool setSource(const Source *samples, const FeatureIdx idxFeature) const;
 
 private:
-    unsigned int index;
-    unsigned int range;
+    int index;
+    int range;
     int sample;
     double getRand() const;
 

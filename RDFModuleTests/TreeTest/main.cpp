@@ -34,15 +34,13 @@ int main(int argc, char *argv[])
     qDebug("training forest...");
     Forest* forest = Forest::train(s, &f, forestPro);
     qDebug("forest trained");
-    QFile file("d:/forest.xml");
-    file.open(QFile::WriteOnly);
-    QString forestText = forest->text();
-    file.write(forestText.toLatin1());
-    file.close();
+    forest->writeForest("d:/forest.xml");
     qDebug("file written");
     delete forest;
 
-    Forest* forest2 = Forest::fromText(forestText);
+    Forest* forest2 = Forest::readForest("d:/forest.xml");
+    forest2->writeForest("d:/forest2.xml");
+
 
     return 0;
 }

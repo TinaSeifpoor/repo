@@ -19,7 +19,7 @@ void Features::init()
 
 void Features::operator <<(const Feature *feature)
 {
-    unsigned int nFeature = feature->parameterRange();
+    int nFeature = feature->parameterRange();
     for (int i=0; i<(int)nFeature;++i) {
         d->features.append(feature->getIndex(i));
     }

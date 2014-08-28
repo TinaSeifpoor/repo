@@ -4,10 +4,10 @@
 #include <QList>
 #include <QStringList>
 #include <QRegExp>
+#include <QFile>
 #include "source.h"
 #include "features.h"
 #include "common.h"
-
 
 const QString forestText("<Forest><BaggingFactorFeaturesTree>%1</BaggingFactorFeaturesTree><BaggingFactorSamplesTree>%2</BaggingFactorSamplesTree><ForestSize>%3</ForestSize><BaggingFactorFeaturesNode>%4</BaggingFactorFeaturesNode><BaggingFactorSamplesNode>%5</BaggingFactorSamplesNode><MaxDepth>%6</MaxDepth>\r\n\t%7\r\n</Forest>");
 const QString treeText("<Tree %1>\r\n\t\t%2\r\n\t</Tree>");
@@ -53,36 +53,65 @@ QString Forest::text() const
     for (int i=0; i<d->forest.count(); ++i)
         treeTexts<<treeText.arg(i).arg(d->forest.at(i)->text());
 
+
     return forestText.arg(d->pro.baggingFactorFeatures).arg(d->pro.baggingFactorSamples).arg(d->pro.nTrees).arg(d->pro.treeProperties.baggingFactorFeatures).arg(d->pro.treeProperties.baggingFactorSamples).arg(d->pro.treeProperties.maxDepth).arg(treeTexts.join("\r\n\t"));
+}
+
+bool Forest::writeForest(QString path) const
+{
+    QFile file(path);
+    if (file.open(QFile::WriteOnly)) {
+        if (file.write(text().toLatin1())) {
+            file.close();
+            return true;
+        }
+    }
+    return false;
 }
 
 Forest *Forest::fromText(QString text)
 {
-    QStringList lines = text.split("\r\n", QString::SkipEmptyParts);
-    QString forestDescription = lines.takeFirst();
 
-    QStringList forestPropertiesKeywords = QStringList()    << BaggingFactorFeaturesTree
-                                                            << BaggingFactorFeaturesTree
-                                                            << BaggingFactorSamplesTree
-                                                            << ForestSize
-                                                            << BaggingFactorFeaturesNode
-                                                            << BaggingFactorSamplesNode
-                                                            << MaxDepth;
+    text.remove("\r\n");
+    text.remove("\t");
 
-    ForestProperties pro;
-    foreach (QString forestPropertiesKeyword, forestPropertiesKeywords) {
-        QString beginText = forestPropertiesKeyword;
-        beginText.prepend("<");
-        beginText.append(">");
-        QString endText = forestPropertiesKeyword;
-        endText.append(">");
-        endText.prepend("</");
-        int beginInd = forestDescription.indexOf(beginText);
-        int endInd = forestDescription.indexOf(endText);
-        QString text = forestDescription.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
-        pro.set(forestPropertiesKeyword,text);
+    Forest* f = new Forest;
+    f->d = new ForestPrivate;
+
+    f->d->pro.setAll(text);
+
+    QString beginText = TreeText;
+    beginText.prepend("<");
+    QString endText = TreeText;
+    endText.append(">");
+    endText.prepend("</");
+
+
+//    int nTrees = text.count(beginText);
+
+    int previousBeginInd = -1;
+    int previousEndInd = -1;
+    while (true) {
+        int beginInd = text.indexOf(beginText, previousBeginInd+1);
+        int endInd = text.indexOf(endText, previousEndInd+1);
+        if (beginInd!=-1 && endInd!=-1)
+            f->d->forest << Node::treeFromText(text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length()), f->d->pro.treeProperties);
+        else
+            break;
+        previousBeginInd = beginInd;
+        previousEndInd = endInd;
     }
-    return 0;
+
+    return f;
+}
+
+Forest *Forest::readForest(QString path)
+{
+    QFile file(path);
+    file.open(QFile::ReadOnly);
+    Forest* f = Forest::fromText(file.readAll());
+    file.close();
+    return f;
 }
 
 Forest::~Forest()
