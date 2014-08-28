@@ -10,9 +10,7 @@ class Features
 {
 public:
     void init();
-//    Features(QList<Feature*> featureList);
     void operator << (const Feature* feature);
-    double getFeatureValue(const int linearIdx, bool *res=0) const;
     std::vector<double> getFeatureValues(const int featureIdx, bool *res=0) const;
     void setSource(const Source *samples);
     Features *baggedFeatures(double ratio) const;

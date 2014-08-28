@@ -30,7 +30,6 @@ struct ForestPrivate {
 
 Forest* Forest::train(const Source *source, const Features *features, const ForestProperties properties)
 {
-    qDebug("training tree...");
     Forest* f = new Forest;
     f->d = new ForestPrivate;
     f->d->pro = properties;
@@ -112,6 +111,17 @@ Forest *Forest::readForest(QString path)
     Forest* f = Forest::fromText(file.readAll());
     file.close();
     return f;
+}
+
+TestResult Forest::test(const Source *source, const Features* features)
+{
+    TestResult result;
+    for (int i=0; i<d->forest.count(); ++i) {
+        Node* node = d->forest.at(i);
+        result.setTreeIndex(i);
+        node->testSource(source, features, &result);
+    }
+    return result;
 }
 
 Forest::~Forest()

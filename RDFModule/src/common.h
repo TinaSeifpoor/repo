@@ -24,8 +24,10 @@ static const char* MaxDepth                     ="MaxDepth";
 static const char* TreeText                     = "Tree";
 static const char* NodeText                     = "Node";
 static const char* EntropyText                  = "Entropy";
-static const char* UniqueClassesText            = "UniqueClasses";
-static const char* ClassesText                  = "Classes";
+static const char* LeftUniqueClassesText        = "LeftUniqueClasses";
+static const char* RightUniqueClassesText       = "RightUniqueClasses";
+static const char* LeftSampleClassesText        = "LeftSampleClasses";
+static const char* RightSampleClassesText       = "RightSampleClasses";
 static const char* FeatureIdxText               = "FeatureIdx";
 static const char* SplitValueText               = "SplitValue";
 
@@ -74,11 +76,71 @@ struct ForestProperties
         }
     }
 };
+template<typename T>
+QPair<QList<int>, QList<T> > getSampleHistogram(QList<T> list) {
+    QList<int> histogram;
+    QList<T> uniqueList;
+    foreach (T item, list) {
+        if (!uniqueList.contains(item)) {
+            uniqueList.append(item);
+            histogram.append(1);
+        } else {
+            int idx = uniqueList.indexOf(item);
+            histogram[idx]++;
+        }
+    }
+    return qMakePair<QList<int>, QList<T>>(histogram, uniqueList);
+}
 
 struct Sample {
     QVariant sampleSource;
     ClassID sampleClass;
     QHash<FeatureIdx, FeatureValue> featureValues;
+    QString sampleId;
+};
+
+struct TreeResult {
+    int treeDepth;
+    QHash<QString, ClassID> trainSampleIDHash;
+    int treeIdx;
+};
+
+class TestResult {
+public:
+    TestResult() {treeIdx = 0;}
+    void setTreeIndex(int treeIdx) {
+        this->treeIdx = treeIdx;
+    }
+
+    void add(QString testSampleId, int nodeDepth, QHash<QString, ClassID> trainSampleIDHash) {
+        TreeResult t;
+        t.treeDepth = nodeDepth;
+        t.trainSampleIDHash = trainSampleIDHash;
+        t.treeIdx = treeIdx;
+        container.insertMulti(testSampleId,t);
+    }
+
+    ClassID getSampleClassMajority (QString sampleID) {
+        QList<TreeResult> treeResults = container.values(sampleID);
+        QList<ClassID> classList;
+        foreach (TreeResult result, treeResults) {
+            classList+=result.trainSampleIDHash.values();
+        }
+        QPair<QList<ClassID>,QList<int>> histogram = getSampleHistogram(classList);
+        int maxCount = -1;
+        ClassID classChosen;
+        for (int i=0; i<histogram.second.count();++i) {
+            if (histogram.second.at(i)>maxCount) {
+                maxCount = histogram.first.at(i);
+                classChosen = histogram.second.at(i);
+            }
+        }
+        return classChosen;
+    }
+
+private:
+    QHash<QString, TreeResult> container;
+    int treeIdx;
 };
 
 #endif // COMMON_H

@@ -18,7 +18,10 @@ public:
     int countClasses() const;
     QList<ClassID> getSampleClasses() const;
     QHash<int, ClassID> uniqueClasses() const;
+    QHash<QString, ClassID> getSampleID() const;
     Sample* at(int idx) const;
+
+    bool writeToDisk(Features *features, QString filePath);
 private:
     SourcePrivate* d;
 };

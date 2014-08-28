@@ -1,5 +1,7 @@
 #include "source.h"
 #include "listrandomsorter.h"
+#include "features.h"
+#include  <QFile>
 struct SourcePrivate {
     QList<Sample> sampleList;
     QList<ClassID> classIDList;
@@ -66,7 +68,43 @@ QHash<int, ClassID> Source::uniqueClasses() const
     return uniqueClassHash;
 }
 
+QHash<QString, ClassID> Source::getSampleID() const
+{
+    QHash<QString, ClassID> sampleIDHash;
+    if (d->classIDList.empty())
+        getSampleClasses();
+    for (int i=0; i<d->classIDList.size(); ++i) {
+        sampleIDHash.insert(d->sampleList.at(i).sampleId, d->sampleList.at(i).sampleClass);
+    }
+    return sampleIDHash;
+}
+
 Sample *Source::at(int idx) const
 {
     return &d->sampleList[idx];
+}
+
+bool Source::writeToDisk(Features* features, QString filePath)
+{
+    features->setSource(this);
+    QString out;
+    for (int i=0; i<this->countSamples(); ++i) {
+        QStringList values;
+        values << at(i)->sampleId;
+        values << QString::number(at(i)->sampleClass);
+        for (int j=0; j<features->range(); ++j) {
+            values << QString::number(at(i)->featureValues.value(j));
+        }
+        out.append(values.join("\t"));
+        out.append("\r\n");
+    }
+    QFile file(filePath);
+    if (file.open(QFile::WriteOnly)) {
+        if (file.write(out.toLatin1())) {
+            file.close();
+            return true;
+        }
+        file.close();
+    }
+    return false;
 }

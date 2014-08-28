@@ -4,10 +4,19 @@
 #include "features.h"
 #include "source.h"
 #include <QStringList>
-const QString nodeText("<Node %1>\r\n\t\t\t<Entropy>%2</Entropy>\r\n\t\t\t<UniqueClasses>%3</UniqueClasses>\r\n\t\t\t<Classes>%4</Classes>\r\n\t\t\t<FeatureIdx>%5</FeatureIdx>\r\n\t\t\t<SplitValue>%6</SplitValue>\r\n\t\t</Node>");
+#include <QStringBuilder>
+const QString nodeText("<"%(QString)NodeText%" %1>\r\n\t\t\t<"%EntropyText%">%2</"%EntropyText%
+                       ">\r\n\t\t\t<"%LeftUniqueClassesText %">%3</"%LeftUniqueClassesText %">\r\n\t\t\t<"%LeftSampleClassesText %">%4</"%LeftSampleClassesText %
+                       ">\r\n\t\t\t<"%RightUniqueClassesText%">%5</"%RightUniqueClassesText%">\r\n\t\t\t<"%RightSampleClassesText%">%6</"%RightSampleClassesText%
+                       ">\r\n\t\t\t<"%FeatureIdxText%">%7</"%FeatureIdxText%">\r\n\t\t\t<"%SplitValueText%">%8</"%SplitValueText%">\r\n\t\t</"%NodeText%">");
 const int tableLength = 1000000;
 const double log2 = 0.693147181;
 double entropy(std::vector<int> sampleHistogram, int nSamples);
+
+
+int depthFromLinearIdx(int linearIdx) {
+    return floor(log((double)linearIdx+1)/log2+0.01)+1;
+}
 
 struct NodePrivate {
     void trainLeft();
@@ -31,8 +40,10 @@ struct NodePrivate {
     double informationGain;
     int linearIdx;
 
-    QList<ClassID> uniqueClasses;
-    QList<ClassID> classes;
+    QList<ClassID> leftUniqueClasses;
+    QList<ClassID> rightUniqueClasses;
+    QHash<QString, ClassID> leftSampleClasses;
+    QHash<QString, ClassID> rightSampleClasses;
 
     //
     ~NodePrivate() {
@@ -49,13 +60,21 @@ QString fromClassList(QList<ClassID> list) {
     }
     return out.join(",");
 }
+QString fromClassHash(QHash<QString, ClassID> hash) {
+    QStringList out;
+    foreach (QString sampleId, hash.keys())
+        out << sampleId.append(QString(";%1").arg(hash.value(sampleId)));
+    return out.join(",");
+}
 
 QString Node::text() const
 {
     QStringList nodeTexts;
     nodeTexts << nodeText.arg(d->linearIdx).arg(d->parentEntropy)
-                 .arg(fromClassList(d->uniqueClasses))
-                 .arg(fromClassList(d->classes))
+                 .arg(fromClassList(d->leftUniqueClasses))
+                 .arg(fromClassHash(d->leftSampleClasses))
+                 .arg(fromClassList(d->rightUniqueClasses))
+                 .arg(fromClassHash(d->rightSampleClasses))
                  .arg(d->featureIdx).arg(d->splitValue);
     if (d->left)
         nodeTexts << d->left->text();
@@ -157,12 +176,12 @@ Node *Node::nodeFromText(QString text, TreeProperties pro)
         QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
         splitValue = propertyValue.toDouble();
     }
-    QList<ClassID> uniqueClasses;
+    QList<ClassID> leftUniqueClasses;
     {
-        QString beginText = UniqueClassesText;
+        QString beginText = LeftUniqueClassesText;
         beginText.prepend("<");
         beginText.append(">");
-        QString endText = UniqueClassesText;
+        QString endText = LeftUniqueClassesText;
         endText.append(">");
         endText.prepend("</");
         int beginInd = text.indexOf(beginText);
@@ -170,14 +189,14 @@ Node *Node::nodeFromText(QString text, TreeProperties pro)
         QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
         QStringList values = propertyValue.split(",");
         foreach (QString value, values)
-            uniqueClasses << value.toInt();
+            leftUniqueClasses << value.toInt();
     }
-    QList<ClassID> classes;
+    QList<ClassID> rightUniqueClasses;
     {
-        QString beginText = ClassesText;
+        QString beginText = RightUniqueClassesText;
         beginText.prepend("<");
         beginText.append(">");
-        QString endText = ClassesText;
+        QString endText = RightUniqueClassesText;
         endText.append(">");
         endText.prepend("</");
         int beginInd = text.indexOf(beginText);
@@ -185,10 +204,88 @@ Node *Node::nodeFromText(QString text, TreeProperties pro)
         QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
         QStringList values = propertyValue.split(",");
         foreach (QString value, values)
-            classes << value.toInt();
+            rightUniqueClasses << value.toInt();
+    }
+    QHash<QString,ClassID> leftSampleClasses;
+    {
+        QString beginText = LeftSampleClassesText;
+        beginText.prepend("<");
+        beginText.append(">");
+        QString endText = LeftSampleClassesText;
+        endText.append(">");
+        endText.prepend("</");
+        int beginInd = text.indexOf(beginText);
+        int endInd = text.indexOf(endText);
+        QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
+        QStringList values = propertyValue.split(",");
+        foreach (QString value, values) {
+            QStringList sampleIdAndClass = value.split(";",QString::SkipEmptyParts);
+            if (sampleIdAndClass.count() == 2)
+                leftSampleClasses.insert(sampleIdAndClass.at(0),sampleIdAndClass.at(1).toInt());
+            else
+                qWarning("nodeFromText(): Invalid value for sample classes: "+value.toLatin1());
+        }
+    }
+    QHash<QString,ClassID> rightSampleClasses;
+    {
+        QString beginText = RightSampleClassesText;
+        beginText.prepend("<");
+        beginText.append(">");
+        QString endText = RightSampleClassesText;
+        endText.append(">");
+        endText.prepend("</");
+        int beginInd = text.indexOf(beginText);
+        int endInd = text.indexOf(endText);
+        QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
+        QStringList values = propertyValue.split(",");
+        foreach (QString value, values) {
+            QStringList sampleIdAndClass = value.split(";",QString::SkipEmptyParts);
+            if (sampleIdAndClass.count() == 2)
+                rightSampleClasses.insert(sampleIdAndClass.at(0),sampleIdAndClass.at(1).toInt());
+            else
+                qWarning("nodeFromText(): Invalid value for sample classes: "+value.toLatin1());
+        }
     }
 
-    return new Node(linearIdx, pro, splitValue, featureIdx, entropy, uniqueClasses, classes);
+    return new Node(linearIdx, pro, splitValue, featureIdx, entropy, leftUniqueClasses, leftSampleClasses, rightUniqueClasses, rightSampleClasses);
+}
+
+void Node::testSource(const Source *source, const Features* features, TestResult* result) const
+{
+    // need a copy
+    Features* featuresForNode = features->baggedFeatures(1);
+    featuresForNode->setSource(source);
+    delete featuresForNode;
+    for (int i=0; i<source->countSamples(); ++i) {
+        Sample* sample = source->at(i);
+        testSample(sample,features,result);
+    }
+}
+
+void Node::testSample(const Sample *sample, const Features *features, TestResult* result) const
+{
+    // need a copy
+    Features* featuresForNode = features->baggedFeatures(1);
+    QList<Sample> sampleList;
+    sampleList.append(*sample);
+    Source* source = new Source(sampleList);
+    featuresForNode->setSource(source);
+    delete featuresForNode;
+    double featureVal = sample->featureValues.value(d->featureIdx);
+    bool isLeft = featureVal < d->splitValue;
+    if (isLeft) {
+        if(d->left) {
+            return d->left->testSample(sample, features, result);
+        } else {
+            result->add(sample->sampleId, depthFromLinearIdx(d->linearIdx), d->leftSampleClasses);
+        }
+    } else {
+        if(d->right) {
+            return d->right->testSample(sample, features, result);
+        } else {
+            result->add(sample->sampleId, depthFromLinearIdx(d->linearIdx), d->rightSampleClasses);
+        }
+    }
 }
 
 Node::~Node()
@@ -217,12 +314,16 @@ Node::Node(const int linearIdx, const Source *source, const Features *features,
     d->linearIdx = linearIdx;
     d->right = 0;
     d->left = 0;
-    d->classes = source->getSampleClasses();
-    d->uniqueClasses = source->uniqueClasses().values();
+    d->leftSampleClasses = left->getSampleID();
+    d->leftUniqueClasses = left->uniqueClasses().values();
+    d->rightSampleClasses = right->getSampleID();
+    d->rightUniqueClasses = right->uniqueClasses().values();
+
 }
 
 Node::Node(const int linearIdx, TreeProperties properties, double splitValue, int featureIdx,
-           double parentEntropy, QList<ClassID> uniqueClasses, QList<ClassID> classes):
+           double parentEntropy, QList<ClassID> leftUniqueClasses, QHash<QString, ClassID> leftSampleClasses,
+           QList<ClassID> rightUniqueClasses, QHash<QString, ClassID> rightSampleClasses):
     d(new NodePrivate)
 {
     d->linearIdx = linearIdx;
@@ -238,8 +339,10 @@ Node::Node(const int linearIdx, TreeProperties properties, double splitValue, in
     d->sourceLeft = 0;
     d->sourceRight = 0;
     d->informationGain = 0;
-    d->uniqueClasses = uniqueClasses;
-    d->classes = classes;
+    d->leftUniqueClasses = leftUniqueClasses;
+    d->leftSampleClasses = leftSampleClasses;
+    d->rightUniqueClasses = rightUniqueClasses;
+    d->rightSampleClasses = rightSampleClasses;
 }
 
 Node *Node::train(const Source *source, const Features* features, const TreeProperties properties, int linearIdx)
@@ -324,8 +427,8 @@ Node *Node::train(const Source *source, const Features* features, const TreeProp
                              new Source(samplesLeft), new Source(samplesRight),
                              bestFeatureVal, bestFeatureIdx,
                              parent, bestLeftEntropy, bestRightEntropy, bestInformationGain);
-    double depth = log((double)linearIdx+1)/log2;
-    if (depth<properties.maxDepth-1.1) {
+    int depth = depthFromLinearIdx(current->d->linearIdx);
+    if (depth<properties.maxDepth) {
         current->d->trainLeft();
         current->d->trainRight();
     }

@@ -14,7 +14,7 @@ FeatureTest::FeatureTest(int index):
     index(index)
 {
     if (index ==-1)
-        range=4;
+        range=3;
     else {
         range=1;
     }
@@ -52,7 +52,7 @@ bool FeatureTest::setSource(const Source *samples, const FeatureIdx idxFeature) 
         Sample* sample = samples->at(idxSamples);
         if (!sample->featureValues.contains(idxFeature)) {
             int featureVal = sample->sampleClass&feature;
-            sample->featureValues[idxFeature] = (getRand()-0.5)*1.6+featureVal;
+            sample->featureValues[idxFeature] = (getRand()-0.5)+featureVal;
         }
     }
     return true;

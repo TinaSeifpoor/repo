@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     TreeProperties treePro;
     treePro.baggingFactorFeatures = 1;
     treePro.baggingFactorSamples = 1;
-    treePro.maxDepth = 4;
+    treePro.maxDepth = 3;
 
 
     ForestProperties forestPro;
@@ -36,11 +36,30 @@ int main(int argc, char *argv[])
     qDebug("forest trained");
     forest->writeForest("d:/forest.xml");
     qDebug("file written");
+    s->writeToDisk(&f, "d:/sources.txt");
     delete forest;
 
     Forest* forest2 = Forest::readForest("d:/forest.xml");
     forest2->writeForest("d:/forest2.xml");
 
+    Source* sReduced = s->baggedSamples(1);
+    TestResult t = forest2->test(sReduced,&f);
 
+
+    int positive=0, negative=0;
+    QHash<QString, ClassID> hash = sReduced->getSampleID();
+    foreach (QString sampleName, hash.keys()) {
+        ClassID testResult = t.getSampleClassMajority(sampleName);
+        ClassID trainResult = hash.value(sampleName);
+        if (testResult==trainResult) {
+            ++positive;
+        } else {
+            ++negative;
+        }
+    }
+    qDebug("Positive:");
+    qDebug(QString::number(positive).toLatin1());
+    qDebug("Negative:");
+    qDebug(QString::number(negative).toLatin1());
     return 0;
 }

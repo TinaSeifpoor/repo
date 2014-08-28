@@ -6,7 +6,7 @@
 struct Sample;
 class FeaturesPrivate {
 public:
-    FeaturesPrivate(){}
+    FeaturesPrivate(){samples=0;}
     QList<Feature*> features;
     const Source *samples;
     QList<bool> featureCalculated;
@@ -24,16 +24,6 @@ void Features::operator <<(const Feature *feature)
         d->features.append(feature->getIndex(i));
     }
 }
-
-//double Features::getFeatureValue(const int linearIdx, bool *res) const
-//{
-//    if (d->features.size()>linearIdx) {
-//        return d->features.at(linearIdx)->getParameterValue(res);
-//    } else {
-//        *res = false;
-//        return INT_MIN;
-//    }
-//}
 
 std::vector<double> Features::getFeatureValues(const int featureIdx, bool *res) const
 {
@@ -54,6 +44,8 @@ std::vector<double> Features::getFeatureValues(const int featureIdx, bool *res) 
 
 void Features::setSource(const Source *samples)
 {
+    if (d->samples)
+        delete d->samples;
     d->samples = samples;
     for (int idxFeature=0; idxFeature<d->features.count(); ++idxFeature)
         this->calculateFeatureValues(idxFeature);

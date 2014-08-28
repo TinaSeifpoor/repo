@@ -36,4 +36,5 @@ HEADERS += \
     ../../RDFModule/src/features.h \
     featurestest.h \
     initializer.h \
-    ../../RDFModule/src/forest.h
+    ../../RDFModule/src/forest.h \
+    ../../RDFModule/src/common.h
