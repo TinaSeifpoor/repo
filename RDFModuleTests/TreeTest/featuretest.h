@@ -9,6 +9,7 @@ public:
     int parameterRange() const;
     Feature* getIndex(const int idx) const;
     bool setSource(const Source *samples, const FeatureIdx idxFeature) const;
+    int getIndex() const;
 
 private:
     int index;

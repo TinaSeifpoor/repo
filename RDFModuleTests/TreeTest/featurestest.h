@@ -7,9 +7,9 @@ class FeaturesTest : public Features
 public:
     FeaturesTest();
 
-    Features* copy(QList<Feature *> featureList) const;
+    Features* copy(QHash<int, Feature *> featureList) const;
     FeaturesTest(Feature *feature);
-    FeaturesTest(QList<Feature *> features);
+    FeaturesTest(QHash<int,Feature *> features);
     void calculateFeatureValues(FeatureIdx featureIdx);
 };
 

@@ -33,16 +33,18 @@ Forest* Forest::train(const Source *source, const Features *features, const Fore
     Forest* f = new Forest;
     f->d = new ForestPrivate;
     f->d->pro = properties;
-    QList<QFuture<Node*> > futureNodes;
-    for (int i=0; i<(int)properties.nTrees; ++i) {
-        QFuture<Node*> futureNode = QtConcurrent::run(nodeTrainer, source,features,properties);
-        futureNodes << futureNode;
-    }
+//    QList<QFuture<Node*> > futureNodes;
+//    for (int i=0; i<(int)properties.nTrees; ++i) {
+//        QFuture<Node*> futureNode = QtConcurrent::run(nodeTrainer, source,features,properties);
+//        futureNodes << futureNode;
+//    }
 
-    foreach (QFuture<Node*> futureNode, futureNodes) {
-        futureNode.waitForFinished();
-        f->d->forest << futureNode.result();
-    }
+//    foreach (QFuture<Node*> futureNode, futureNodes) {
+//        futureNode.waitForFinished();
+//        f->d->forest << futureNode.result();
+//    }
+    for (int i = 0; i<(int)properties.nTrees;++i)
+        f->d->forest << nodeTrainer(source, features, properties);
     return f;
 }
 

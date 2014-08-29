@@ -14,7 +14,7 @@ FeatureTest::FeatureTest(int index):
     index(index)
 {
     if (index ==-1)
-        range=3;
+        range=150;
     else {
         range=1;
     }
@@ -39,13 +39,13 @@ Feature *FeatureTest::getIndex(const int idx) const
 bool FeatureTest::setSource(const Source *samples, const FeatureIdx idxFeature) const
 {
     featureTestEnum feature;
-    if (idxFeature==0) {
+    if (idxFeature%range==0) {
         feature = feature1;
-    } else if (idxFeature==1) {
+    } else if (idxFeature%range==1) {
         feature = feature2;
-    } else if (idxFeature==2) {
+    } else if (idxFeature%range==2) {
         feature = feature3;
-    } else if (idxFeature==3) {
+    } else if (idxFeature%range==3) {
         feature = feature4;
     }
     for (int idxSamples=0; idxSamples<samples->countSamples(); ++idxSamples) {
@@ -56,6 +56,15 @@ bool FeatureTest::setSource(const Source *samples, const FeatureIdx idxFeature) 
         }
     }
     return true;
+}
+
+int FeatureTest::getIndex() const
+{
+    if (range == 1) {
+        return this->index;
+    } else {
+        return -1;
+    }
 }
 
 double FeatureTest::getRand() const

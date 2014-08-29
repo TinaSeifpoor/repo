@@ -10,14 +10,16 @@ class Features
 {
 public:
     void init();
-    void operator << (const Feature* feature);
+    void operator << (Feature *feature);
     std::vector<double> getFeatureValues(const int featureIdx, bool *res=0) const;
     void setSource(const Source *samples);
     Features *baggedFeatures(double ratio) const;
-    virtual Features* copy(QList<Feature*> featureList) const=0;
+    virtual Features* copy(QHash<int, Feature*> featureList) const=0;
     const int range() const;
+    QList<int> featureIdxList() const;
+
 protected:
-    Feature * at(const int linearIdx) const;
+    Feature * at(const int featureIdx) const;
     virtual void calculateFeatureValues(FeatureIdx featureIdx)=0;
     const Source *getSamples();
 

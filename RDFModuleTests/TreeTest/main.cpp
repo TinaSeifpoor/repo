@@ -21,14 +21,14 @@ int main(int argc, char *argv[])
 
 
     TreeProperties treePro;
-    treePro.baggingFactorFeatures = 1;
-    treePro.baggingFactorSamples = 1;
+    treePro.baggingFactorFeatures = 0.6;
+    treePro.baggingFactorSamples = 0.6;
     treePro.maxDepth = 3;
 
 
     ForestProperties forestPro;
-    forestPro.baggingFactorFeatures = 1;
-    forestPro.baggingFactorSamples = 1;
+    forestPro.baggingFactorFeatures = 0.6;
+    forestPro.baggingFactorSamples = 0.6;
     forestPro.nTrees = 1;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");

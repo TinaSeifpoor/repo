@@ -358,7 +358,6 @@ Node *Node::train(const Source *source, const Features* features, const TreeProp
     EntropyValue bestInformationGain = -INT_MAX;
 
     int bestFeatureIdx = -1;
-    int nFeatures = featuresForNode->range();
     int nSamples = sampleClasses.size();
     std::vector<int> bestSortIdx;
     int bestCurrent;
@@ -370,7 +369,9 @@ Node *Node::train(const Source *source, const Features* features, const TreeProp
         ++sampleClassesHistogram[uniqueClasses.key(sampleClasses.at(idx))];
     }
     EntropyValue parent = entropy(sampleClassesHistogram, nSamples);
-    for (int idxFeature=0; idxFeature<nFeatures; ++idxFeature) {
+    if (featuresForNode->featureIdxList().isEmpty())
+        qWarning("FeaturesForNode is empty!!!");
+    foreach (int idxFeature, featuresForNode->featureIdxList()) {
         std::vector<FeatureValue> featureValues = featuresForNode->getFeatureValues(idxFeature);// as big as sample count
         std::vector<int> sortIdx = sort_indexes(featureValues);
 
@@ -406,6 +407,9 @@ Node *Node::train(const Source *source, const Features* features, const TreeProp
 
     //
 
+    if (bestFeatureIdx==-1) {
+        return 0;
+    }
     Features* featuresForSplit = features->baggedFeatures(1);
     featuresForSplit->setSource(source);
     std::vector<double> featureValues = featuresForSplit->getFeatureValues(bestFeatureIdx);

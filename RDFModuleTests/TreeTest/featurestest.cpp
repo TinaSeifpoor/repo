@@ -6,7 +6,7 @@ FeaturesTest::FeaturesTest()
     (*this) << new FeatureTest;
 }
 
-Features *FeaturesTest::copy(QList<Feature *> featureList) const
+Features *FeaturesTest::copy(QHash<int,Feature *> featureList) const
 {
     return new FeaturesTest(featureList);
 }
@@ -17,14 +17,16 @@ FeaturesTest::FeaturesTest(Feature *feature)
     this->init();
     (*this) << feature;
 }
-FeaturesTest::FeaturesTest(QList<Feature* > features)
+FeaturesTest::FeaturesTest(QHash<int, Feature *> features)
 {
     this->init();
-    for (int i=0; i<features.count(); ++i)
-        (*this) << features.at(i);
+    foreach (int i, features.keys())
+        (*this) << features.value(i);
 }
 
 void FeaturesTest::calculateFeatureValues(FeatureIdx featureIdx)
 {
-    dynamic_cast<FeatureTest*>(Features::at(featureIdx))->setSource(getSamples(),featureIdx);
+    FeatureTest* ft = dynamic_cast<FeatureTest*>(Features::at(featureIdx));
+    if (ft)
+        ft->setSource(getSamples(),featureIdx);
 }
