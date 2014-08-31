@@ -6,7 +6,7 @@
 #include "common.h"
 class Source;
 class FeaturesPrivate;
-class Features
+class RDFMODULESHARED_EXPORT Features
 {
 public:
     void init();

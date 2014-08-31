@@ -7,7 +7,7 @@
 typedef double EntropyValue;
 class Features;
 struct SourcePrivate;
-class Source // A file that contains a training matrix, a directory from which features are read etc.
+class RDFMODULESHARED_EXPORT Source // A file that contains a training matrix, a directory from which features are read etc.
 {
 public:
     Source(QList<Sample> samples);

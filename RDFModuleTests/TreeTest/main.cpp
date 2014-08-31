@@ -6,7 +6,6 @@
 #include "featurestest.h"
 #include <QFile>
 #include <QDateTime>
-Q_DECLARE_METATYPE(QFileInfo);
 
 int main(int argc, char *argv[])
 {
@@ -29,14 +28,14 @@ int main(int argc, char *argv[])
     ForestProperties forestPro;
     forestPro.baggingFactorFeatures = 0.6;
     forestPro.baggingFactorSamples = 0.6;
-    forestPro.nTrees = 5;
+    forestPro.nTrees = 8;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");
     Forest* forest = Forest::train(s, &f, forestPro);
     qDebug("forest trained");
     forest->writeForest("d:/forest.xml");
     qDebug("file written");
-    s->writeToDisk(&f, "d:/sources.txt");
+//    s->writeToDisk(&f, "d:/sources.txt");
     delete forest;
 
     Forest* forest2 = Forest::readForest("d:/forest.xml");

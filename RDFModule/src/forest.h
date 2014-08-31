@@ -4,10 +4,9 @@
 class Source;
 class Features;
 class Node;
-struct ForestProperties;
 struct ForestPrivate;
 class QString;
-class Forest
+class RDFMODULESHARED_EXPORT Forest
 {
 public:
     static Forest *train(const Source *source, const Features *features, const ForestProperties properties);

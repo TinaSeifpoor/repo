@@ -16,25 +16,18 @@ TEMPLATE = app
 
 INCLUDEPATH += ../../RDFModule/src
 
+CONFIG(debug, debug|release) {
+SUFFIX = d
+}
+
+LIBS += -LD:\Projects\RDF\RDFModule\lib
+LIBS += -lrdfmodule$$SUFFIX
 
 SOURCES += main.cpp \
-    ../../RDFModule/src/node.cpp \
     featuretest.cpp \
-    ../../RDFModule/src/features.cpp \
     featurestest.cpp \
-    ../../RDFModule/src/source.cpp \
     initializer.cpp \
-    ../../RDFModule/src/forest.cpp
 
-HEADERS += \
-    ../../RDFModule/src/source.h \
-    ../../RDFModule/src/node.h \
-    ../../RDFModule/src/vectorindexsorter.h \
-    featuretest.h \
-    ../../RDFModule/src/listrandomsorter.h \
-    ../../RDFModule/src/feature.h \
-    ../../RDFModule/src/features.h \
+HEADERS += featuretest.h \
     featurestest.h \
-    initializer.h \
-    ../../RDFModule/src/forest.h \
-    ../../RDFModule/src/common.h
+    initializer.h

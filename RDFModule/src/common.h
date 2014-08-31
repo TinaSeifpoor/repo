@@ -1,19 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
-
+#include "rdfmodule_global.h"
 typedef int ClassID;
 typedef int FeatureIdx;
 typedef double FeatureValue;
 #include <QStringList>
 #include <QVariant>
-
-struct TreeProperties
-{
-    double  baggingFactorFeatures,
-            baggingFactorSamples;
-    int maxDepth;
-};
-
 static const char* BaggingFactorFeaturesTree    ="BaggingFactorFeaturesTree";
 static const char* BaggingFactorSamplesTree     ="BaggingFactorSamplesTree";
 static const char* ForestSize                   ="ForestSize";
@@ -31,6 +23,14 @@ static const char* RightSampleClassesText       = "RightSampleClasses";
 static const char* FeatureIdxText               = "FeatureIdx";
 static const char* SplitValueText               = "SplitValue";
 
+struct TreeProperties
+{
+    double  baggingFactorFeatures,
+            baggingFactorSamples;
+    int maxDepth;
+};
+
+
 struct ForestProperties
 {
 
@@ -39,58 +39,13 @@ struct ForestProperties
     double          baggingFactorFeatures,
                     baggingFactorSamples;
     TreeProperties  treeProperties;
-    void set(QString var, QString val) {
-        if (var == BaggingFactorFeaturesTree)
-            baggingFactorFeatures=val.toDouble();
-        if (var == BaggingFactorSamplesTree)
-            baggingFactorSamples=val.toDouble();
-        if (var == ForestSize)
-            nTrees=val.toInt();
-        if (var == MaxDepth)
-            treeProperties.maxDepth=val.toInt();
-        if (var == BaggingFactorFeaturesNode)
-            treeProperties.baggingFactorFeatures=val.toDouble();
-        if (var == BaggingFactorSamplesNode)
-            treeProperties.baggingFactorSamples=val.toDouble();
-    }
+    void set(QString var, QString val);
 
-    void setAll(QString text) {
-        QStringList forestPropertiesKeywords = QStringList()    << BaggingFactorFeaturesTree
-                                                                << BaggingFactorFeaturesTree
-                                                                << BaggingFactorSamplesTree
-                                                                << ForestSize
-                                                                << BaggingFactorFeaturesNode
-                                                                << BaggingFactorSamplesNode
-                                                                << MaxDepth;
-        foreach (QString forestPropertiesKeyword, forestPropertiesKeywords) {
-            QString beginText = forestPropertiesKeyword;
-            beginText.prepend("<");
-            beginText.append(">");
-            QString endText = forestPropertiesKeyword;
-            endText.append(">");
-            endText.prepend("</");
-            int beginInd = text.indexOf(beginText);
-            int endInd = text.indexOf(endText);
-            QString propertyValue = text.mid(beginInd+beginText.length(), endInd-beginInd-beginText.length());
-            set(forestPropertiesKeyword,propertyValue);
-        }
-    }
+    void setAll(QString text);
 };
+
 template<typename T>
-QPair<QList<int>, QList<T> > getSampleHistogram(QList<T> list) {
-    QList<int> histogram;
-    QList<T> uniqueList;
-    foreach (T item, list) {
-        if (!uniqueList.contains(item)) {
-            uniqueList.append(item);
-            histogram.append(1);
-        } else {
-            int idx = uniqueList.indexOf(item);
-            histogram[idx]++;
-        }
-    }
-    return qMakePair<QList<int>, QList<T>>(histogram, uniqueList);
-}
+QPair<QList<int>, QList<T> > getSampleHistogram(QList<T> list);
 
 struct Sample {
     QVariant sampleSource;
@@ -105,38 +60,14 @@ struct TreeResult {
     int treeIdx;
 };
 
-class TestResult {
+class RDFMODULESHARED_EXPORT TestResult {
 public:
     TestResult() {treeIdx = 0;}
-    void setTreeIndex(int treeIdx) {
-        this->treeIdx = treeIdx;
-    }
+    void setTreeIndex(int treeIdx);
 
-    void add(QString testSampleId, int nodeDepth, QHash<QString, ClassID> trainSampleIDHash) {
-        TreeResult t;
-        t.treeDepth = nodeDepth;
-        t.trainSampleIDHash = trainSampleIDHash;
-        t.treeIdx = treeIdx;
-        container.insertMulti(testSampleId,t);
-    }
+    void add(QString testSampleId, int nodeDepth, QHash<QString, ClassID> trainSampleIDHash);
 
-    ClassID getSampleClassMajority (QString sampleID) {
-        QList<TreeResult> treeResults = container.values(sampleID);
-        QList<ClassID> classList;
-        foreach (TreeResult result, treeResults) {
-            classList+=result.trainSampleIDHash.values();
-        }
-        QPair<QList<ClassID>,QList<int>> histogram = getSampleHistogram(classList);
-        int maxCount = -1;
-        ClassID classChosen;
-        for (int i=0; i<histogram.second.count();++i) {
-            if (histogram.second.at(i)>maxCount) {
-                maxCount = histogram.first.at(i);
-                classChosen = histogram.second.at(i);
-            }
-        }
-        return classChosen;
-    }
+    ClassID getSampleClassMajority (QString sampleID);
 
 private:
     QHash<QString, TreeResult> container;

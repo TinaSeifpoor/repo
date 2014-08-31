@@ -14,24 +14,23 @@ SUFFIX = d
 
 DEFINES +=  RDFMODULE_LIBRARY
 
-SOURCES +=  rdfmodule.cpp \
+SOURCES +=  \
             forest.cpp \
-            tree.cpp \
-            decisiontreetrainer.cpp \
             node.cpp \
-    features.cpp
+    features.cpp \
+    source.cpp \
+    common.cpp
 
-HEADERS +=  rdfmodule.h\
+HEADERS += \
             rdfmodule_global.h \
             source.h \
             common.h \
             forest.h \
-            tree.h \
-            decisiontreetrainer.h \
             node.h \
     vectorindexsorter.h \
     features.h \
-    feature.h
+    feature.h \
+    listrandomsorter.h
 
 DESTDIR = ../lib
 
