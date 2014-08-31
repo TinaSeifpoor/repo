@@ -9,7 +9,7 @@ Source* Initializer::getSource()
 {
     QList<Sample> samples;
     int classCount = 8;
-    int sampleCount = 100;
+    int sampleCount = 50;
     for (int i=0; i<classCount; ++i) {
         for (int j=0; j<sampleCount; ++j) {
             Sample s;

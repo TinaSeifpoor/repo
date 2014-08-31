@@ -13,7 +13,6 @@ const QString forestText("<Forest><BaggingFactorFeaturesTree>%1</BaggingFactorFe
 const QString treeText("<Tree %1>\r\n\t\t%2\r\n\t</Tree>");
 
 extern Node* nodeTrainer(const Source *source, const Features *features, const ForestProperties properties){
-    qDebug("training tree...");
     return Node::train(source->baggedSamples(properties.baggingFactorSamples),
                        features->baggedFeatures(properties.baggingFactorFeatures),
                        properties.treeProperties);
@@ -33,18 +32,17 @@ Forest* Forest::train(const Source *source, const Features *features, const Fore
     Forest* f = new Forest;
     f->d = new ForestPrivate;
     f->d->pro = properties;
-//    QList<QFuture<Node*> > futureNodes;
-//    for (int i=0; i<(int)properties.nTrees; ++i) {
-//        QFuture<Node*> futureNode = QtConcurrent::run(nodeTrainer, source,features,properties);
-//        futureNodes << futureNode;
-//    }
+    QList<QFuture<Node*> > futureNodes;
+    for (int i=0; i<(int)properties.nTrees; ++i) {
+        QFuture<Node*> futureNode = QtConcurrent::run(nodeTrainer, source, features, properties);
+        futureNodes << futureNode;
+    }
 
-//    foreach (QFuture<Node*> futureNode, futureNodes) {
-//        futureNode.waitForFinished();
-//        f->d->forest << futureNode.result();
-//    }
-    for (int i = 0; i<(int)properties.nTrees;++i)
-        f->d->forest << nodeTrainer(source, features, properties);
+    for (int i=0; i<(int)properties.nTrees; ++i) {
+        futureNodes.value(i).waitForFinished();
+        qDebug("tree trained...");
+        f->d->forest << futureNodes.value(i).result();
+    }
     return f;
 }
 

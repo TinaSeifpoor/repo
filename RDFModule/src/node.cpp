@@ -113,6 +113,8 @@ Node *Node::treeFromText(QString text, TreeProperties pro)
     qSort(sortedNodeIdx);
     for (int i=sortedNodeIdx.count()-1; i>0; --i) {
         Node* c = nodeHash.value(i);
+        if (!c)
+            continue;
         int idxParent = (i-1)/2;
         Node* p = nodeHash.value(idxParent);
         if (i%2) {

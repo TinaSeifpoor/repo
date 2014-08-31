@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     ForestProperties forestPro;
     forestPro.baggingFactorFeatures = 0.6;
     forestPro.baggingFactorSamples = 0.6;
-    forestPro.nTrees = 1;
+    forestPro.nTrees = 5;
     forestPro.treeProperties = treePro;
     qDebug("training forest...");
     Forest* forest = Forest::train(s, &f, forestPro);
