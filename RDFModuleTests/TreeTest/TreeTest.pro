@@ -14,13 +14,13 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../../RDFModule/src
+INCLUDEPATH += ../../RDFModule/include
 
 CONFIG(debug, debug|release) {
 SUFFIX = d
 }
 
-LIBS += -LD:\Projects\RDF\RDFModule\lib
+LIBS += -L../../RDFModule/lib
 LIBS += -lrdfmodule$$SUFFIX
 
 SOURCES += main.cpp \
