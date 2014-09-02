@@ -1,19 +1,11 @@
 #include "imagecolorfeature.h"
 #include "opencv2/opencv.hpp"
-enum ImageColorEnum {
-    Red,
-    Green,
-    Blue,
-    Hue,
-    Saturation,
-    Value
-};
 
 ImageColorFeature::ImageColorFeature(int index):
     index(index)
 {
     if (index ==-1)
-        range=1500;
+        range=((int)Value+1)*binSize;
     else {
         range=1;
     }
@@ -24,7 +16,7 @@ int ImageColorFeature::parameterRange() const
     return this->range;
 }
 
-Feature* ImageColorFeature::getIndex() const
+Feature* ImageColorFeature::getIndex(const int idx) const
 {
     if (this->index==-1 && range>idx) {
         return new ImageColorFeature(idx);
@@ -46,30 +38,12 @@ int ImageColorFeature::getIndex() const
 
 bool ImageColorFeature::setSource(const Source *samples, const FeatureIdx idxFeature) const
 {
-    switch ((ImageColorEnum)idxFeature) {
-    case Red:
-        break;
-    case Green:
-        break;
-    case Blue:
-        break;
-    case Hue:
-        break;
-    case Saturation:
-        break;
-    case Value:
-        break;
-    }
+    ColorChannel colorChannel =(ColorChannel)(idxFeature/binSize);
+    int bin = idxFeature%binSize;
 
     for (int idxSamples=0; idxSamples<samples->countSamples(); ++idxSamples) {
         Sample* sample = samples->at(idxSamples);
-        if (!sample->featureValues.contains(idxFeature)) {
-            cv::Mat image = sample->sampleSource.value<cv::Mat>();
-            image.
-
-            int featureVal = sample->sampleClass&feature;
-            sample->featureValues[idxFeature] = (getRand()-0.5)+featureVal;
-        }
+        sample->featureValues[idxFeature] = sample->sampleSource.value<colorHistograms>().value(colorChannel).at(bin);
     }
     return true;
 }
