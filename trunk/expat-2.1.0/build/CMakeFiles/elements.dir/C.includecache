@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/Projects/expat-2.1.0/examples/elements.c
+stdio.h
+-
+expat.h
+D:/Projects/expat-2.1.0/examples/expat.h
+proto/expat.h
+-
+
+D:/Projects/expat-2.1.0/lib/expat.h
+stdlib.h
+-
+expat_external.h
+D:/Projects/expat-2.1.0/lib/expat_external.h
+
+D:/Projects/expat-2.1.0/lib/expat_external.h
+

@@ -1,0 +1,15 @@
+ConvNet - C++ Convolutional Neural Network Library
+
+Description of the contents:
+
+compile.sh	script that compiles the ConvNet library
+CMakeLists.txt	main file describing build process (for cmake)
+build/		directory where everything will be built into
+doc/		documentation sources & configs (for doxygen)
+include/	ConvNet header files
+src/		ConvNet library sources
+tst/		test sources, test scripts
+data/		data storage (mostly test data and config files)
+
+For more detailed documentation, see
+http://conv-net.sf.net

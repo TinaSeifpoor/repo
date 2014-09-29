@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="expat" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="msvc8" />
+      <Option virtualFolders="CMake Files\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="elements">
+         <Option output="D:/Projects/expat-2.1.0-build/elements.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 elements" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="elements/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/elements.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 elements/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="expat">
+         <Option output="D:/Projects/expat-2.1.0-build/expat.dll" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 expat" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="expat/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/expat.dll" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 expat/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 install" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install/local">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 install/local" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="list_install_components">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 list_install_components" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="outline">
+         <Option output="D:/Projects/expat-2.1.0-build/outline.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 outline" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="outline/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/outline.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 outline/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runtests">
+         <Option output="D:/Projects/expat-2.1.0-build/runtests.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 runtests" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runtests/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/runtests.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 runtests/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runtestspp">
+         <Option output="D:/Projects/expat-2.1.0-build/runtestspp.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 runtestspp" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runtestspp/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/runtestspp.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 runtestspp/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="test">
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 test" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="xmlwf">
+         <Option output="D:/Projects/expat-2.1.0-build/xmlwf.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 xmlwf" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="xmlwf/fast">
+         <Option output="D:/Projects/expat-2.1.0-build/xmlwf.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="D:/Projects/expat-2.1.0-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="msvc8" />
+         <Compiler>
+            <Add option="-DHAVE_EXPAT_CONFIG_H" />
+            <Add option="-D_CRT_SECURE_NO_WARNINGS" />
+            <Add directory="D:/Projects/expat-2.1.0-build" />
+            <Add directory="D:/Projects/expat-2.1.0/lib" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 xmlwf/fast" />
+            <CompileFile command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="nmake /NOLOGO /f &quot;D:\Projects\expat-2.1.0-build\Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="D:/Projects/expat-2.1.0/examples/elements.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/examples/outline.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmlparse.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmlrole.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmltok.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmltok_impl.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmltok_ns.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/chardata.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/minicheck.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/runtests.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/runtestspp.cpp">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/codepage.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/readfilemap.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/xmlfile.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/xmlwf.c">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmlrole.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmltok.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/lib/xmltok_impl.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/chardata.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/tests/minicheck.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/codepage.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/xmlwf/xmlfile.h">
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/ConfigureChecks.cmake">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/expat_config.h.cmake">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="D:/Projects/expat-2.1.0/expat.pc.in">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,1 @@
+2 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "D:/Projects/expat-2.1.0-build/expat.dll.embed.manifest"
