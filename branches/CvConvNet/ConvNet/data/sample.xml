@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- /* -->
+<net name="sample" creator="Akhmed Umyarov">
+	<info>
+		This is a template of config file for convolutional network.
+		1) connection tag contains weights for the connection of 
+		the plane to its parent planes (from-left-to-right, then row-by-row
+		from-top-to-bottom)
+		2) bias has a special tag
+		3) each plane has its own id, type, featuremap size and window size
+		of its neuron
+		4) there are several types of planes including 
+		   "source plane" (data abstraction specifying size of source image),
+		   "convolution plane",
+		   "subsampling plane", 
+		   "max plane" (data abstraction for output decision)
+		   Each plane has exactly one feature map, so you can think of the
+		   plane as a neuron with its attached featuremap.
+	</info>
+	
+	<!-- Source image -->
+	<plane id="src" type="source" featuremapsize="32x32">
+	</plane>
+	
+	<!-- Layer C1: 4 planes -->
+	<plane id="C1-1" type="convolution" featuremapsize="28x28" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="src"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	<plane id="C1-2" type="convolution" featuremapsize="28x28" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="src"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	<plane id="C1-3" type="convolution" featuremapsize="28x28" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="src"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	<plane id="C1-4" type="convolution" featuremapsize="28x28" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="src"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	
+	<!-- Layer S2: 4 planes -->
+	<plane id="S2-1" type="subsampling" featuremapsize="14x14" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C1-1"> 1.0 </connection>
+	</plane>
+	<plane id="S2-2" type="subsampling" featuremapsize="14x14" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C1-2"> 1.0 </connection>
+	</plane>
+	<plane id="S2-3" type="subsampling" featuremapsize="14x14" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C1-3"> 1.0 </connection>
+	</plane>
+	<plane id="S2-4" type="subsampling" featuremapsize="14x14" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C1-4"> 1.0 </connection>
+	</plane>
+
+	<!-- And now layer C3: only 2 planes -->
+	<plane id="C3-1" type="convolution" featuremapsize="10x10" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="S2-1"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+		<connection to="S2-2"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+		<connection to="S2-3"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	<plane id="C3-2" type="convolution" featuremapsize="10x10" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="S2-2"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+		<connection to="S2-3"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+		<connection to="S2-4"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	
+	<!-- Here goes layer S4 -->
+	<plane id="S4-1" type="subsampling" featuremapsize="5x5" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C3-1"> 1.0 </connection>
+	</plane>
+	<plane id="S4-2" type="subsampling" featuremapsize="5x5" neuronsize="2x2">
+		<bias> 1.0 </bias>
+		<connection to="C3-2"> 1.0 </connection>
+	</plane>
+		
+	<!-- Layer C5: 2 planes-->
+	<plane id="C5-1" type="convolution" featuremapsize="1x1" neuronsize="5x5">
+		<bias> 0.0 </bias>
+		<connection to="S4-1"> 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 </connection>
+		<connection to="S4-2"> 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 </connection>
+	</plane>
+	<plane id="C5-2" type="convolution" featuremapsize="1x1" neuronsize="5x5">
+		<bias> 1.0 </bias>
+		<connection to="S4-1"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+		<connection to="S4-2"> 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 </connection>
+	</plane>
+	
+	<!-- "Output" neuron: -->
+	<!-- program abstraction for choosing maximum of C5 layer -->
+	<plane id="output" type="max">
+		<connection to="C5-1"> </connection>
+		<connection to="C5-2"> </connection>
+	</plane>
+</net>
+<!-- */ -->
