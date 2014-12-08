@@ -1,0 +1,2 @@
+LIBRARY "configure"
+EXPORTS mexFunction
