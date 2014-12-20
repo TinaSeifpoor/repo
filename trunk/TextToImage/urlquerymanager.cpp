@@ -1,16 +1,21 @@
 #include "urlquerymanager.h"
 #include <QtNetwork>
-URLQueryManager::URLQueryManager()
+URLQueryManager::URLQueryManager():
+    manager(new QNetworkAccessManager)
 {
+    connect (manager, SIGNAL(finished(QNetworkReply*)), SLOT(sourceReady(QNetworkReply*)));
 }
 
 void URLQueryManager::query(QUrl url)
 {
-    QNetworkAccessManager manager;
     QNetworkRequest request(url);
-    QNetworkReply *reply(manager.get(request));
-    QEventLoop loop;
-    QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
-    loop.exec();
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    qDebug(url.toString().toLatin1());
+    manager->get(request);
+}
+
+void URLQueryManager::sourceReady(QNetworkReply *reply)
+{
     emit source(reply->readAll());
 }

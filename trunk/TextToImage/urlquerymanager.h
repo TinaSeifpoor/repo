@@ -2,6 +2,8 @@
 #define URLQUERYMANAGER_H
 #include <QObject>
 #include <QUrl>
+class QNetworkAccessManager;
+class QNetworkReply;
 class URLQueryManager : public QObject
 {
     Q_OBJECT
@@ -11,6 +13,10 @@ public slots:
     void query(QUrl url);
 signals:
     void source(QString source);
+private slots:
+    void sourceReady(QNetworkReply*reply);
+private:
+    QNetworkAccessManager* manager;
 };
 
 #endif // URLQUERYMANAGER_H
