@@ -6,10 +6,10 @@
 #include <QRegExp>
 class ImageSourceParser : public QObject
 {
-    QRegExp _begin, _end;
+    QString _begin, _end;
     Q_OBJECT
 public:
-    explicit ImageSourceParser(QRegExp begin, QRegExp end, QObject *parent = 0);
+    explicit ImageSourceParser(QString begin, QString end, QObject *parent = 0);
 
 signals:
 

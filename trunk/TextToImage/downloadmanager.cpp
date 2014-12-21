@@ -1,46 +1,50 @@
 #include "downloadmanager.h"
 
-DownloadManager::DownloadManager(QString downloadPath):_downloadDir(downloadPath)
+DownloadManager::DownloadManager(QNetworkAccessManager *manager, QString downloadPath):_downloadDir(downloadPath), manager(manager)
 {
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
             SLOT(downloadFinished(QNetworkReply*)));
+    connect(&mapper, SIGNAL(mapped(QObject*)),
+            SLOT(downloadTimeout(QObject*)));
 }
 
 void DownloadManager::doDownload(const QUrl &url)
 {
     QNetworkRequest request(url);
-    QNetworkReply *reply = manager.get(request);
-
+    QNetworkReply *reply = manager->get(request);
+    QTimer* timeoutTimer = new QTimer;
+    connect(timeoutTimer, SIGNAL(timeout()), &mapper, SLOT(map()));
+    mapper.setMapping(timeoutTimer,reply);
+    timeoutTimer->setSingleShot(true);
+    timeoutTimer->start(20000);
     currentDownloads.append(reply);
 }
 
 QString DownloadManager::saveFileName(const QUrl &url)
 {
-    QString path = _downloadDir.filePath(url.path());
-    _downloadDir.mkpath(path);
-    QString basename = QFileInfo(path).fileName();
-
-
+    QFileInfo urlInfo(url.path());
+    QFileInfo fileInfo(_downloadDir, urlInfo.fileName());
+    fileInfo.dir().mkpath(fileInfo.absolutePath());
+    QString basename = fileInfo.baseName();
     if (basename.isEmpty())
         basename = "download";
 
     if (QFile::exists(basename)) {
         // already exists, don't overwrite
         int i = 0;
-        basename += '.';
+        basename += '_';
         while (QFile::exists(basename + QString::number(i)))
             ++i;
 
         basename += QString::number(i);
     }
-    return _downloadDir.filePath(basename);
+    basename.append(".").append(fileInfo.completeSuffix());
+    QFileInfo cFileInfo(fileInfo.dir(), basename);
+    return cFileInfo.filePath();
 }
 
 bool DownloadManager::saveToDisk(const QString &filename, QIODevice *data)
 {
-//    QFileInfo fileInfo(filename);
-//    if (fileInfo.exists())
-//        saveToDisk(QString("%1/%2-%3.%4").arg(fileInfo.path()).arg(fileInfo.fileName()).arg("a").arg(fileInfo.completeSuffix()),data);
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         fprintf(stderr, "Could not open %s for writing: %s\n",
@@ -54,17 +58,6 @@ bool DownloadManager::saveToDisk(const QString &filename, QIODevice *data)
 
     return true;
 }
-
-//void DownloadManager::execute()
-//{
-//    QStringList args = QCoreApplication::instance()->arguments();
-//    args[0]="http://www.google.ru/images/srpr/logo3w.png";
-
-//    QString arg=args[0];
-
-//    QUrl url = QUrl::fromEncoded(arg.toLocal8Bit());
-//    doDownload(url);
-//}
 
 void DownloadManager::downloadFinished(QNetworkReply *reply)
 {
@@ -82,8 +75,27 @@ void DownloadManager::downloadFinished(QNetworkReply *reply)
 
     currentDownloads.removeAll(reply);
     reply->deleteLater();
+    finishedDownloads.append(reply);
 
     if (currentDownloads.isEmpty())
         //   all downloads finished
         QCoreApplication::instance()->quit();
+}
+
+void DownloadManager::downloadTimeout(QObject *reply)
+{
+    if (!finishedDownloads.contains(reply)) {
+        QNetworkReply* networkReply = qobject_cast<QNetworkReply*>(reply);
+        if (networkReply) {
+            if (networkReply->isRunning())
+                networkReply->abort();
+
+            currentDownloads.removeAll(networkReply);
+            networkReply->deleteLater();
+            finishedDownloads.append(reply);
+            if (currentDownloads.isEmpty())
+                //   all downloads finished
+                QCoreApplication::instance()->quit();
+        }
+    }
 }

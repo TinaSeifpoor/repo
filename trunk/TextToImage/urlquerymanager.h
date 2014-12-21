@@ -2,13 +2,14 @@
 #define URLQUERYMANAGER_H
 #include <QObject>
 #include <QUrl>
-class QNetworkAccessManager;
-class QNetworkReply;
+//#include <QNetworkAccessManager>
+#include <QtNetwork>
+//class QNetworkReply;
 class URLQueryManager : public QObject
 {
     Q_OBJECT
 public:
-    URLQueryManager();
+    URLQueryManager(QNetworkAccessManager* manager);
 public slots:
     void query(QUrl url);
 signals:

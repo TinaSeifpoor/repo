@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QString searchString("https://www.google.com/search\?tbm=isch&q=%1");
+    QString searchString("http://www.google.com.tr/search?q=%1&biw=1920&bih=955&source=lnms&tbm=isch&sa=X&ei=sTyVVITxEKKY7gbEroHoDg&ved=0CAYQ_AUoAQ&gws_rd=ssl&sout=0");
 
     QString savePath = "%1/%2";
     if (argc>1)
@@ -14,13 +14,16 @@ int main(int argc, char *argv[])
         savePath = savePath.arg("./");
 
     savePath = savePath.arg(argv[1]);
-    DownloadManager manager(savePath);
-    ImageSourceParser parser(QRegExp("<a href=\"http://www.google.com/imgres\?imgurl="),QRegExp("&amp;imgrefurl="));
+    searchString = searchString.arg(argv[1]);
+
+//    QNetworkAccessManager nam;
+    DownloadManager manager(new QNetworkAccessManager, savePath);
+    ImageSourceParser parser("imgres?imgurl=","&amp;imgrefurl=");
     QObject::connect (&parser, SIGNAL(download(QUrl)), &manager, SLOT(doDownload(QUrl)));
 
-    URLQueryManager urlManager;
+    URLQueryManager urlManager(new QNetworkAccessManager);
     QObject::connect (&urlManager, SIGNAL(source(QString)), &parser, SLOT(urlSource(QString)));
-    urlManager.query(searchString.arg(argv[1]));
+    urlManager.query(searchString);
 
 
 
