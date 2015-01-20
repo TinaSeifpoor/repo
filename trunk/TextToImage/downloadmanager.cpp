@@ -16,7 +16,10 @@ void DownloadManager::doDownload(const QUrl &url)
     connect(timeoutTimer, SIGNAL(timeout()), &mapper, SLOT(map()));
     mapper.setMapping(timeoutTimer,reply);
     timeoutTimer->setSingleShot(true);
-    timeoutTimer->start(20000);
+    if (qApp->argc()>3)
+        timeoutTimer->start(QString(qApp->argv()[3]).toInt());
+    else
+        timeoutTimer->start(20000);
     currentDownloads.append(reply);
 }
 
