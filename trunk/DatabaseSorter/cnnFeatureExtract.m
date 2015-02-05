@@ -1,12 +1,12 @@
-function [Net, Categorizer]=cnnFeatureExtract(Net,Categorizer)
+function Class=cnnFeatureExtract(Net,imageFiles, className)
 %CNNFEATUREEXTRACT Summary of this function goes here
 %   Detailed explanation goes here
-nFiles = numel(Categorizer.imageFile);
+nFiles = numel(imageFiles);
 successVector=ones(1,nFiles);
 for i=1:nFiles
     try
         tic
-        filePath = Categorizer.imageFile{i};
+        filePath = imageFiles{i};
         % obtain and preprocess an image
         im = imread(filePath) ;
         %im_ = single(im) ; % note: 255 range
@@ -15,17 +15,21 @@ for i=1:nFiles
         
         % run the CNN
         res = vl_simplenn(Net.net, im_);
-        Net.x(i,:) = res(Net.layer).x;
+        Class.X(i,:) = res(Net.layer).x;
         fprintf('%d/%d done in %f...\n', i, nFiles, toc);
     catch
         % on to next one..
         successVector(i)=0;
+        Class.X(i,:) = zeros(1,4096);
     end
 end
 failIndices = successVector==0;
-Categorizer.imageFile(failIndices)=[];
-Categorizer.className(failIndices)=[];
-Categorizer.classIndex(failIndices)=[];
-Net.x(failIndices,:)=[];
+Class.imageFileAll = imageFiles;
+Class.imageFile = imageFiles;
+Class.className = className;
+% Class.className = Categorizer.className;
+Class.imageFile(failIndices) = [];
+Class.X(failIndices,:) = [];
+Class.classNames = repmat(className,[1,numel(Class.imageFile)]);
 end
 
