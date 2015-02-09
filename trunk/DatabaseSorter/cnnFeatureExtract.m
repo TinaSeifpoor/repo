@@ -1,4 +1,4 @@
-function Class=cnnFeatureExtract(Net,imageFiles, className)
+function Class=cnnFeatureExtract(Net,imageFiles, className, imageFilesBasePath)
 %CNNFEATUREEXTRACT Summary of this function goes here
 %   Detailed explanation goes here
 nFiles = numel(imageFiles);
@@ -6,7 +6,7 @@ successVector=ones(1,nFiles);
 for i=1:nFiles
     try
         tic
-        filePath = imageFiles{i};
+        filePath = strcat(imageFilesBasePath,imageFiles{i});
         % obtain and preprocess an image
         im = imread(filePath) ;
         %im_ = single(im) ; % note: 255 range

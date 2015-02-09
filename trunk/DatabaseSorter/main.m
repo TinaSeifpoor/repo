@@ -33,7 +33,7 @@ for i=1:numel(uniqueClassNames)
         currentClass=load(classFile{:});
         currentClass=currentClass.currentClass;
     else
-        currentClass=cnnFeatureExtract(Net,Downloader.imageFile(classIndices), className);
+        currentClass=cnnFeatureExtract(Net,Downloader.imageFile(classIndices), className, Paths.textToImagePath.dir);
         save(classFile{:},'currentClass');
     end
     currentClass.classFile = classFile;
@@ -41,31 +41,26 @@ for i=1:numel(uniqueClassNames)
 end
 %% Train SVM
 for i=1:numel(Class)
-    if (exist('Class(i).svm.model','var'))
-        currentClass=load(classFile{:});
-        currentClass=currentClass.currentClass;
-        Class(i) = currentClass;
-    else
-        X = {Class(:).X};
-        X(i)=[];
-        XNegative = cell2mat(X');
-        yNegative = -ones(size(XNegative,1),1);
-        XPositive = Class(i).X;
-        yPositive = ones(size(XPositive,1),1);
-        Class(i).svm.model = svmtrain([XNegative;XPositive], [yNegative;yPositive]);
-        currentClass = Class(i);
-        save(Class(i).classFile{:},'currentClass');
-    end
+    X = {Class(:).X};
+    X(i)=[];
+    XNegative = cell2mat(X');
+    yNegative = -ones(size(XNegative,1),1);
+    XPositive = Class(i).X;
+    yPositive = ones(size(XPositive,1),1);
+    SVM(i).model = libsvmtrain([XNegative;XPositive], [yNegative;yPositive]);
+%     X = [XNegative;XPositive];
+%     y = [yNegative;yPositive];
+%     save('svm_sample.mat','X','y');
 end
 %% Test SVM
 load('db.mat');
 classNames = {Class(:).className};
 for i=1:numel(classNames)
-    idxPicked = svmclassify(Class(i).svm.model,DB.Net.X)==1;
+    [idxPicked, prob] = libsvmpredict(SVM(i).model,DB.Net.X, 2);
     filesPicked = DB.Categorizer.imageFile(idxPicked);
-    for j=1:min([2,numel(filesPicked)])
+    for j=1:numel(filesPicked)
         figure;
         filePicked = filesPicked{j};
-%         imshow(imread(filePicked));title(classNames{i});
+                imshow(imread(filePicked));title(classNames{i});
     end
 end
