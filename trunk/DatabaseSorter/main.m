@@ -13,13 +13,14 @@ Paths.basePath = '../';
 Paths.rijk = 'vgg-f19_rijks.mat';
 Paths.matconvnetPath    = [Paths.basePath 'matconvnet-1.0-beta7/matlab/vl_setupnn.m'];
 Paths.textToImagePath.bin   = './TextToImage/TextToImage.exe';
-Paths.textToImagePath.dir  = 'e:/gimages/images/';
+Paths.textToImagePath.dir  = 'd:/gimages/images/';
 Paths.libsvmPath        = [Paths.basePath 'libsvm-3.20/matlab/'];
 Paths.netPath           = 'imagenet-vgg-f.mat';
-Paths.classBasePath = 'e:/gimages/images/';
+Paths.classBasePath = 'd:/gimages/images/';
 %% Load
 run(Paths.matconvnetPath);
 Net.net = load('imagenet-vgg-f.mat') ;
+addpath(Paths.libsvmPath);
 %% Download
 downloadSamples(Paths.textToImagePath, Downloader.className);
 %% Discover
@@ -48,19 +49,21 @@ for i=1:numel(Class)
     XPositive = Class(i).X;
     yPositive = ones(size(XPositive,1),1);
     SVM(i).model = libsvmtrain([XNegative;XPositive], [yNegative;yPositive]);
-%     X = [XNegative;XPositive];
-%     y = [yNegative;yPositive];
-%     save('svm_sample.mat','X','y');
+    %     X = [XNegative;XPositive];
+    %     y = [yNegative;yPositive];
+    %     save('svm_sample.mat','X','y');
 end
 %% Test SVM
 load('db.mat');
 classNames = {Class(:).className};
 for i=1:numel(classNames)
-    [idxPicked, prob] = libsvmpredict(SVM(i).model,DB.Net.X, 2);
+    [idxPicked, prob] = libsvmpredict(SVM(i).model,DB.Net.X, 5);
     filesPicked = DB.Categorizer.imageFile(idxPicked);
     for j=1:numel(filesPicked)
-        figure;
         filePicked = filesPicked{j};
-                imshow(imread(filePicked));title(classNames{i});
+        imcur = imread(filePicked);
+        %         figure;imshow(imcur);title(classNames{i});
+        outputfilename = strcat(classNames{i},num2str(j),'.jpg');
+        imwrite(imcur,outputfilename{:});
     end
 end
