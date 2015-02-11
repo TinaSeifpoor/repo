@@ -13,10 +13,14 @@ int main(int argc, char *argv[])
     else
         savePath = savePath.arg("./");
 
-    savePath = savePath.arg(argv[1]);
-    searchString = searchString.arg(argv[1]);
+    QString query = argv[1];
+    query.replace(" ", "+");
+    query.append("\"");
+    query.prepend("\"");
 
-//    QNetworkAccessManager nam;
+    savePath = savePath.arg(argv[1]);
+    searchString = searchString.arg(query);
+
     DownloadManager manager(new QNetworkAccessManager, savePath);
     ImageSourceParser parser("imgres?imgurl=","&amp;imgrefurl=");
     QObject::connect (&parser, SIGNAL(download(QUrl)), &manager, SLOT(doDownload(QUrl)));
