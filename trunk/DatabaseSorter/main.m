@@ -3,17 +3,24 @@ clear; close all; clc;
 % See also %%Path
 Net.layer = 19;
 Downloader.className = {};
-% Downloader.className{numel(Downloader.className)+1} = 'portrait';
-% Downloader.className{numel(Downloader.className)+1} = 'painting';
-% Downloader.className{numel(Downloader.className)+1} = 'stuff';
-% Downloader.className{numel(Downloader.className)+1} = 'cup';
-% Downloader.className{numel(Downloader.className)+1} = 'plate';
+Downloader.className{numel(Downloader.className)+1} = 'hammer';
+Downloader.className{numel(Downloader.className)+1} = 'tool';
+Downloader.className{numel(Downloader.className)+1} = 'book';
+Downloader.className{numel(Downloader.className)+1} = 'train';
+Downloader.className{numel(Downloader.className)+1} = 'garden';
+Downloader.className{numel(Downloader.className)+1} = 'wardrobe';
+Downloader.className{numel(Downloader.className)+1} = 'sketch';
+Downloader.className{numel(Downloader.className)+1} = 'newspaper';
+Downloader.className{numel(Downloader.className)+1} = 'meditation';
+Downloader.className{numel(Downloader.className)+1} = 'selfie';
+Downloader.className{numel(Downloader.className)+1} = 'bridge';
 %% Path
 Paths.basePath = '../';
-Paths.rijk = 'vgg-f19_rijks.mat';
+Paths.rijkBase = 'd:/downloads/rijksjpg/jpg2.mat';
+Paths.rijkBaseDir = 'd:/downloads/rijksjpg/';
 Paths.matconvnetPath    = [Paths.basePath 'matconvnet-1.0-beta7/matlab/vl_setupnn.m'];
 Paths.textToImagePath.bin   = './TextToImage/TextToImage.exe';
-Paths.textToImagePath.dir  = 'd:/gimages/images/';
+Paths.textToImagePath.dir  = 'd:/gimages/dbsorter/';
 Paths.libsvmPath        = [Paths.basePath 'libsvm-3.20/matlab/'];
 Paths.netPath           = 'imagenet-vgg-f.mat';
 Paths.classBasePath = 'd:/gimages/images/';
@@ -49,21 +56,20 @@ for i=1:numel(Class)
     XPositive = Class(i).X;
     yPositive = ones(size(XPositive,1),1);
     SVM(i).model = libsvmtrain([XNegative;XPositive], [yNegative;yPositive]);
-    %     X = [XNegative;XPositive];
-    %     y = [yNegative;yPositive];
-    %     save('svm_sample.mat','X','y');
 end
 %% Test SVM
-load('db.mat');
-classNames = {Class(:).className};
+currentClass = load(Paths.rijkBase);
+rijk = currentClass.currentClass;
+classNames = Class(:).className;
 for i=1:numel(classNames)
-    [idxPicked, prob] = libsvmpredict(SVM(i).model,DB.Net.X, 5);
-    filesPicked = DB.Categorizer.imageFile(idxPicked);
+    [idxPicked, prob] = libsvmpredict(SVM(i).model,rijk.X, 9);
+    filesPicked = rijk.imageFile(idxPicked);
     for j=1:numel(filesPicked)
-        filePicked = filesPicked{j};
-        imcur = imread(filePicked);
-        %         figure;imshow(imcur);title(classNames{i});
-        outputfilename = strcat(classNames{i},num2str(j),'.jpg');
-        imwrite(imcur,outputfilename{:});
+        filePicked = [Paths.rijkBaseDir,filesPicked{j}];
+        outputfilename = [classNames{i} '/' classNames{i} num2str(j) '.jpg'];
+        if(~exist(classNames{i},'dir'))
+            mkdir(classNames{i});
+        end
+        copyfile(filePicked, outputfilename);
     end
 end
