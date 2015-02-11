@@ -3,17 +3,17 @@ clear; close all; clc;
 % See also %%Path
 Net.layer = 19;
 Downloader.className = {};
-Downloader.className{numel(Downloader.className)+1} = 'hammer';
-Downloader.className{numel(Downloader.className)+1} = 'tool';
-Downloader.className{numel(Downloader.className)+1} = 'book';
-Downloader.className{numel(Downloader.className)+1} = 'train';
-Downloader.className{numel(Downloader.className)+1} = 'garden';
-Downloader.className{numel(Downloader.className)+1} = 'wardrobe';
-Downloader.className{numel(Downloader.className)+1} = 'sketch';
-Downloader.className{numel(Downloader.className)+1} = 'newspaper';
-Downloader.className{numel(Downloader.className)+1} = 'meditation';
-Downloader.className{numel(Downloader.className)+1} = 'selfie';
-Downloader.className{numel(Downloader.className)+1} = 'bridge';
+% Downloader.className{numel(Downloader.className)+1} = 'hammer';
+% Downloader.className{numel(Downloader.className)+1} = 'tool';
+% Downloader.className{numel(Downloader.className)+1} = 'book';
+% Downloader.className{numel(Downloader.className)+1} = 'train';
+% Downloader.className{numel(Downloader.className)+1} = 'garden';
+% Downloader.className{numel(Downloader.className)+1} = 'wardrobe';
+% Downloader.className{numel(Downloader.className)+1} = 'sketch';
+% Downloader.className{numel(Downloader.className)+1} = 'newspaper';
+% Downloader.className{numel(Downloader.className)+1} = 'meditation';
+% Downloader.className{numel(Downloader.className)+1} = 'selfie';
+% Downloader.className{numel(Downloader.className)+1} = 'bridge';
 %% Path
 Paths.basePath = '../';
 Paths.rijkBase = 'd:/downloads/rijksjpg/jpg2.mat';
@@ -23,7 +23,7 @@ Paths.textToImagePath.bin   = './TextToImage/TextToImage.exe';
 Paths.textToImagePath.dir  = 'd:/gimages/dbsorter/';
 Paths.libsvmPath        = [Paths.basePath 'libsvm-3.20/matlab/'];
 Paths.netPath           = 'imagenet-vgg-f.mat';
-Paths.classBasePath = 'd:/gimages/images/';
+Paths.classBasePath = 'd:/gimages/dbsorter/';
 %% Load
 run(Paths.matconvnetPath);
 Net.net = load('imagenet-vgg-f.mat') ;
@@ -60,15 +60,17 @@ end
 %% Test SVM
 currentClass = load(Paths.rijkBase);
 rijk = currentClass.currentClass;
-classNames = Class(:).className;
+classNames = {Class(:).className};
 for i=1:numel(classNames)
+    className = classNames{i};
+    className = className{:};
     [idxPicked, prob] = libsvmpredict(SVM(i).model,rijk.X, 9);
     filesPicked = rijk.imageFile(idxPicked);
     for j=1:numel(filesPicked)
         filePicked = [Paths.rijkBaseDir,filesPicked{j}];
-        outputfilename = [classNames{i} '/' classNames{i} num2str(j) '.jpg'];
-        if(~exist(classNames{i},'dir'))
-            mkdir(classNames{i});
+        outputfilename = [className,'/',className,num2str(j),'.jpg'];
+        if(~exist(className,'dir'))
+            mkdir(className);
         end
         copyfile(filePicked, outputfilename);
     end
