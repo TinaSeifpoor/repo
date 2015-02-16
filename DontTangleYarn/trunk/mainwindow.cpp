@@ -10,6 +10,7 @@
 #include "animationfactory.h"
 #include "scoreboard.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -38,7 +39,6 @@ void MainWindow::initMainWindow()
 {
     init = true;
     grabMouse();
-    //    grabGesture(Qt::SwipeGesture);
     QGraphicsScene* scene = new QGraphicsScene;
     ui->graphicsView->setScene(scene);
     ui->graphicsView->installEventFilter(this);

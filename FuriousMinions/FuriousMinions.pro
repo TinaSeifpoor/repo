@@ -16,11 +16,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     questhub.cpp \
     questwidget.cpp \
-    common.cpp
+    common.cpp \
+    miniontemplate.cpp \
+    affiniteetemplate.cpp \
+    minionselectionwidget.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
     questwidget.h \
-    common.h
+    common.h \
+    miniontemplate.h \
+    affiniteetemplate.h \
+    minionselectionwidget.h
 
 FORMS    += mainwindow.ui

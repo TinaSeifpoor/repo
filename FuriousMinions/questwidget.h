@@ -2,16 +2,14 @@
 #define QUESTWIDGET_H
 
 #include <QCheckBox>
-#include "common.h"
-class QuestWidget : public QCheckBox
+#include "affiniteetemplate.h"
+class QuestWidget : public QCheckBox, protected AffiniteeTemplate
 {
     Q_OBJECT
     explicit QuestWidget(QWidget *parent = 0);
     int __questValue;
     int __time;
-    Affinities __questAffinities;
-    int __seed;
-    void set(int seed);
+    virtual void set(int seed);
 public:
     static QuestWidget* genQuest(QWidget *parent=0);
     ~QuestWidget();

@@ -8,11 +8,10 @@ QuestWidget::QuestWidget(QWidget *parent) : QCheckBox(parent)
 
 void QuestWidget::set(int seed)
 {
-    __seed = seed;
-    __questAffinities = genAffinities(seed);
-    __questValue = genValue(seed);
+    AffiniteeTemplate::set(seed);
+    __questValue = genValue(get());
     __time = qBound(60000,__questValue*1000,300000);
-    setText(QString("Time: %1 Affinities: (%2)").arg(__time/1000).arg(affinityStringList(__questAffinities).join(", ")));
+    setText(QString("Time: %1 Affinities: (%2)").arg(__time/1000).arg(affinityStringList(getAffinities()).join(", ")));
 }
 
 QuestWidget *QuestWidget::genQuest(QWidget *parent)

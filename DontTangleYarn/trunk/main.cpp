@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Ball*>("Ball");
 
     MainWindow w;
-    w.show();
+    w.showFullScreen();
     a.processEvents();
     w.initMainWindow();
     return a.exec();
