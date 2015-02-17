@@ -15,9 +15,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QComboBox" name="cbAvailableMinions"/>
-    </item>
     <item row="1" column="0" colspan="3">
      <widget class="QListWidget" name="listWidget"/>
     </item>
@@ -31,6 +28,9 @@
     <item row="0" column="1">
      <widget class="QuestHub" name="widget" native="true"/>
     </item>
+    <item row="0" column="0">
+     <widget class="MinionHub" name="widget_2" native="true"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -39,7 +39,7 @@
      <x>0</x>
      <y>0</y>
      <width>731</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -59,6 +59,12 @@
    <class>QuestHub</class>
    <extends>QWidget</extends>
    <header>questhub.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MinionHub</class>
+   <extends>QWidget</extends>
+   <header>minionhub.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

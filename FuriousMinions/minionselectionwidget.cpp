@@ -1,8 +1,8 @@
 #include "minionselectionwidget.h"
-#include "miniontemplate.h"
 
-MinionSelectionWidget::MinionSelectionWidget(MinionTemplate* mt, QWidget *parent) :
+MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
     QCheckBox(parent),
     __mt(mt)
 {
+    setText(__mt->name());
 }

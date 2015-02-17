@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     common.cpp \
     miniontemplate.cpp \
     affiniteetemplate.cpp \
-    minionselectionwidget.cpp
+    minionselectionwidget.cpp \
+    minionhub.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     common.h \
     miniontemplate.h \
     affiniteetemplate.h \
-    minionselectionwidget.h
+    minionselectionwidget.h \
+    minionhub.h
 
 FORMS    += mainwindow.ui

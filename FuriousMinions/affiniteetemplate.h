@@ -1,7 +1,8 @@
 #ifndef AFFINITEETEMPLATE_H
 #define AFFINITEETEMPLATE_H
 #include "common.h"
-class AffiniteeTemplate
+#include <QSharedData>
+class AffiniteeTemplate : public QSharedData
 {
     Affinities __affinities;
     int __seed;

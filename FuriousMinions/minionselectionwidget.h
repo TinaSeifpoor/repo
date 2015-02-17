@@ -2,18 +2,15 @@
 #define MINIONSELECTIONWIDGET_H
 
 #include <QCheckBox>
-class MinionTemplate;
+#include "miniontemplate.h"
+
 class MinionSelectionWidget : public QCheckBox
 {
     Q_OBJECT
-    MinionTemplate* __mt;
+    Minion __mt;
 public:
-    explicit MinionSelectionWidget(MinionTemplate* mt, QWidget *parent = 0);
-
-signals:
-
-public slots:
-
+    explicit MinionSelectionWidget(Minion mt, QWidget *parent = 0);
+    void getMinion(Minion mt);
 };
 
 #endif // MINIONSELECTIONWIDGET_H
