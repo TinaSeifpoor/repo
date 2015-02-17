@@ -11,6 +11,8 @@ class MinionSelectionWidget : public QCheckBox
 public:
     explicit MinionSelectionWidget(Minion mt, QWidget *parent = 0);
     Minion getMinion() const;
+public slots:
+    void minionNotification();
 };
 
 #endif // MINIONSELECTIONWIDGET_H

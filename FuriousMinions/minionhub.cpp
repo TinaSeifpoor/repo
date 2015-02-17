@@ -4,20 +4,21 @@
 MinionHub::MinionHub(QWidget *parent) :
     QWidget(parent)
 {
-    int nRows = 3;
-    int nCols = 3;
-    QGridLayout* gridLayout = new QGridLayout;
-    for (int row = 0; row < nRows; ++row)
-        for (int col=0; col<nCols; ++col)
-            gridLayout->addWidget(new MinionSelectionWidget(Minion(), this),row,col);
-    setLayout(gridLayout);
+    setLayout(new QGridLayout());
 }
 
-QList<Minion> MinionHub::selectedMinions() const
+Minion MinionHub::getMinion()
 {
-    QList<Minion> selectedMinions;
     foreach(MinionSelectionWidget* msw,findChildren<MinionSelectionWidget*>())
-        if (msw->isChecked())
-            selectedMinions << msw->getMinion();
-    return selectedMinions;
+        if (msw->isChecked()) {
+            Minion minion = msw->getMinion();
+            msw->deleteLater();
+            return minion;
+        }
+}
+
+void MinionHub::addMinion(Minion minion)
+{
+    QGridLayout* gridLayout = dynamic_cast<QGridLayout*>(layout());
+    gridLayout->addWidget(new MinionSelectionWidget(minion, this));
 }

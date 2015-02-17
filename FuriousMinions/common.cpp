@@ -41,7 +41,7 @@ QColor pureAffinityColor(AffinityTypes type) {
 
 
 
-QList<AffinityTypes> toAffinityList(Affinities affinities)
+QList<AffinityTypes> convertToAffinityList(Affinities affinities)
 {
     QList<AffinityTypes> ret;
     QList<AffinityTypes> allAffinities = allAffinityList();
@@ -85,7 +85,7 @@ QColor affinityToColor(Affinities type) {
     double red = 0;
     double green = 0;
     double blue = 0;
-    QList<AffinityTypes> affinityList = toAffinityList(type);
+    QList<AffinityTypes> affinityList = convertToAffinityList(type);
     foreach (AffinityTypes affinity, affinityList) {
             QColor pureColor = pureAffinityColor(affinity);
             red+=pureColor.red();
@@ -102,7 +102,7 @@ QColor affinityToColor(Affinities type) {
 QStringList affinityStringList(Affinities type)
 {
     QStringList affinityTextList;
-    foreach (AffinityTypes affinity, toAffinityList(type))
+    foreach (AffinityTypes affinity, convertToAffinityList(type))
         affinityTextList << affinityString(affinity);
     return affinityTextList;
 }

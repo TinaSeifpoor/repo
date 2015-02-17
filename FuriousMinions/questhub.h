@@ -6,12 +6,11 @@
 class QuestHub : public QWidget
 {
     Q_OBJECT
-    int __nRows;
-    int __nCols;
 public:
-    explicit QuestHub(QWidget *parent = 0,int nRows=6, int nCols=4);
+    explicit QuestHub(QWidget *parent = 0);
     ~QuestHub();
-    QList<Quest> selectedQuests() const;
+    void addQuest(Quest quest);
+    Quest getQuest();
 };
 
 #endif // QUESTHUB_H

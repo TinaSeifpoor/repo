@@ -15,6 +15,8 @@ public:
     Affinities getAffinities() const;
 
     void reset();
+    void setQuestTrigger(QObject* obj, const char *member);
+
 private:
     QExplicitlySharedDataPointer<QuestData> __data;
 };

@@ -1,13 +1,9 @@
 #include "questhub.h"
 #include <QGridLayout>
 #include "questselectionwidget.h"
-QuestHub::QuestHub(QWidget *parent,int nRows, int nCols):__nRows(nRows), __nCols(nCols), QWidget(parent)
+QuestHub::QuestHub(QWidget *parent): QWidget(parent)
 {
-    QGridLayout* gridLayout = new QGridLayout;
-    for (int row = 0; row < nRows; ++row)
-        for (int col=0; col<nCols; ++col)
-            gridLayout->addWidget(new QuestSelectionWidget(Quest(),this),row,col);
-    setLayout(gridLayout);
+    setLayout(new QGridLayout());
 }
 
 QuestHub::~QuestHub()
@@ -15,12 +11,19 @@ QuestHub::~QuestHub()
 
 }
 
-QList<Quest> QuestHub::selectedQuests() const
+void QuestHub::addQuest(Quest quest)
 {
-        QList<Quest> selectedQuests ;
-        foreach(QuestSelectionWidget* qsw,findChildren<QuestSelectionWidget*>())
-            if (qsw->isChecked())
-                selectedQuests << qsw->getQuest();
-        return selectedQuests ;
+    layout()->addWidget(new QuestSelectionWidget(quest,this));
+}
+
+Quest QuestHub::getQuest()
+{
+    foreach(QuestSelectionWidget* qsw,findChildren<QuestSelectionWidget*>())
+        if (qsw->isChecked()) {
+            Quest quest = qsw->getQuest();
+            qsw->reset();
+            return quest;
+        }
+    return Quest(-1);
 }
 

@@ -18,7 +18,7 @@ Affinities genAffinities(int seed);
 
 double genValue(int seed);
 int genTime(int seed);
-
+QList<AffinityTypes> convertToAffinityList(Affinities affinities);
 QColor affinityToColor(Affinities type);
 QStringList affinityStringList(Affinities type);
 

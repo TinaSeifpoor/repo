@@ -13,6 +13,11 @@ public:
     ~Minion();
     QString getName() const;
     Affinities getAffinities() const;
+    double getBasePower() const;
+    double getAffinityPower(AffinityTypes affinity) const;
+    bool rewardExperience(double experience);
+
+    void setMinionTrigger(QObject* obj, const char *member);
 private:
     QExplicitlySharedDataPointer<MinionData> __data;
 };

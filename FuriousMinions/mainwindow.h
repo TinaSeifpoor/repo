@@ -6,7 +6,8 @@
 namespace Ui {
 class MainWindow;
 }
-
+#include "minion.h"
+#include "quest.h"
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -14,6 +15,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void questComplete(Minion minion, Quest quest);
 
 private slots:
     void on_pbGo_clicked();

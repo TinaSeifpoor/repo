@@ -1,19 +1,31 @@
 #include "quest.h"
 #include "affiniteetemplate.h"
-
 #include "qmath.h"
 class QuestData : public AffiniteeTemplate
 {
-public:
+    QList<QObject*> objsToNotify;
+    QList<const char*> membersToNotify;
     int __questValue;
     int __questTime;
-    virtual void set(int seed)
+    void notify() const
     {
-        AffiniteeTemplate::set(seed);
-        __questValue = this->genValue(get());
-        __questTime = this->genTime(get());
+        for (int i=0; i<objsToNotify.count(); ++i) {
+            const char* member = membersToNotify.value(i);
+            QObject* receiver = objsToNotify.value(i);
+            if (member && receiver) {
+                const char* bracketPosition = strchr(member, '(');
+                if (!bracketPosition || !(member[0] >= '0' && member[0] <= '3')) {
+                    qWarning("MinionData::notify: Invalid slot specification");
+                    return;
+                }
+                QByteArray methodName(member+1, bracketPosition - 1 - member); // extract method name
+                QMetaObject::invokeMethod(receiver, methodName.constData(), Qt::QueuedConnection);
+            }
+        }
+
+
     }
-private:
+
     double genValue(int seed) const
     {
         return seed%500000;
@@ -25,6 +37,25 @@ private:
         int maxTime = 300000;
         return minTime + seed%(maxTime-minTime);
     }
+public:
+    virtual void set(int seed)
+    {
+        AffiniteeTemplate::set(seed);
+        __questValue = this->genValue(get());
+        __questTime = this->genTime(get());
+        notify();
+    }
+    int value() const {return __questValue;}
+    int time() const {return __questTime;}
+    void setTime(int time) {
+        __questTime = time;
+        notify();
+    }
+    void addObj(QObject* obj, const char* member) {
+        objsToNotify << obj;
+        membersToNotify << member;
+    }
+private:
 };
 
 Quest::Quest(const Quest &other) : __data(other.__data)
@@ -48,12 +79,12 @@ Quest::Quest():__data(new QuestData()){
 
 int Quest::getTime() const
 {
-    return __data->__questTime;
+    return __data->time();
 }
 
 int Quest::getValue() const
 {
-    return __data->__questValue;
+    return __data->value();
 }
 
 
@@ -66,4 +97,9 @@ void Quest::reset()
 {
     __data.detach();
     __data->set(qrand());
+}
+
+void Quest::setQuestTrigger(QObject *obj, const char *member)
+{
+    __data->addObj(obj, member);
 }

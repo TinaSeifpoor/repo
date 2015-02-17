@@ -8,7 +8,8 @@ class MinionHub : public QWidget
     Q_OBJECT
 public:
     explicit MinionHub(QWidget *parent = 0);
-    QList<Minion> selectedMinions() const;
+    Minion getMinion();
+    void addMinion(Minion minion);
 };
 
 #endif // MINIONHUB_H

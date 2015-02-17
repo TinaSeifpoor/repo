@@ -21,7 +21,9 @@ SOURCES += main.cpp\
     minionhub.cpp \
     quest.cpp \
     minion.cpp \
-    questselectionwidget.cpp
+    questselectionwidget.cpp \
+    reward.cpp \
+    questtimer.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -31,6 +33,8 @@ HEADERS  += mainwindow.h \
     minionhub.h \
     quest.h \
     minion.h \
-    questselectionwidget.h
+    questselectionwidget.h \
+    reward.h \
+    questtimer.h
 
 FORMS    += mainwindow.ui
