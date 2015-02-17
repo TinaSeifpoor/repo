@@ -2,7 +2,7 @@
 #define MINIONSELECTIONWIDGET_H
 
 #include <QCheckBox>
-#include "miniontemplate.h"
+#include "minion.h"
 
 class MinionSelectionWidget : public QCheckBox
 {
@@ -10,7 +10,7 @@ class MinionSelectionWidget : public QCheckBox
     Minion __mt;
 public:
     explicit MinionSelectionWidget(Minion mt, QWidget *parent = 0);
-    void getMinion(Minion mt);
+    Minion getMinion() const;
 };
 
 #endif // MINIONSELECTIONWIDGET_H

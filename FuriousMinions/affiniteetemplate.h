@@ -9,10 +9,10 @@ class AffiniteeTemplate : public QSharedData
 protected:
     virtual void set(int seed);
     int get() const;
-    Affinities getAffinities() const;
     AffiniteeTemplate();
     virtual ~AffiniteeTemplate();
-
+public:
+    Affinities getAffinities() const;
 };
 
 #endif // AFFINITEETEMPLATE_H

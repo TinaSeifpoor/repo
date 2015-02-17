@@ -15,20 +15,22 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     questhub.cpp \
-    questwidget.cpp \
     common.cpp \
-    miniontemplate.cpp \
     affiniteetemplate.cpp \
     minionselectionwidget.cpp \
-    minionhub.cpp
+    minionhub.cpp \
+    quest.cpp \
+    minion.cpp \
+    questselectionwidget.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
-    questwidget.h \
     common.h \
-    miniontemplate.h \
     affiniteetemplate.h \
     minionselectionwidget.h \
-    minionhub.h
+    minionhub.h \
+    quest.h \
+    minion.h \
+    questselectionwidget.h
 
 FORMS    += mainwindow.ui

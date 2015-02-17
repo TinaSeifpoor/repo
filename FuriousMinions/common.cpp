@@ -81,12 +81,6 @@ Affinities genAffinities(int seed)
 }
 
 
-double genValue(int seed)
-{
-    return qPow(2,10 - numDigits(seed));
-}
-
-
 QColor affinityToColor(Affinities type) {
     double red = 0;
     double green = 0;

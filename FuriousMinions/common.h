@@ -13,7 +13,7 @@ enum AffinityTypes {
 };
 Q_DECLARE_FLAGS(Affinities, AffinityTypes)
 
-
+unsigned numDigits(const unsigned n);
 Affinities genAffinities(int seed);
 
 double genValue(int seed);
