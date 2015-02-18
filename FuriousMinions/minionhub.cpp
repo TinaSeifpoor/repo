@@ -7,18 +7,28 @@ MinionHub::MinionHub(QWidget *parent) :
     setLayout(new QGridLayout());
 }
 
-Minion MinionHub::getMinion()
+MinionSelectionWidget* MinionHub::getMinionSelectionWidget()
 {
-    foreach(MinionSelectionWidget* msw,findChildren<MinionSelectionWidget*>())
+    foreach (MinionSelectionWidget* msw, findChildren<MinionSelectionWidget*>()) {
         if (msw->isChecked()) {
-            Minion minion = msw->getMinion();
-            msw->deleteLater();
-            return minion;
+            layout()->removeWidget(msw);
+            return msw;
         }
+    }
+    return 0;
 }
-
 void MinionHub::addMinion(Minion minion)
 {
-    QGridLayout* gridLayout = dynamic_cast<QGridLayout*>(layout());
-    gridLayout->addWidget(new MinionSelectionWidget(minion, this));
+    addMinionSelectionWidget(new MinionSelectionWidget(minion, this));
+}
+
+void MinionHub::addMinionSelectionWidget(MinionSelectionWidget *msw)
+{
+    msw->setParent(this);
+    layout()->addWidget(msw);
+}
+
+void MinionHub::minionSelected()
+{
+
 }

@@ -1,9 +1,9 @@
 #ifndef QUESTSELECTIONWIDGET_H
 #define QUESTSELECTIONWIDGET_H
 
-#include <QCheckBox>
+#include <QPushButton>
 #include "quest.h"
-class QuestSelectionWidget : public QCheckBox
+class QuestSelectionWidget : public QPushButton
 {
     Q_OBJECT
     Quest __quest;

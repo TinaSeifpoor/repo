@@ -3,13 +3,17 @@
 
 #include <QWidget>
 #include "minion.h"
+class MinionSelectionWidget;
 class MinionHub : public QWidget
 {
     Q_OBJECT
 public:
     explicit MinionHub(QWidget *parent = 0);
-    Minion getMinion();
+    MinionSelectionWidget *getMinionSelectionWidget();
     void addMinion(Minion minion);
+    void addMinionSelectionWidget(MinionSelectionWidget* msw);
+public slots:
+    void minionSelected();
 };
 
 #endif // MINIONHUB_H

@@ -17,7 +17,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void questComplete(Minion minion, Quest quest);
+//    void questComplete(Minion minion, Quest quest);
+    void showGuidance(QString title, QString text);
 
 private slots:
     void on_pbGo_clicked();

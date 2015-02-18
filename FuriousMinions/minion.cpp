@@ -1,5 +1,6 @@
 #include "minion.h"
 #include "affiniteetemplate.h"
+#include <QTimer>
 class MinionData : public AffiniteeTemplate
 {
     QString __minionName;
@@ -39,20 +40,8 @@ public:
     void notify() const
     {
         for (int i=0; i<objsToNotify.count(); ++i) {
-            const char* member = membersToNotify.value(i);
-            QObject* receiver = objsToNotify.value(i);
-            if (member && receiver) {
-                const char* bracketPosition = strchr(member, '(');
-                if (!bracketPosition || !(member[0] >= '0' && member[0] <= '3')) {
-                    qWarning("MinionData::notify: Invalid slot specification");
-                    return;
-                }
-                QByteArray methodName(member+1, bracketPosition - 1 - member); // extract method name
-                QMetaObject::invokeMethod(receiver, methodName.constData(), Qt::QueuedConnection);
-            }
+            QTimer::singleShot(0,objsToNotify.value(i), membersToNotify.value(i));
         }
-
-
     }
 
     // TODO: Experience / Talents etc.

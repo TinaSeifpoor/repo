@@ -3,6 +3,7 @@
 #include "minion.h"
 #include "quest.h"
 class RewardData;
+#include <QExplicitlySharedDataPointer>
 class Reward
 {
 public:

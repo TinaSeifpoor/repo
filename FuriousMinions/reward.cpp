@@ -1,4 +1,6 @@
 #include "reward.h"
+#include "minion.h"
+#include "quest.h"
 class RewardData : public QSharedData
 {
 public:

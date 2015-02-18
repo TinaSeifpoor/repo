@@ -6,8 +6,10 @@ void QuestSelectionWidget::resetUI()
     setText(QString("Time: %1 Affinities: (%2)").arg(__quest.getTime()/1000).arg(affinityStringList(__quest.getAffinities()).join(", ")));
 }
 
-QuestSelectionWidget::QuestSelectionWidget(Quest quest, QWidget *parent) : QCheckBox(parent), __quest(quest)
+QuestSelectionWidget::QuestSelectionWidget(Quest quest, QWidget *parent) : QPushButton(parent), __quest(quest)
 {
+    setCheckable(true);
+    setAutoExclusive(true);
     resetUI();
 }
 

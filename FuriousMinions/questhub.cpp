@@ -13,17 +13,23 @@ QuestHub::~QuestHub()
 
 void QuestHub::addQuest(Quest quest)
 {
-    layout()->addWidget(new QuestSelectionWidget(quest,this));
+    addQuestSelectionWidget(new QuestSelectionWidget(quest,this));
 }
 
-Quest QuestHub::getQuest()
+void QuestHub::addQuestSelectionWidget(QuestSelectionWidget *qsw)
 {
-    foreach(QuestSelectionWidget* qsw,findChildren<QuestSelectionWidget*>())
+    qsw->setParent(this);
+    layout()->addWidget(qsw);
+}
+
+QuestSelectionWidget *QuestHub::getQuestSelectionWidget()
+{
+    foreach (QuestSelectionWidget* qsw, findChildren<QuestSelectionWidget*>()) {
         if (qsw->isChecked()) {
-            Quest quest = qsw->getQuest();
-            qsw->reset();
-            return quest;
+            layout()->removeWidget(qsw);
+            return qsw;
         }
-    return Quest(-1);
+    }
+    return 0;
 }
 
