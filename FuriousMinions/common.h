@@ -26,6 +26,8 @@ typedef qint64 GoldCurrency;
 
 typedef qint64 Power;
 
+QString coolNumericFormat(double number);
+
 
 
 #endif // COMMON_H

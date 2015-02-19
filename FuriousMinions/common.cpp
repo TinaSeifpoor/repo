@@ -64,7 +64,7 @@ QString affinityString(AffinityTypes affinity)
 
 QList<AffinityTypes> genAffinities(int seed)
 {
-    int nAffinities = 4 - ceil(((double)numDigits(seed))/2);
+    int nAffinities = 5 - ceil(((double)numDigits(seed))/2);
     QList<AffinityTypes> allAffinities = allAffinityList();
     QList<AffinityTypes> affinities;
     for (int idxAffinity = 1; idxAffinity<nAffinities; ++idxAffinity)
@@ -97,4 +97,24 @@ QStringList affinityStringList(QList<AffinityTypes> affinityList)
     foreach (AffinityTypes affinity, affinityList)
         affinityTextList << affinityString(affinity);
     return affinityTextList;
+}
+
+QStringList numericIdentifier = QStringList()<<"k"<< "m"<< "b" << "t" << "aa";
+
+QString coolFormat(double numeric, int iteration) {
+    double remainingNumeric = ((long) numeric / 100) / 10.0;
+    bool isRound = int(remainingNumeric * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+    return (remainingNumeric < 1000? //this determines the class, i.e. 'k', 'm' etc
+        (QString("%1%2").arg(remainingNumeric > 99.9 || isRound || (!isRound && remainingNumeric > 9.99)? //this decides whether to trim the decimals
+         (int) remainingNumeric * 10 / 10 : remainingNumeric // (int) d * 10 / 10 drops the decimal
+         ).arg(numericIdentifier.value(iteration,"INF")))
+        : coolFormat(remainingNumeric, iteration+1));
+
+}
+
+QString coolNumericFormat(double number)
+{
+    if (number<1000)
+        return QString::number(number);
+    return coolFormat(number,0);
 }

@@ -89,7 +89,7 @@ QString Quest::getText() const
 {
     QStringList affinityTexts;
     foreach (AffinityTypes type, getAffinities()) {
-        affinityTexts << QString("%1 (%2)").arg(affinityString(type)).arg(getAffinityPower(type));
+        affinityTexts << QString("%1 (%2)").arg(affinityString(type)).arg(coolNumericFormat(getAffinityPower(type)));
     }
     QString affinityText = affinityTexts.join(", ");
     QTime time;

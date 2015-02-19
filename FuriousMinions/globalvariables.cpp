@@ -13,7 +13,7 @@ QHash<QObject*, const char*> objectMemberHash;
 GoldNotifierActionMap limitNotifiers;
 void updateGold() {
     if (goldLabel)
-        goldLabel->setText(QString::number(allGold));
+        goldLabel->setText(coolNumericFormat(allGold));
     qDebug(QString("New gold amount: %1").arg(allGold).toLatin1());
 }
 

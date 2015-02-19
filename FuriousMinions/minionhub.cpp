@@ -12,7 +12,7 @@ MinionHub::MinionHub(QWidget *parent) :
     layout()->addItem(new QSpacerItem(0,0,QSizePolicy::Preferred, QSizePolicy::Expanding));
     connect(buyMinion, SIGNAL(pressed()), SLOT(minionBought()));
     GlobalVariables::addGoldLimitNotifier(Minion::nextMinionGold(), buyMinion, SLOT(setEnabled(bool)));
-    buyMinion->setText(buyMinionText.arg(Minion::nextMinionGold()));
+    buyMinion->setText(buyMinionText.arg(coolNumericFormat(Minion::nextMinionGold())));
 }
 
 MinionSelectionWidget* MinionHub::getMinionSelectionWidget()
@@ -45,6 +45,6 @@ void MinionHub::minionBought()
         addMinion(Minion());
         GlobalVariables::removeGoldLimitNotifier(buyMinion);
         GlobalVariables::addGoldLimitNotifier(Minion::nextMinionGold(), buyMinion, SLOT(setEnabled(bool)));
-        buyMinion->setText(buyMinionText.arg(Minion::nextMinionGold()));
+        buyMinion->setText(buyMinionText.arg(coolNumericFormat(Minion::nextMinionGold())));
     }
 }

@@ -6,12 +6,68 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>259</width>
-    <height>204</height>
+    <width>567</width>
+    <height>427</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">            QWidget {                                          
+            background-color:             rgb(16, 37, 63);
+            }                                                  
+                                                               
+            QPushButton{                                       
+            background-color:             rgb(55, 96,146);
+            font:14pt 'Segoe UI Semibold';
+            color:                        rgb(220,230,242);
+            border-width:2px;
+            border-color:                 rgb(220,230,242);
+            }                                                  
+                                                               
+            QPushButton:checked{                               
+            background-color:             rgb(220,230,242);
+            color:                        rgb(55, 96,146);
+            }                                                  
+                                                               
+            QPushButton:disabled {                             
+            color:                        rgb(242,242,242);
+            background-color:             rgb(166,166,166);
+            border-color:                 rgb(166,166,166);
+            }                                                  
+                                                               
+            QLabel{                                            
+            font:14pt 'Segoe UI Semibold';
+            color:                        rgb(220,230,242);
+            text-align:center;                                 
+            border-style:none;                                 
+            }                                                  
+                                                               
+            QGroupBox{                                         
+            + largeFont +
+            color:                        rgb(220,230,242);
+            text-align:center;                                 
+            }                                                  
+                                                               
+            QComboBox {                                        
+            border-style:none;                                 
+            color:                        rgb(220,230,242);
+            background-color:             rgb(55, 96,146);
+            font:14pt 'Segoe UI Semibold';
+            }                                                  
+            QComboBox:disabled {                               
+            color:                        rgb(242,242,242);
+            background-color:             rgb(166,166,166);
+            }                                                  
+                                                               
+            QComboBox QAbstractItemView {                      
+            color:                        rgb(220,230,242);
+            background-color:             rgb(55, 96,146);
+            selection-color:              rgb(55, 96,146);
+            selection-background-color:   rgb(220,230,242);
+            }												    
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -53,8 +109,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>69</width>
-            <height>37</height>
+            <width>184</width>
+            <height>110</height>
            </rect>
           </property>
          </widget>
@@ -88,8 +144,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>78</width>
-            <height>37</height>
+            <width>183</width>
+            <height>110</height>
            </rect>
           </property>
          </widget>
@@ -133,8 +189,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>239</width>
-            <height>37</height>
+            <width>543</width>
+            <height>110</height>
            </rect>
           </property>
          </widget>
@@ -156,7 +212,7 @@
     <item row="1" column="1">
      <widget class="QPushButton" name="pbGo">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
