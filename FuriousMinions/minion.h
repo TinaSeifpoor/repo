@@ -18,6 +18,7 @@ public:
     bool rewardExperience(double experience);
     void setMinionTrigger(QObject* obj, const char *member);
     void removeMinionTrigger(QObject* obj);
+    static int totalNumberOfMinions();
 private:
     QExplicitlySharedDataPointer<MinionData> __data;
 };

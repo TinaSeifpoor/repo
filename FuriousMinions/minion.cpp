@@ -1,6 +1,7 @@
 #include "minion.h"
 #include "affiniteetemplate.h"
 #include <QTimer>
+int minionCounter=0;
 class MinionData : public AffiniteeTemplate
 {
     QString __minionName;
@@ -16,7 +17,12 @@ public:
         AffiniteeTemplate::set(seed);
         __experience = 0;
         setName();
+        minionCounter++;
         notify();
+    }
+
+    ~MinionData() {
+        minionCounter--;
     }
 
     virtual bool addExperience(double experience) {
@@ -111,4 +117,9 @@ void Minion::setMinionTrigger(QObject *obj, const char *member)
 void Minion::removeMinionTrigger(QObject *obj)
 {
     __data->removeObj(obj);
+}
+
+int Minion::totalNumberOfMinions()
+{
+    return minionCounter;
 }

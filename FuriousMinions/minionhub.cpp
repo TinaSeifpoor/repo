@@ -1,10 +1,13 @@
 #include "minionhub.h"
 #include "minionselectionwidget.h"
 #include <QGridLayout>
+QString buyMinionText("Buy minion (%1 gold)");
 MinionHub::MinionHub(QWidget *parent) :
     QWidget(parent)
 {
     setLayout(new QGridLayout());
+    QPushButton* buyMinion = new QPushButton(this);
+    buyMinion->setObjectName("BuyMinionButton");
 }
 
 MinionSelectionWidget* MinionHub::getMinionSelectionWidget()
@@ -25,9 +28,4 @@ void MinionHub::addMinionSelectionWidget(MinionSelectionWidget *msw)
 {
     msw->setParent(this);
     layout()->addWidget(msw);
-}
-
-void MinionHub::minionSelected()
-{
-
 }

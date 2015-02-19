@@ -3,6 +3,7 @@
 #include "reward.h"
 #include "minionselectionwidget.h"
 #include "questselectionwidget.h"
+#include "globalvariables.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -12,14 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     for (int i=0; i<10; ++i)
         ui->wQuestHub->addQuest(Quest());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
-    ui->wMinionHub->addMinion(Minion());
+    GlobalVariables::setGoldLabel(ui->lblGold);
+    GlobalVariables::addGold(300);
     connect(ui->wQuestProgressHub, SIGNAL(questComplete(Reward)), SLOT(questComplete(Reward)));
 }
 

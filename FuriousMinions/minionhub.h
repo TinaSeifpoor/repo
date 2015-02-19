@@ -7,14 +7,13 @@ class MinionSelectionWidget;
 class MinionHub : public QWidget
 {
     Q_OBJECT
-    QPushButton* purchaseMinionButton;
 public:
     explicit MinionHub(QWidget *parent = 0);
     MinionSelectionWidget *getMinionSelectionWidget();
     void addMinion(Minion minion);
     void addMinionSelectionWidget(MinionSelectionWidget* msw);
 public slots:
-    void minionSelected();
+    void minionBought();
 };
 
 #endif // MINIONHUB_H
