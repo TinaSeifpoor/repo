@@ -14,14 +14,19 @@ GoldNotifierActionMap limitNotifiers;
 void updateGold() {
     if (goldLabel)
         goldLabel->setText(QString::number(allGold));
+    qDebug(QString("New gold amount: %1").arg(allGold).toLatin1());
 }
 
 void setNotifierFromIt(GoldNotifierActionMap::iterator it, bool isAvailable) {
-    GoldNotifierActionMap mymap = limitNotifiers;
     GoldCurrency value = it.key();
     QAction* action = limitNotifiers.value(value,0);
-    if (action)
+    if (action) {
         action->setChecked(isAvailable);
+        if (isAvailable)
+            qDebug("Enabled!");
+        else
+            qDebug("Disabled!");
+    }
 }
 
 GlobalVariables::GlobalVariables()
@@ -40,13 +45,11 @@ qint64 GlobalVariables::getRemainingGold()
 
 void GlobalVariables::addGold(GoldCurrency gold)
 {
-    GoldNotifierActionMap mymap = limitNotifiers;
     GoldNotifierActionMap::iterator currentIt = limitNotifiers.upperBound(allGold);
-    GoldNotifierActionMap::iterator targetIt  = limitNotifiers.lowerBound(allGold+gold);
+    GoldNotifierActionMap::iterator targetIt  = limitNotifiers.upperBound(allGold+gold);
     while (targetIt!=currentIt) {
         setNotifierFromIt(currentIt++,true);
     }
-    setNotifierFromIt(targetIt,true);
     allGold+=gold;
     updateGold();
 }
@@ -54,8 +57,7 @@ void GlobalVariables::addGold(GoldCurrency gold)
 bool GlobalVariables::reduceGold(GoldCurrency gold)
 {
     if (allGold>=gold) {
-        GoldNotifierActionMap mymap = limitNotifiers;
-        GoldNotifierActionMap::iterator currentIt = limitNotifiers.lowerBound(allGold);
+        GoldNotifierActionMap::iterator currentIt = limitNotifiers.upperBound(allGold);
         GoldNotifierActionMap::iterator targetIt  = limitNotifiers.upperBound(allGold-gold);
         while (targetIt!=currentIt) {
             setNotifierFromIt(currentIt--,false);

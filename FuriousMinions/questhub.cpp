@@ -34,4 +34,3 @@ QuestSelectionWidget *QuestHub::getQuestSelectionWidget()
     }
     return 0;
 }
-

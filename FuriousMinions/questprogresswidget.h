@@ -15,7 +15,8 @@ public:
     ~QuestProgressWidget();
 public slots:
     void epoch();
-
+private slots:
+    void onClicked();
 signals:
     void questReward(Minion reward);
 };

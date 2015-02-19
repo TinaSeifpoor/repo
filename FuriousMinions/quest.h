@@ -15,7 +15,6 @@ public:
     QString getText() const;
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
-
     QList<AffinityTypes> getAffinities() const;
 private:
     QExplicitlySharedDataPointer<QuestData> __data;

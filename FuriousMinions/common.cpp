@@ -16,7 +16,6 @@ QList<AffinityTypes> allAffinityList()
                                      Water <<
                                      Fire <<
                                      Death <<
-                                     Base <<
                                      Nature;
 }
 
@@ -65,11 +64,12 @@ QString affinityString(AffinityTypes affinity)
 
 QList<AffinityTypes> genAffinities(int seed)
 {
-    int nAffinities = 5 - ceil(((double)numDigits(seed))/2);
+    int nAffinities = 4 - ceil(((double)numDigits(seed))/2);
     QList<AffinityTypes> allAffinities = allAffinityList();
     QList<AffinityTypes> affinities;
     for (int idxAffinity = 1; idxAffinity<nAffinities; ++idxAffinity)
         affinities << allAffinities.takeAt(seed%allAffinities.count());
+    affinities << Base;
     return affinities;
 }
 

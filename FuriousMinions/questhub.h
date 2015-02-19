@@ -2,6 +2,7 @@
 #define QUESTHUB_H
 
 #include <QWidget>
+#include "minion.h"
 class Quest;
 class QuestSelectionWidget;
 class QuestHub : public QWidget
@@ -13,6 +14,7 @@ public:
     void addQuest(Quest quest);
     void addQuestSelectionWidget(QuestSelectionWidget* qsw);
     QuestSelectionWidget* getQuestSelectionWidget();
+public slots:
 };
 
 #endif // QUESTHUB_H

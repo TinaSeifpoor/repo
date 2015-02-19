@@ -23,6 +23,8 @@ QuestProgressWidget::QuestProgressWidget(Minion minion, Quest quest, QWidget *pa
     QPushButton(parent),
     d(new QuestProgressWidgetPrivate(quest,minion,this))
 {
+    connect (this, SIGNAL(clicked()), SLOT(onClicked()));
+    setEnabled(false);
 }
 
 QuestProgressWidget::~QuestProgressWidget()
@@ -34,12 +36,18 @@ void QuestProgressWidget::epoch()
 {
     qint64 current = QDateTime::currentDateTime().toMSecsSinceEpoch();
     if (current > d->questEndTime) {
-        Reward::rewardGold(d->minion, d->quest);
-        emit questReward(d->minion);
-        deleteLater();
+        setText(QString("Claim rewards!"));
+        setEnabled(true);
     } else {
         QTime time;
         setText(QString("%1\n%2\nTime Left: %3").arg(d->minion.getName(),d->quest.getText(),
-                                          time.addMSecs(d->questEndTime-current).toString()));
+                                                     time.addMSecs(d->questEndTime-current).toString()));
     }
+}
+
+void QuestProgressWidget::onClicked()
+{
+    Reward::rewardGold(d->minion, d->quest);
+    emit questReward(d->minion);
+    deleteLater();
 }
