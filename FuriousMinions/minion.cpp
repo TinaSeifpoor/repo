@@ -1,21 +1,34 @@
 #include "minion.h"
 #include "affiniteetemplate.h"
 #include <QTimer>
+#include <QHash>
 int minionCounter=0;
+QHash<MinionRank, Minion> allMinions;
 class MinionData : public AffiniteeTemplate
 {
     QString __minionName;
-    double __experience;
     QList<QObject*> objsToNotify;
     QList<const char*> membersToNotify;
     void setName() {
-        __minionName = QString("Experience: %1 Affinities: (%2)").arg(__experience).arg(affinityStringList(getAffinities()).join(", "));
+        __minionName.clear();
+        QStringList affinityTexts;
+        foreach (AffinityTypes type, getAffinities()) {
+            affinityTexts << QString("%1 (%2)").arg(affinityString(type)).arg(getAffinityPower(type));
+        }
+        __minionName = affinityTexts.join(", ");
     }
+    virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes> types) {
+        QHash<AffinityTypes, Power> powers;
+        foreach (AffinityTypes type, types) {
+            powers.insert(type, qrand()%80 + 30);
+        }
+        return powers;
+    }
+
 public:
     virtual void set(int seed)
     {
         AffiniteeTemplate::set(seed);
-        __experience = 0;
         setName();
         minionCounter++;
         notify();
@@ -25,16 +38,7 @@ public:
         minionCounter--;
     }
 
-    virtual bool addExperience(double experience) {
-        bool isLevelUp=false;
-        if (numDigits(__experience)<numDigits(__experience+experience))
-            isLevelUp=true;
-        __experience+=experience;
-        setName();
-        notify();
-        // check if lvl up
-        return isLevelUp;
-    }
+
 
     QString minionName() const {return __minionName;}
 
@@ -57,8 +61,6 @@ public:
             QTimer::singleShot(0,objsToNotify.value(i), membersToNotify.value(i));
         }
     }
-
-    // TODO: Experience / Talents etc.
 };
 
 
@@ -89,24 +91,14 @@ QString Minion::getName() const
     return __data->minionName();
 }
 
-Affinities Minion::getAffinities() const
+QList<AffinityTypes> Minion::getAffinities() const
 {
     return __data->getAffinities();
 }
 
-double Minion::getBasePower() const
+Power Minion::getAffinityPower(AffinityTypes affinity) const
 {
-    return 20;
-}
-
-double Minion::getAffinityPower(AffinityTypes affinity) const
-{
-    return 50;
-}
-
-bool Minion::rewardExperience(double experience)
-{
-    return __data->addExperience(experience);
+    return __data->getAffinityPower(affinity);
 }
 
 void Minion::setMinionTrigger(QObject *obj, const char *member)
@@ -122,4 +114,11 @@ void Minion::removeMinionTrigger(QObject *obj)
 int Minion::totalNumberOfMinions()
 {
     return minionCounter;
+}
+#include "qmath.h"
+GoldCurrency Minion::nextMinionGold()
+{
+    if (totalNumberOfMinions()==0)
+        return 50;
+    return qPow(50,totalNumberOfMinions())+50;
 }

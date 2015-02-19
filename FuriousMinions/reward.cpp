@@ -1,48 +1,15 @@
 #include "reward.h"
 #include "minion.h"
 #include "quest.h"
-class RewardData : public QSharedData
-{
-public:
-    RewardData(Minion minion, Quest quest):__quest(quest),__minion(minion){}
-    Quest __quest;
-    Minion __minion;
-    double calculatePower() {
-        Affinities questAffinities  = __quest.getAffinities();
-        QList<AffinityTypes> questAffinityList = convertToAffinityList(questAffinities);
-        double power = __minion.getBasePower();
-        foreach (AffinityTypes affinity, questAffinityList)
-            power+= __minion.getAffinityPower(affinity);
-        return power;
-    }
-};
-
-Reward::Reward(const Reward &other) : __data(other.__data)
-{
-
+#include "globalvariables.h"
+double calculatePower(Minion minion, Quest quest) {
+    QList<AffinityTypes> questAffinityList  = quest.getAffinities();
+    Power power=0;
+    foreach (AffinityTypes affinity, questAffinityList)
+        power+= minion.getAffinityPower(affinity) * quest.getAffinityPower(affinity);
+    return power;
 }
-
-Reward::Reward(Minion minion, Quest quest) : __data(new RewardData(minion,quest))
+void Reward::rewardGold(Minion minion, Quest quest)
 {
-
-}
-
-Reward::~Reward()
-{
-
-}
-
-double Reward::getReward() const
-{
-    return __data->__quest.getValue()*__data->calculatePower();
-}
-
-Minion Reward::getMinion() const
-{
-    return __data->__minion;
-}
-
-Quest Reward::getQuest() const
-{
-    return __data->__quest;
+    GlobalVariables::addGold(calculatePower(minion,quest));
 }

@@ -15,21 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->wQuestHub->addQuest(Quest());
     GlobalVariables::setGoldLabel(ui->lblGold);
     GlobalVariables::addGold(300);
-    connect(ui->wQuestProgressHub, SIGNAL(questComplete(Reward)), SLOT(questComplete(Reward)));
+    connect(ui->wQuestProgressHub, SIGNAL(questComplete(Minion)), ui->wMinionHub, SLOT(addMinion(Minion)), Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::questComplete(Reward reward)
-{
-    Minion minion = reward.getMinion();
-    if (minion.rewardExperience(reward.getReward())) {
-        ui->wMinionHub->addMinion(Minion());
-    }
-    ui->wMinionHub->addMinion(minion);
 }
 
 void MainWindow::showGuidance(QString title, QString text)

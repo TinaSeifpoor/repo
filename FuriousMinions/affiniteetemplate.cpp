@@ -11,7 +11,7 @@ AffiniteeTemplate::~AffiniteeTemplate()
 void AffiniteeTemplate::set(int seed)
 {
     __seed = seed;
-    __affinities = genAffinities(seed);
+    __affinityPowers = setPowers(genAffinities(seed));
 }
 
 int AffiniteeTemplate::get() const
@@ -19,7 +19,12 @@ int AffiniteeTemplate::get() const
     return __seed;
 }
 
-Affinities AffiniteeTemplate::getAffinities() const
+Power AffiniteeTemplate::getAffinityPower(AffinityTypes type) const
 {
-    return __affinities;
+    return __affinityPowers.value(type,0);
+}
+
+QList<AffinityTypes> AffiniteeTemplate::getAffinities() const
+{
+    return __affinityPowers.keys();
 }

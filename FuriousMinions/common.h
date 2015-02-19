@@ -4,6 +4,7 @@
 #include <QStringList>
 class QColor;
 enum AffinityTypes {
+    Base    = 0,
     Air     = 1,
     Earth   = 2,
     Water   = 4,
@@ -11,16 +12,20 @@ enum AffinityTypes {
     Death   = 16,
     Nature  = 32
 };
-Q_DECLARE_FLAGS(Affinities, AffinityTypes)
 
 unsigned numDigits(const unsigned n);
-Affinities genAffinities(int seed);
+QList<AffinityTypes> genAffinities(int seed);
 
 double genValue(int seed);
 int genTime(int seed);
-QList<AffinityTypes> convertToAffinityList(Affinities affinities);
-QColor affinityToColor(Affinities type);
-QStringList affinityStringList(Affinities type);
+//QList<AffinityTypes> convertToAffinityList(Affinities affinities);
+QColor affinityToColor(QList<AffinityTypes> affinityList);
+QStringList affinityStringList(QList<AffinityTypes> affinityList);
+QString affinityString(AffinityTypes affinity);
+typedef qint64 GoldCurrency;
+
+typedef qint64 Power;
+
 
 
 #endif // COMMON_H

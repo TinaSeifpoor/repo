@@ -2,7 +2,8 @@
 #define QUESTPROGRESSWIDGET_H
 
 #include <QPushButton>
-#include "reward.h"
+#include "minion.h"
+class Quest;
 class QuestProgressWidgetPrivate;
 class QuestProgressWidget : public QPushButton
 {
@@ -16,7 +17,7 @@ public slots:
     void epoch();
 
 signals:
-    void questReward(Reward reward);
+    void questReward(Minion reward);
 };
 
 #endif // QUESTPROGRESSWIDGET_H

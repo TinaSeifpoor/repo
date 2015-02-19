@@ -11,12 +11,12 @@ public:
     explicit Quest();
     ~Quest();
     int getTime() const;
-    int getValue() const;
-    Affinities getAffinities() const;
+    Power getAffinityPower(AffinityTypes type) const;
     QString getText() const;
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
 
+    QList<AffinityTypes> getAffinities() const;
 private:
     QExplicitlySharedDataPointer<QuestData> __data;
 };

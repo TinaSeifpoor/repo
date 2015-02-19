@@ -2,7 +2,8 @@
 #define QUESTPROGRESSHUB_H
 
 #include <QWidget>
-#include "reward.h"
+#include "minion.h"
+class Quest;
 class QuestProgressHub : public QWidget
 {
     Q_OBJECT
@@ -11,7 +12,7 @@ public:
     ~QuestProgressHub();
     void startQuest(Minion minion, Quest quest);
 signals:
-    void questComplete(Reward questReward);
+    void questComplete(Minion returningMinion);
 };
 
 #endif // QUESTPROGRESSHUB_H

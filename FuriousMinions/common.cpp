@@ -11,12 +11,13 @@ unsigned numDigits(const unsigned n) {
 QList<AffinityTypes> allAffinityList()
 {
     return QList<AffinityTypes>() <<
-                                Air <<
-                                Earth <<
-                                Water <<
-                                Fire <<
-                                Death <<
-                                Nature;
+                                     Air <<
+                                     Earth <<
+                                     Water <<
+                                     Fire <<
+                                     Death <<
+                                     Base <<
+                                     Nature;
 }
 
 
@@ -34,26 +35,16 @@ QColor pureAffinityColor(AffinityTypes type) {
         return QColor(24,24,24);
     case Nature:
         return QColor(27,64,20);
+    case Base:
+        return QColor(127,127,127);
     }
     return QColor();
 
 }
 
-
-
-QList<AffinityTypes> convertToAffinityList(Affinities affinities)
+QString affinityString(AffinityTypes affinity)
 {
-    QList<AffinityTypes> ret;
-    QList<AffinityTypes> allAffinities = allAffinityList();
-    foreach (AffinityTypes current, allAffinities)
-        if (affinities&current)
-            ret << current;
-    return ret;
-}
-
-QString affinityString(AffinityTypes type)
-{
-    switch (type) {
+    switch (affinity) {
     case Air:
         return QApplication::tr("Air");
     case Earth:
@@ -66,31 +57,32 @@ QString affinityString(AffinityTypes type)
         return QApplication::tr("Death");
     case Nature:
         return QApplication::tr("Nature");
+    case Base:
+        return QApplication::tr("Base");
     }
     return QString();
 }
 
-Affinities genAffinities(int seed)
+QList<AffinityTypes> genAffinities(int seed)
 {
     int nAffinities = 5 - ceil(((double)numDigits(seed))/2);
     QList<AffinityTypes> allAffinities = allAffinityList();
-    Affinities affinities;
+    QList<AffinityTypes> affinities;
     for (int idxAffinity = 1; idxAffinity<nAffinities; ++idxAffinity)
-        affinities|=allAffinities.takeAt(seed%allAffinities.count());
+        affinities << allAffinities.takeAt(seed%allAffinities.count());
     return affinities;
 }
 
 
-QColor affinityToColor(Affinities type) {
+QColor affinityToColor(QList<AffinityTypes> affinityList) {
     double red = 0;
     double green = 0;
     double blue = 0;
-    QList<AffinityTypes> affinityList = convertToAffinityList(type);
     foreach (AffinityTypes affinity, affinityList) {
-            QColor pureColor = pureAffinityColor(affinity);
-            red+=pureColor.red();
-            green+=pureColor.green();
-            blue+=pureColor.blue();
+        QColor pureColor = pureAffinityColor(affinity);
+        red+=pureColor.red();
+        green+=pureColor.green();
+        blue+=pureColor.blue();
     }
     int nAffinities = affinityList.count();
     red/=nAffinities;
@@ -99,10 +91,10 @@ QColor affinityToColor(Affinities type) {
     return QColor(red,green,blue);
 }
 
-QStringList affinityStringList(Affinities type)
+QStringList affinityStringList(QList<AffinityTypes> affinityList)
 {
     QStringList affinityTextList;
-    foreach (AffinityTypes affinity, convertToAffinityList(type))
+    foreach (AffinityTypes affinity, affinityList)
         affinityTextList << affinityString(affinity);
     return affinityTextList;
 }

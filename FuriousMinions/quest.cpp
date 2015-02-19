@@ -2,11 +2,11 @@
 #include "affiniteetemplate.h"
 #include "qmath.h"
 #include <QTimer>
+#include <QTime>
 class QuestData : public AffiniteeTemplate
 {
     QList<QObject*> objsToNotify;
     QList<const char*> membersToNotify;
-    int __questValue;
     int __questTime;
     void notify() const
     {
@@ -14,27 +14,31 @@ class QuestData : public AffiniteeTemplate
             QTimer::singleShot(0,objsToNotify.value(i), membersToNotify.value(i));
         }
     }
-
-    double genValue(int seed) const
-    {
-        return seed%500000;
+    virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes> types) {
+        QHash<AffinityTypes, Power> powers;
+        foreach (AffinityTypes type, types) {
+            powers.insert(type, qrand()%600 + 800);
+        }
+        return powers;
     }
 
-    int genTime(int seed) const
+    int genTime() const
     {
-        int minTime = 60000;
-        int maxTime = 300000;
-        return minTime + seed%(maxTime-minTime);
+        int nAffinities = getAffinities().count();
+        int totalPower=0;
+        foreach (AffinityTypes type, getAffinities())
+            totalPower+=getAffinityPower(type);
+        nAffinities*=2.5;
+        int time = 86*totalPower/nAffinities;
+        return time;
     }
 public:
     virtual void set(int seed)
     {
         AffiniteeTemplate::set(seed);
-        __questValue = this->genValue(get());
-        __questTime = this->genTime(get());
+        __questTime = this->genTime();
         notify();
     }
-    int value() const {return __questValue;}
     int time() const {return __questTime;}
     void setTime(int time) {
         __questTime = time;
@@ -71,20 +75,25 @@ int Quest::getTime() const
     return __data->time();
 }
 
-int Quest::getValue() const
+Power Quest::getAffinityPower(AffinityTypes type) const
 {
-    return __data->value();
+    return __data->getAffinityPower(type);
 }
 
-
-Affinities Quest::getAffinities() const
+QList<AffinityTypes> Quest::getAffinities() const
 {
     return __data->getAffinities();
 }
 
 QString Quest::getText() const
 {
-    return QString("Time: %1 Affinities: (%2)").arg(getTime()/1000).arg(affinityStringList(getAffinities()).join(", "));
+    QStringList affinityTexts;
+    foreach (AffinityTypes type, getAffinities()) {
+        affinityTexts << QString("%1 (%2)").arg(affinityString(type)).arg(getAffinityPower(type));
+    }
+    QString affinityText = affinityTexts.join(", ");
+    QTime time;
+    return QString("Time: %1\n%2").arg(time.addMSecs(getTime()).toString()).arg(affinityText);
 }
 
 void Quest::reset()

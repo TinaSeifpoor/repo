@@ -17,7 +17,6 @@ public:
     ~MainWindow();
 
 public slots:
-    void questComplete(Reward reward);
     void showGuidance(QString title, QString text);
 
 private slots:

@@ -2,17 +2,20 @@
 #define AFFINITEETEMPLATE_H
 #include "common.h"
 #include <QSharedData>
+#include <QHash>
 class AffiniteeTemplate : public QSharedData
 {
-    Affinities __affinities;
     int __seed;
+    QHash<AffinityTypes, Power> __affinityPowers;
 protected:
     virtual void set(int seed);
+    virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes>)=0;
     int get() const;
     AffiniteeTemplate();
     virtual ~AffiniteeTemplate();
 public:
-    Affinities getAffinities() const;
+    Power getAffinityPower(AffinityTypes type) const;
+    QList<AffinityTypes> getAffinities() const;
 };
 
 #endif // AFFINITEETEMPLATE_H

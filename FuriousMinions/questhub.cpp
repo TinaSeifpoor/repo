@@ -4,6 +4,7 @@
 QuestHub::QuestHub(QWidget *parent): QWidget(parent)
 {
     setLayout(new QGridLayout());
+    layout()->addItem(new QSpacerItem(0,0,QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 
 QuestHub::~QuestHub()
@@ -19,7 +20,9 @@ void QuestHub::addQuest(Quest quest)
 void QuestHub::addQuestSelectionWidget(QuestSelectionWidget *qsw)
 {
     qsw->setParent(this);
+    QLayoutItem* item = layout()->takeAt(layout()->count()-1);
     layout()->addWidget(qsw);
+    layout()->addItem(item);
 }
 
 QuestSelectionWidget *QuestHub::getQuestSelectionWidget()

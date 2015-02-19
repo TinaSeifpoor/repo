@@ -3,6 +3,7 @@
 
 #include <QExplicitlySharedDataPointer>
 #include "common.h"
+typedef int MinionRank;
 class MinionData;
 class Minion
 {
@@ -12,13 +13,12 @@ public:
     explicit Minion();
     ~Minion();
     QString getName() const;
-    Affinities getAffinities() const;
-    double getBasePower() const;
-    double getAffinityPower(AffinityTypes affinity) const;
-    bool rewardExperience(double experience);
+    QList<AffinityTypes> getAffinities() const;
+    Power getAffinityPower(AffinityTypes affinity) const;
     void setMinionTrigger(QObject* obj, const char *member);
     void removeMinionTrigger(QObject* obj);
     static int totalNumberOfMinions();
+    static GoldCurrency nextMinionGold();
 private:
     QExplicitlySharedDataPointer<MinionData> __data;
 };

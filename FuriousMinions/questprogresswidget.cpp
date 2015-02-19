@@ -4,6 +4,7 @@
 #include "quest.h"
 #include <QDateTime>
 #include "synchronizedtimer.h"
+#include "reward.h"
 class QuestProgressWidgetPrivate
 {
 public:
@@ -33,8 +34,8 @@ void QuestProgressWidget::epoch()
 {
     qint64 current = QDateTime::currentDateTime().toMSecsSinceEpoch();
     if (current > d->questEndTime) {
-        Reward reward(d->minion, d->quest);
-        emit questReward(reward);
+        Reward::rewardGold(d->minion, d->quest);
+        emit questReward(d->minion);
         deleteLater();
     } else {
         QTime time;
