@@ -3,7 +3,8 @@
 void QuestSelectionWidget::resetUI()
 {
     setCheckable(true);
-    setText(__quest.getText());
+    setIcon(QIcon(__quest.getPixmap()));
+    setIconSize(__quest.getPixmap().size());
 }
 
 QuestSelectionWidget::QuestSelectionWidget(Quest quest, QWidget *parent) : QPushButton(parent), __quest(quest)

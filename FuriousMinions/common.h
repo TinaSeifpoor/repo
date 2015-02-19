@@ -20,6 +20,7 @@ double genValue(int seed);
 int genTime(int seed);
 //QList<AffinityTypes> convertToAffinityList(Affinities affinities);
 QColor affinityToColor(QList<AffinityTypes> affinityList);
+QColor affinityToColor(AffinityTypes affinity);
 QStringList affinityStringList(QList<AffinityTypes> affinityList);
 QString affinityString(AffinityTypes affinity);
 typedef qint64 GoldCurrency;

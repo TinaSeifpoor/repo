@@ -1,10 +1,10 @@
 #ifndef MINIONSELECTIONWIDGET_H
 #define MINIONSELECTIONWIDGET_H
 
-#include <QPushButton>
+#include "furiouspushbutton.h"
 #include "minion.h"
 
-class MinionSelectionWidget : public QPushButton
+class MinionSelectionWidget : public FuriousPushButton
 {
     Q_OBJECT
     Minion __mt;

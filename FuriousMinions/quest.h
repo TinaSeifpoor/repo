@@ -3,6 +3,7 @@
 #include <QExplicitlySharedDataPointer>
 #include "common.h"
 class QuestData;
+class QPixmap;
 class Quest
 {
 public:
@@ -13,6 +14,7 @@ public:
     int getTime() const;
     Power getAffinityPower(AffinityTypes type) const;
     QString getText() const;
+    QPixmap getPixmap() const;
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
     QList<AffinityTypes> getAffinities() const;

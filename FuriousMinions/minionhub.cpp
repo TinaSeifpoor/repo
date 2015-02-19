@@ -2,6 +2,7 @@
 #include "minionselectionwidget.h"
 #include <QGridLayout>
 #include "globalvariables.h"
+#include <QPushButton>
 QString buyMinionText("Buy minion (%1 gold)");
 MinionHub::MinionHub(QWidget *parent) :
     QWidget(parent),

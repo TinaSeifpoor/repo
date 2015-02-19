@@ -20,7 +20,7 @@ QList<AffinityTypes> allAffinityList()
 }
 
 
-QColor pureAffinityColor(AffinityTypes type) {
+QColor affinityToColor(AffinityTypes type) {
     switch (type) {
     case Air:
         return QColor(186,192,191);
@@ -79,7 +79,7 @@ QColor affinityToColor(QList<AffinityTypes> affinityList) {
     double green = 0;
     double blue = 0;
     foreach (AffinityTypes affinity, affinityList) {
-        QColor pureColor = pureAffinityColor(affinity);
+        QColor pureColor = affinityToColor(affinity);
         red+=pureColor.red();
         green+=pureColor.green();
         blue+=pureColor.blue();

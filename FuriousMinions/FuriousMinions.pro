@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     questprogresswidget.cpp \
     synchronizedtimer.cpp \
     verticalscrollarea.cpp \
-    globalvariables.cpp
+    globalvariables.cpp \
+    furiouspushbutton.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -43,6 +44,10 @@ HEADERS  += mainwindow.h \
     questprogresswidget.h \
     synchronizedtimer.h \
     verticalscrollarea.h \
-    globalvariables.h
+    globalvariables.h \
+    furiouspushbutton.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    res.qrc

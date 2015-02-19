@@ -1,12 +1,19 @@
 #include "minionselectionwidget.h"
-
+#include <QGridLayout>
+#include <QLabel>
 MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
-    QPushButton(parent),
+    FuriousPushButton(parent),
     __mt(mt)
 {
-    setCheckable(true);
-    setAutoExclusive(true);
-    setText(__mt.getName());
+    int nAffinities = __mt.getAffinities().count();
+    QGridLayout* gridLayout = new QGridLayout();
+    gridLayout->addWidget(new QLabel(__mt.getName(),this),0,0,1,nAffinities);
+    int i=0;
+    foreach(AffinityTypes type, __mt.getAffinities()) {
+        QColor affinityColor = affinityToColor(type);
+        gridLayout->addWidget(new QLabel(coolNumericFormat(__mt.getAffinityPower(type)),this),1,i++);
+    }
+    setLayout(gridLayout);
     __mt.setMinionTrigger(this, SLOT(minionNotification()));
 }
 
@@ -22,5 +29,5 @@ Minion MinionSelectionWidget::getMinion() const
 
 void MinionSelectionWidget::minionNotification()
 {
-    setText(__mt.getName());
+//    setIcon(QIcon(*__mt.getPixmap()));
 }
