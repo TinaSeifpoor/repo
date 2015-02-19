@@ -2,7 +2,7 @@
 #define QUESTHUB_H
 
 #include <QWidget>
-#include "quest.h"
+class Quest;
 class QuestSelectionWidget;
 class QuestHub : public QWidget
 {

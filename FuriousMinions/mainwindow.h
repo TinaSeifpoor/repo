@@ -2,12 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include "reward.h"
 namespace Ui {
 class MainWindow;
 }
-#include "minion.h"
-#include "quest.h"
+class Minion;
+class Quest;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
     ~MainWindow();
 
 public slots:
-//    void questComplete(Minion minion, Quest quest);
+    void questComplete(Reward reward);
     void showGuidance(QString title, QString text);
 
 private slots:

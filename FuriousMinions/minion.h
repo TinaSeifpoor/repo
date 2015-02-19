@@ -17,6 +17,7 @@ public:
     double getAffinityPower(AffinityTypes affinity) const;
     bool rewardExperience(double experience);
     void setMinionTrigger(QObject* obj, const char *member);
+    void removeMinionTrigger(QObject* obj);
 private:
     QExplicitlySharedDataPointer<MinionData> __data;
 };

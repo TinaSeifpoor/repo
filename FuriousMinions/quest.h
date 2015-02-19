@@ -13,7 +13,7 @@ public:
     int getTime() const;
     int getValue() const;
     Affinities getAffinities() const;
-
+    QString getText() const;
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
 

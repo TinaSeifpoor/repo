@@ -11,7 +11,6 @@ MinionSelectionWidget* MinionHub::getMinionSelectionWidget()
 {
     foreach (MinionSelectionWidget* msw, findChildren<MinionSelectionWidget*>()) {
         if (msw->isChecked()) {
-            layout()->removeWidget(msw);
             return msw;
         }
     }

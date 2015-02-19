@@ -17,5 +17,6 @@ void QuestProgressHub::startQuest(Minion minion, Quest quest)
 {
     QuestProgressWidget* qpw = new QuestProgressWidget(minion,quest,this);
     layout()->addWidget(qpw);
+    connect (qpw, SIGNAL(questReward(Reward)), SIGNAL(questComplete(Reward)));
 }
 

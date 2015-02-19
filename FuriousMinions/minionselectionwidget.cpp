@@ -10,6 +10,11 @@ MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
     __mt.setMinionTrigger(this, SLOT(minionNotification()));
 }
 
+MinionSelectionWidget::~MinionSelectionWidget()
+{
+    __mt.removeMinionTrigger(this);
+}
+
 Minion MinionSelectionWidget::getMinion() const
 {
     return __mt;

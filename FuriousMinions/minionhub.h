@@ -2,7 +2,7 @@
 #define MINIONHUB_H
 
 #include <QWidget>
-#include "minion.h"
+class Minion;
 class MinionSelectionWidget;
 class MinionHub : public QWidget
 {

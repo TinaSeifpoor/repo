@@ -11,7 +11,7 @@ public:
     ~QuestProgressHub();
     void startQuest(Minion minion, Quest quest);
 signals:
-//    void questComplete(Reward questReward);
+    void questComplete(Reward questReward);
 };
 
 #endif // QUESTPROGRESSHUB_H

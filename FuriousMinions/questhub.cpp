@@ -26,7 +26,6 @@ QuestSelectionWidget *QuestHub::getQuestSelectionWidget()
 {
     foreach (QuestSelectionWidget* qsw, findChildren<QuestSelectionWidget*>()) {
         if (qsw->isChecked()) {
-            layout()->removeWidget(qsw);
             return qsw;
         }
     }

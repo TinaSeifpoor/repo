@@ -13,6 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
     for (int i=0; i<10; ++i)
         ui->wQuestHub->addQuest(Quest());
     ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    ui->wMinionHub->addMinion(Minion());
+    connect(ui->wQuestProgressHub, SIGNAL(questComplete(Reward)), SLOT(questComplete(Reward)));
 }
 
 MainWindow::~MainWindow()
@@ -20,11 +28,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//void MainWindow::questComplete(Minion minion, Quest quest)
-//{
-//    if (minion.rewardExperience(Reward(minion,quest).getExperienceReward()))
-//        ui->wMinionHub->addMinion(Minion());
-//}
+void MainWindow::questComplete(Reward reward)
+{
+    Minion minion = reward.getMinion();
+    if (minion.rewardExperience(reward.getExperienceReward())) {
+        ui->wMinionHub->addMinion(Minion());
+    }
+    ui->wMinionHub->addMinion(minion);
+}
 
 void MainWindow::showGuidance(QString title, QString text)
 {
@@ -43,5 +54,8 @@ void MainWindow::on_pbGo_clicked()
         showGuidance("Select a quest", "You should select a quest!");
         return;
     }
+    qsw->deleteLater();
+    msw->deleteLater();
+    ui->wQuestHub->addQuest(Quest());
     ui->wQuestProgressHub->startQuest(msw->getMinion(), qsw->getQuest());
 }

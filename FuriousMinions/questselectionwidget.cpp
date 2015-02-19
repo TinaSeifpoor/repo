@@ -3,7 +3,7 @@
 void QuestSelectionWidget::resetUI()
 {
     setCheckable(true);
-    setText(QString("Time: %1 Affinities: (%2)").arg(__quest.getTime()/1000).arg(affinityStringList(__quest.getAffinities()).join(", ")));
+    setText(__quest.getText());
 }
 
 QuestSelectionWidget::QuestSelectionWidget(Quest quest, QWidget *parent) : QPushButton(parent), __quest(quest)

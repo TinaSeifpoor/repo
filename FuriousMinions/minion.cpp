@@ -37,6 +37,14 @@ public:
         membersToNotify << member;
     }
 
+    void removeObj(QObject* obj) {
+        int i = objsToNotify.indexOf(obj);
+        if (i!=-1) {
+            objsToNotify.removeAt(i);
+            membersToNotify.removeAt(i);
+        }
+    }
+
     void notify() const
     {
         for (int i=0; i<objsToNotify.count(); ++i) {
@@ -98,4 +106,9 @@ bool Minion::rewardExperience(double experience)
 void Minion::setMinionTrigger(QObject *obj, const char *member)
 {
     __data->addObj(obj, member);
+}
+
+void Minion::removeMinionTrigger(QObject *obj)
+{
+    __data->removeObj(obj);
 }
