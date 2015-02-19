@@ -32,9 +32,9 @@ Reward::~Reward()
 
 }
 
-double Reward::getExperienceReward() const
+double Reward::getReward() const
 {
-    return __data->__quest.getValue()/__data->calculatePower();
+    return __data->__quest.getValue()*__data->calculatePower();
 }
 
 Minion Reward::getMinion() const

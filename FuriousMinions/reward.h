@@ -10,7 +10,7 @@ public:
     Reward(const Reward &other);
     explicit Reward(Minion minion, Quest quest);
     ~Reward();
-    double getExperienceReward() const;
+    double getReward() const;
     Minion getMinion() const;
     Quest getQuest() const;
 

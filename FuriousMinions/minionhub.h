@@ -7,6 +7,7 @@ class MinionSelectionWidget;
 class MinionHub : public QWidget
 {
     Q_OBJECT
+    QPushButton* purchaseMinionButton;
 public:
     explicit MinionHub(QWidget *parent = 0);
     MinionSelectionWidget *getMinionSelectionWidget();

@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     reward.cpp \
     questprogresshub.cpp \
     questprogresswidget.cpp \
-    synchronizedtimer.cpp
+    synchronizedtimer.cpp \
+    verticalscrollarea.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -39,6 +40,7 @@ HEADERS  += mainwindow.h \
     reward.h \
     questprogresshub.h \
     questprogresswidget.h \
-    synchronizedtimer.h
+    synchronizedtimer.h \
+    verticalscrollarea.h
 
 FORMS    += mainwindow.ui

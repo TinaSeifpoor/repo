@@ -31,7 +31,7 @@ MainWindow::~MainWindow()
 void MainWindow::questComplete(Reward reward)
 {
     Minion minion = reward.getMinion();
-    if (minion.rewardExperience(reward.getExperienceReward())) {
+    if (minion.rewardExperience(reward.getReward())) {
         ui->wMinionHub->addMinion(Minion());
     }
     ui->wMinionHub->addMinion(minion);

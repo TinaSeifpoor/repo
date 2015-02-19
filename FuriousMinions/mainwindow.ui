@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>510</height>
+    <width>259</width>
+    <height>204</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,13 +15,145 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="MinionHub" name="wMinionHub" native="true"/>
+    <item row="1" column="0">
+     <widget class="QWidget" name="wMinionHubContainer" native="true">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblMinionHub">
+         <property name="text">
+          <string>Idle Minions</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="VerticalScrollArea" name="saMinionHub">
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="MinionHub" name="wMinionHub">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>69</width>
+            <height>37</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QuestHub" name="wQuestHub" native="true"/>
+    <item row="1" column="2">
+     <widget class="QWidget" name="wQuestHubContainer" native="true">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="VerticalScrollArea" name="saQuestHub">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QuestHub" name="wQuestHub">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>78</width>
+            <height>37</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblQuestHub">
+         <property name="text">
+          <string>Available Quests</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
-    <item row="0" column="2" rowspan="2">
+    <item row="2" column="0" colspan="3">
+     <widget class="QWidget" name="wQuestProgressHubContainer" native="true">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="VerticalScrollArea" name="saQuestProgressHub">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QuestProgressHub" name="wQuestProgressHub">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>239</width>
+            <height>37</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblQuestProgressHub">
+         <property name="text">
+          <string>Quests in Progress</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="1">
      <widget class="QPushButton" name="pbGo">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -34,8 +166,37 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QuestProgressHub" name="wQuestProgressHub" native="true"/>
+    <item row="0" column="0" colspan="3">
+     <widget class="QWidget" name="wTitle" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblGoldText">
+         <property name="text">
+          <string>Available Gold</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lblGold">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -58,6 +219,12 @@
    <class>QuestProgressHub</class>
    <extends>QWidget</extends>
    <header>questprogresshub.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VerticalScrollArea</class>
+   <extends>QScrollArea</extends>
+   <header>verticalscrollarea.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
