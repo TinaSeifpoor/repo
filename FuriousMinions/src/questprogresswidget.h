@@ -14,6 +14,8 @@ public:
     QuestProgressWidget(Minion minion, Quest quest, QWidget* parent=0);
     ~QuestProgressWidget();
     qint64 questEndTime() const;
+    QVariantHash toHash() const;
+    static QuestProgressWidget* fromHash(QVariantHash hash, QWidget* parent);
 public slots:
     void epoch();
 private slots:

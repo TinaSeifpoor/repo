@@ -16,6 +16,11 @@ MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
     __mt.setMinionTrigger(this, SLOT(minionNotification()));
 }
 
+MinionSelectionWidget *MinionSelectionWidget::fromHash(QVariantHash hash, QWidget *parent)
+{
+    return new MinionSelectionWidget(Minion::fromHash(hash), parent);
+}
+
 MinionSelectionWidget::~MinionSelectionWidget()
 {
     __mt.removeMinionTrigger(this);
@@ -24,6 +29,11 @@ MinionSelectionWidget::~MinionSelectionWidget()
 Minion MinionSelectionWidget::getMinion() const
 {
     return __mt;
+}
+
+QVariantHash MinionSelectionWidget::toHash() const
+{
+    return __mt.toHash();
 }
 
 void MinionSelectionWidget::minionNotification()

@@ -12,6 +12,7 @@ public:
     ~SynchronizedTimer();
 signals:
     void epoch();
+    void bigEpoch();
 };
 
 #endif // SYNCHRONIZEDTIMER_H

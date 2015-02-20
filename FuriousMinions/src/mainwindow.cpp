@@ -4,6 +4,9 @@
 #include "minionselectionwidget.h"
 #include "questselectionwidget.h"
 #include "globalvariables.h"
+#include "synchronizedtimer.h"
+#include <QStandardPaths>
+#include <QFile>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -11,21 +14,68 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<Minion>("Minion");
     qRegisterMetaType<Quest>("Quest");
     ui->setupUi(this);
-    for (int i=0; i<5; ++i)
-        ui->wQuestHub->addQuest(Quest());
     GlobalVariables::setGoldLabel(ui->lblGold);
-    GlobalVariables::addGold(100);
     connect(ui->wQuestProgressHub, SIGNAL(questComplete(Minion)), ui->wMinionHub, SLOT(addMinion(Minion)), Qt::QueuedConnection);
+    if (!loadProgress()) {
+        connect(SynchronizedTimer::getInstance(), SIGNAL(bigEpoch()), SLOT(saveProgress()));
+        GlobalVariables::addGold(100);
+        for (int i=0; i<5; ++i)
+            ui->wQuestHub->addQuest(Quest());
+    }
 }
 
 MainWindow::~MainWindow()
 {
+    saveProgress();
     delete ui;
 }
 
 void MainWindow::showGuidance(QString title, QString text)
 {
 
+}
+
+bool MainWindow::loadProgress()
+{
+    QString filepath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)+"/FuriousMinions.dat");
+    QFile file(filepath);
+    if (file.open(QFile::ReadOnly)) {
+        QByteArray progress = QByteArray::fromBase64(QByteArray::fromHex(file.readAll()));
+        file.close();
+        QDataStream s(&progress, QIODevice::ReadOnly);
+        QVariantHash progressHash;
+        s >> progressHash;
+        if (progressHash.value("Version",0).toDouble()>0.005) {
+            GlobalVariables::fromHash(progressHash.value("GlobalVariables").toHash());
+            ui->wMinionHub->fromHash(progressHash.value("MinionHub").toHash());
+            ui->wQuestHub->fromHash(progressHash.value("QuestHub").toHash());
+            ui->wQuestProgressHub->fromHash(progressHash.value("QuestProgressHub").toHash());
+            connect(SynchronizedTimer::getInstance(), SIGNAL(bigEpoch()), SLOT(saveProgress()));
+            return true;
+        }
+    }
+    return false;
+}
+
+void MainWindow::saveProgress()
+{
+    QVariantHash progressHash;
+    progressHash.insert("Version", 0.01);
+    progressHash.insert("MinionHub",ui->wMinionHub->toHash());
+    progressHash.insert("QuestHub" ,ui->wQuestHub->toHash());
+    progressHash.insert("QuestProgressHub", ui->wQuestProgressHub->toHash());
+    progressHash.insert("GlobalVariables", GlobalVariables::toHash());
+    QByteArray progressByteArray;
+    {
+        QDataStream s(&progressByteArray, QIODevice::WriteOnly);
+        s << progressHash;
+    }
+    QString filepath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)+"/FuriousMinions.dat");
+    QFile file(filepath);
+    if (file.open(QFile::WriteOnly)) {
+        file.write(progressByteArray.toBase64().toHex());
+        file.close();
+    }
 }
 
 void MainWindow::on_pbGo_clicked()

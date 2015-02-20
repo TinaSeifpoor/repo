@@ -14,6 +14,8 @@ public:
     explicit MinionHub(QWidget *parent = 0);
     MinionSelectionWidget *getMinionSelectionWidget();
     void addMinionSelectionWidget(MinionSelectionWidget* msw);
+    QVariantHash toHash() const;
+    void fromHash(QVariantHash hash);
 signals:
     void minionSelected(Minion minion);
 

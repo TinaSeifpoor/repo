@@ -12,8 +12,8 @@ public:
     explicit QuestSelectionWidget(Quest quest, QWidget *parent = 0);
     ~QuestSelectionWidget();
     void reset();
-
     Quest getQuest() const;
+    QVariantHash toHash() const;
 
 signals:
 

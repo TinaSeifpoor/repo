@@ -18,11 +18,13 @@ public:
 
 public slots:
     void showGuidance(QString title, QString text);
+    void saveProgress();
 
 private slots:
     void on_pbGo_clicked();
 
 private:
+    bool loadProgress();
     Ui::MainWindow *ui;
 };
 

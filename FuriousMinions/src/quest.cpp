@@ -3,11 +3,7 @@
 #include "qmath.h"
 #include <QTimer>
 #include <QTime>
-#include <QPixmap>
-#include <QTextDocument>
-#include <QPainter>
-QHash<Rank, int> questCounterHash;
-int questCounter=0;
+#include "globalvariables.h"
 class QuestData : public AffiniteeTemplate
 {
 protected:
@@ -16,23 +12,20 @@ protected:
     int __questTime;
     QString __textDescription;
     Rank __rank;
+    QString __icon;
     void notify() const
     {
         for (int i=0; i<objsToNotify.count(); ++i) {
             QTimer::singleShot(0,objsToNotify.value(i), membersToNotify.value(i));
         }
     }
-    virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes> types) {
-        QHash<AffinityTypes, Power> powers;
+    virtual void setPowers(QList<AffinityTypes> types) {
+        __affinityPowers.clear();
         foreach (AffinityTypes type, types) {
             Power affPower = qrand()%60 + 80;
             Power curPower = qPow(affPower,__rank);
-            if (curPower<0) {
-                qDebug(QString("Negative value from: %1, %2, %3").arg(affPower).arg(__rank).arg(curPower).toLatin1());
-            }
-            powers.insert(type, curPower);
+            __affinityPowers.insert(type, curPower);
         }
-        return powers;
     }
 
     int genTime() const
@@ -42,35 +35,62 @@ protected:
         foreach (AffinityTypes type, getAffinities())
             totalPower+=getAffinityPower(type);
         nAffinities*=2.5;
-        int time = 86*totalPower/nAffinities;
+        int time = 1986*qLn(totalPower/nAffinities);
         return time;
     }
 
     Rank nextRank()
     {
-        return calculateNextRank(questCounterHash,15);
+        return GlobalVariables::calculateNextQuestRank();
     }
 
 public:
+    QVariantHash toHash() const {
+        QVariantHash questHash;
+        questHash.insert("Rank", __rank);
+        questHash.insert("Seed", get());
+        questHash.insert("Time", __questTime);
+        questHash.insert("Icon", getQuestResourceIcon());
+        questHash.insert("Name", getName());
+        QVariantHash powersHash;
+        foreach (AffinityTypes type, getAffinities()) {
+            powersHash.insert(affinityString(type), getAffinityPower(type));
+        }
+        questHash.insert("Powers", powersHash);
+        return questHash;
+    }
+    static QuestData* fromHash(QVariantHash hash) {
+        QuestData* qd = new QuestData();
+        qd->set(hash.value("Seed", qrand()).toInt());
+        qd->__rank = hash.value("Rank",1).toInt();
+        qd->__icon = hash.value("Icon",qd->__icon).toString();
+        qd->__textDescription = hash.value("Name", qd->__textDescription).toString();
+        qd->__questTime = hash.value("Time",qd->__questTime).toInt();
+        qd->__affinityPowers.clear();
+        QVariantHash powersHash = hash.value("Powers").toHash();
+        foreach (QString affinityStr, powersHash.keys())
+            qd->__affinityPowers.insert(affinityFromString(affinityStr),powersHash.value(affinityStr).toDouble());
+        return qd;
+    }
+
     QuestData() {}
     Rank getRank() const {return __rank;}
     virtual void set(int seed)
     {
         __rank = nextRank();
         __textDescription = "Building";
+        __icon = ":/icons/quests/35/quest1.gif";
         for (int i=0; i<__rank-1;++i)
             __textDescription.append('+');
         AffiniteeTemplate::set(seed);
         __questTime = this->genTime();
         notify();
-    }
-    void markComplete() {
-        questCounterHash[__rank]++;
+        GlobalVariables::addQuest(__rank);
     }
 
     QString getQuestResourceIcon() const
     {
-        return ":/icons/quests/35/quest1.gif";
+        return __icon;
     }
 
     QString getName() const {
@@ -109,6 +129,10 @@ Quest::Quest():__data(new QuestData()){
     __data->set(qrand());
 }
 
+Quest::Quest(QuestData *data): __data(data)
+{
+}
+
 int Quest::getTime() const
 {
     return __data->time();
@@ -124,6 +148,16 @@ QList<AffinityTypes> Quest::getAffinities() const
     return __data->getAffinities();
 }
 
+QVariantHash Quest::toHash() const
+{
+    return __data->toHash();
+}
+
+Quest Quest::fromHash(QVariantHash hash)
+{
+    return Quest(QuestData::fromHash(hash));
+}
+
 QString Quest::getName() const
 {
     return __data->getName();
@@ -131,7 +165,7 @@ QString Quest::getName() const
 
 QString Quest::getTimeText() const
 {
-    return QTime().addMSecs(getTime()).toString();
+    return QTime::fromString("00:00:00:000", "hh:mm:ss:zzz").addMSecs(getTime()).toString();
 }
 
 QString Quest::getQuestResourceIcon() const
@@ -143,11 +177,6 @@ QString Quest::getQuestResourceIcon() const
 Rank Quest::getRank() const
 {
     return __data->getRank();
-}
-
-void Quest::markComplete()
-{
-    __data->markComplete();
 }
 
 void Quest::reset()

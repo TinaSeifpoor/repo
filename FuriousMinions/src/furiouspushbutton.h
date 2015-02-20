@@ -18,6 +18,7 @@ signals:
     void clicked();
 public slots:
     void setChecked(bool checked);
+    void setShown(bool isShown);
 };
 
 #endif // FURIOUSPUSHBUTTON_H

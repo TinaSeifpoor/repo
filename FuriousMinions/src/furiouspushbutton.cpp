@@ -52,3 +52,8 @@ void FuriousPushButton::setChecked(bool checked)
     }
 }
 
+void FuriousPushButton::setShown(bool isShown)
+{
+    setHidden(!isShown);
+}
+

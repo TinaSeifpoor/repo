@@ -36,6 +36,11 @@ Quest QuestSelectionWidget::getQuest() const
     return __quest;
 }
 
+QVariantHash QuestSelectionWidget::toHash() const
+{
+    return __quest.toHash();
+}
+
 void QuestSelectionWidget::onResetTimerFinished()
 {
     resetUI();

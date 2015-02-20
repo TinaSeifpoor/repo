@@ -3,12 +3,21 @@
 #include <QMap>
 #include <QHash>
 #include <QAction>
+#include "qmath.h"
+GoldCurrency allGold=0;
+GoldCurrency allGoldAcquiredSinceAscension=0;
+QHash<Rank, int> minionCounterHash;
+QHash<Rank, int> questCounterHash;
+int minionCounter=0;
+int questCounter=0;
 
-QLabel* goldLabel=0;
+
+
 GlobalVariables* gv=0;
-GoldCurrency allGold;
+QLabel* goldLabel=0;
 typedef QMap<GoldCurrency, QAction*> GoldNotifierActionMap;
 QHash<QObject*, QAction*> objectActionHash;
+QHash<QAction*, GoldCurrency> actionThresholdHash;
 QHash<QObject*, const char*> objectMemberHash;
 GoldNotifierActionMap limitNotifiers;
 void updateGold() {
@@ -51,6 +60,7 @@ void GlobalVariables::addGold(GoldCurrency gold)
         setNotifierFromIt(currentIt++,true);
     }
     allGold+=gold;
+    allGoldAcquiredSinceAscension+=gold;
     updateGold();
 }
 
@@ -74,7 +84,7 @@ bool GlobalVariables::addGoldLimitNotifier(GoldCurrency threshold, QObject *obj,
 {
     QAction* objAction = new QAction(obj);
     if (objAction->connect(objAction, SIGNAL(toggled(bool)), obj, member)) {
-        objAction->setObjectName(QString::number(threshold));
+        actionThresholdHash.insert(objAction, threshold);
         limitNotifiers.insertMulti(threshold, objAction);
         objectActionHash.insert(obj, objAction);
         objectMemberHash.insert(obj, member);
@@ -94,7 +104,7 @@ void GlobalVariables::removeGoldLimitNotifier(QObject *obj)
         QAction* objAction = objectActionHash.take(obj);
         const char* member = objectMemberHash.take(obj);
         objAction->disconnect(obj, member);
-        GoldCurrency threshold = objAction->objectName().toInt();
+        GoldCurrency threshold = actionThresholdHash.value(objAction);
         QList<QAction*> actions = limitNotifiers.values(threshold);
         actions.removeAll(objAction);
         limitNotifiers.remove(threshold);
@@ -103,3 +113,104 @@ void GlobalVariables::removeGoldLimitNotifier(QObject *obj)
         objAction->deleteLater();
     }
 }
+
+QVariantHash GlobalVariables::toHash()
+{
+    QVariantHash globalVariablesHash;
+    globalVariablesHash.insert("AllGold", allGold);
+    globalVariablesHash.insert("AllGoldSinceAscension", allGoldAcquiredSinceAscension);
+    globalVariablesHash.insert("MinionCount", minionCounter);
+    QVariantHash minionCounterVariantHash;
+    foreach (Rank rank, minionCounterHash.keys())
+        minionCounterVariantHash.insert(QString::number(rank), minionCounterHash.value(rank));
+    globalVariablesHash.insert("MinionCounterHash", minionCounterVariantHash);
+    QVariantHash questCounterVariantHash;
+    foreach (Rank rank, questCounterHash.keys())
+        minionCounterVariantHash.insert(QString::number(rank), questCounterHash.value(rank));
+    globalVariablesHash.insert("QuestCounterHash", questCounterVariantHash);
+    return globalVariablesHash;
+}
+
+void GlobalVariables::fromHash(QVariantHash hash)
+{
+    allGoldAcquiredSinceAscension = hash.value("AllGoldSinceAscension",300).toDouble();
+    allGold = 0;
+    addGold(hash.value("AllGold",300).toDouble());
+    minionCounter = hash.value("MinionCount").toInt();
+    QVariantHash minionCounterVariantHash = hash.value("MinionCounterHash").toHash();
+    minionCounterVariantHash.clear();
+    foreach (QString rankKey, minionCounterVariantHash.keys())
+        minionCounterHash.insert(rankKey.toInt(), minionCounterVariantHash.value(rankKey).toInt());
+    QVariantHash questCounterVariantHash = hash.value("QuestCounterHash").toHash();
+    questCounterVariantHash.clear();
+    foreach (QString rankKey, questCounterVariantHash.keys())
+        questCounterHash.insert(rankKey.toInt(), questCounterVariantHash.value(rankKey).toInt());
+
+}
+
+void GlobalVariables::addMinion(Rank r)
+{
+    minionCounterHash[r]++;
+    minionCounter++;
+}
+
+void GlobalVariables::addQuest(Rank r)
+{
+    questCounterHash[r]++;
+    questCounter++;
+}
+
+bool GlobalVariables::calculateMinionRank(Rank currentRank, int nQuests)
+{
+    int expectedCount = nQuests/(qPow(2,currentRank));
+    int chance = qMin(qMax(expectedCount,-rankConstant)+rankConstant+1,10);
+    if (qrand()%10<chance)
+        return true;
+    else
+        return false;
+}
+
+Rank calculateNextRank(QHash<Rank,int> rankings, int expectedNextRankRatio)
+{
+    QList<Rank> currentRanks = rankings.keys();
+    qSort(currentRanks);
+    int previousRankCounter = rankings.value(currentRanks.takeFirst());
+    while (previousRankCounter>0) {
+        Rank rank = currentRanks.takeFirst();
+        int count = rankings.value(rank);
+        int expectedCount = count/expectedNextRankRatio;
+        int missingCount = expectedCount-previousRankCounter;
+        int chance = qMin(qMax(missingCount,-rankConstant)+rankConstant+1,10);
+        if (qrand()%10<chance)
+            return rank;
+        previousRankCounter=count;
+    }
+    return 1;
+}
+
+Rank GlobalVariables::calculateNextQuestRank()
+{
+    if (questCounterHash.isEmpty()) {
+        for (Rank i=1; i<12; ++i) {
+            questCounterHash.insert(i,0);
+        }
+    }
+    return calculateNextRank(questCounterHash, 10);
+}
+
+int GlobalVariables::minionCount(Rank rank)
+{
+    return minionCounterHash.value(rank);
+}
+
+int GlobalVariables::minionCount()
+{
+    return minionCounter;
+}
+
+GoldCurrency GlobalVariables::nextMinionGold()
+{
+    return qPow(20,minionCount()+1)*(minionCount()+1)+50;
+}
+
+

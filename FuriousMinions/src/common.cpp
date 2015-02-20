@@ -164,20 +164,10 @@ QLabel *genAffinityLabel(Quest quest, AffinityTypes type, QWidget *parent) {
 }
 
 
-Rank calculateNextRank(QHash<Rank, int> rankings, int expectedNextRankRatio)
+AffinityTypes affinityFromString(QString string)
 {
-    QList<Rank> currentRanks = rankings.keys();
-    qSort(currentRanks);
-    int previousRankCounter =0;
-    while (!currentRanks.isEmpty()) {
-        Rank rank = currentRanks.takeLast();
-        int count = rankings.value(rank);
-        int expectedCount = count/5;
-        int missingCount = expectedCount-previousRankCounter;
-        int chance = qMin(qMax(missingCount,-rankConstant)+rankConstant+1,10);
-        if (qrand()%10<chance)
-            return rank+1;
-        previousRankCounter=count;
-    }
-    return 1;
+    foreach (AffinityTypes type, allAffinityList())
+        if (string == affinityString(type))
+            return type;
+    return Base;
 }

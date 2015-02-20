@@ -16,6 +16,10 @@ Minion::Minion() : __data(new MinionData())
     __data->set(qrand());
 }
 
+Minion::Minion(MinionData* data) : __data(data)
+{
+}
+
 Minion::~Minion()
 {
 
@@ -56,12 +60,18 @@ void Minion::removeMinionTrigger(QObject *obj)
     __data->removeObj(obj);
 }
 
-int Minion::totalNumberOfMinions()
+void Minion::questComplete()
 {
-    return MinionData::minionCount();
+    __data->questCompleted();
 }
 
-GoldCurrency Minion::nextMinionGold()
+QVariantHash Minion::toHash() const
 {
-    return MinionData::nextMinionGold();
+    return __data->toHash();
+}
+
+Minion Minion::fromHash(QVariantHash hash)
+{
+    Minion mt(MinionData::fromHash(hash));
+    return mt;
 }

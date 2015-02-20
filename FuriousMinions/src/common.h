@@ -29,13 +29,12 @@ QColor affinityToColor(QList<AffinityTypes> affinityList);
 QColor affinityToColor(AffinityTypes affinity);
 QStringList affinityStringList(QList<AffinityTypes> affinityList);
 QString affinityString(AffinityTypes affinity);
+AffinityTypes affinityFromString(QString string);
 typedef quint64 GoldCurrency;
 
 typedef quint64 Power;
 typedef int Rank;
-const int rankConstant=1;
-
-Rank calculateNextRank(QHash<Rank,int> rankings, int expectedNextRankRatio);
+const int rankConstant=-2;
 
 QString coolNumericFormat(double number);
 QLabel* genIconTextLabel(QString iconText, QString text, QWidget* parent);

@@ -1,13 +1,18 @@
 #include "synchronizedtimer.h"
 #include <QTimer>
 SynchronizedTimer *sync=0;
-QTimer* timer=0;
+QTimer* epochTimer=0;
+QTimer* bigEpochTimer=0;
 SynchronizedTimer::SynchronizedTimer(QObject *parent) : QObject(parent)
 {
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), SIGNAL(epoch()));
-    timer->setSingleShot(false);
-    timer->start(100);
+    epochTimer = new QTimer(this);
+    connect(epochTimer, SIGNAL(timeout()), SIGNAL(epoch()));
+    epochTimer->setSingleShot(false);
+    epochTimer->start(100);
+    bigEpochTimer = new QTimer(this);
+    connect(bigEpochTimer, SIGNAL(timeout()), SIGNAL(bigEpoch()));
+    bigEpochTimer->setSingleShot(false);
+    bigEpochTimer->start(30000);
 }
 
 SynchronizedTimer *SynchronizedTimer::getInstance()
@@ -20,5 +25,9 @@ SynchronizedTimer *SynchronizedTimer::getInstance()
 SynchronizedTimer::~SynchronizedTimer()
 {
     sync = 0;
+    if (epochTimer)
+        epochTimer->deleteLater();
+    if (bigEpochTimer)
+        bigEpochTimer->deleteLater();
 }
 

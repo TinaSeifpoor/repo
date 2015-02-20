@@ -11,7 +11,7 @@ AffiniteeTemplate::~AffiniteeTemplate()
 void AffiniteeTemplate::set(int seed)
 {
     __seed = seed;
-    __affinityPowers = setPowers(genAffinities(seed));
+    setPowers(genAffinities(seed));
 }
 
 int AffiniteeTemplate::get() const

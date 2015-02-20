@@ -14,14 +14,14 @@ MinionHub::MinionHub(QWidget *parent) :
     layout()->addWidget(buyMinion);
     layout()->addItem(new QSpacerItem(0,0,QSizePolicy::Preferred, QSizePolicy::Expanding));
     connect(buyMinion, SIGNAL(clicked()), SLOT(minionBought()));
-    GlobalVariables::addGoldLimitNotifier(Minion::nextMinionGold(), buyMinion, SLOT(setShown(bool)));
+    GlobalVariables::addGoldLimitNotifier(GlobalVariables::nextMinionGold(), buyMinion, SLOT(setShown(bool)));
     buyMinion->setAutoExclusive(false);
     buyMinion->setCheckable(false);
     QLabel* goldIcon = new QLabel(buyMinion);
     goldIcon->setPixmap(QPixmap(":/icons/currency/15/goldIcon.gif"));
     goldIcon->setAlignment(Qt::AlignLeft);
     goldLabel = new QLabel(buyMinion);
-    goldLabel->setText(buyMinionText.arg(coolNumericFormat(Minion::nextMinionGold())));
+    goldLabel->setText(buyMinionText.arg(coolNumericFormat(GlobalVariables::nextMinionGold())));
     goldLabel->setAlignment(Qt::AlignRight);
     QGridLayout* layout = new QGridLayout(buyMinion);
     layout->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Fixed),0,0);
@@ -48,19 +48,37 @@ void MinionHub::addMinion(Minion minion)
 void MinionHub::addMinionSelectionWidget(MinionSelectionWidget *msw)
 {
     msw->setParent(this);
-//    layout()->removeWidget(buyMinion);
     QLayoutItem* item = layout()->takeAt(layout()->count()-1);
     layout()->addWidget(msw);
-//    layout()->addWidget(buyMinion);
     layout()->addItem(item);
 }
 
 void MinionHub::minionBought()
 {
-    if (GlobalVariables::reduceGold(Minion::nextMinionGold())) {
+    if (GlobalVariables::reduceGold(GlobalVariables::nextMinionGold())) {
         addMinion(Minion());
         GlobalVariables::removeGoldLimitNotifier(buyMinion);
-        GlobalVariables::addGoldLimitNotifier(Minion::nextMinionGold(), buyMinion, SLOT(setShown(bool)));
-        goldLabel->setText(buyMinionText.arg(coolNumericFormat(Minion::nextMinionGold())));
+        GlobalVariables::addGoldLimitNotifier(GlobalVariables::nextMinionGold(), buyMinion, SLOT(setShown(bool)));
+        goldLabel->setText(buyMinionText.arg(coolNumericFormat(GlobalVariables::nextMinionGold())));
     }
+}
+
+QVariantHash MinionHub::toHash() const
+{
+    QVariantHash questProgressHubHash;
+    QList<MinionSelectionWidget*> mswList = findChildren<MinionSelectionWidget*>();
+    for (int i=0; i<mswList.count();++i) {
+        questProgressHubHash.insert(QString::number(i),mswList.value(i)->toHash());
+    }
+    return questProgressHubHash;
+}
+
+void MinionHub::fromHash(QVariantHash hash)
+{
+    foreach (QVariant var, hash) {
+        addMinionSelectionWidget(new MinionSelectionWidget(Minion::fromHash(var.toHash()),this));
+    }
+    GlobalVariables::removeGoldLimitNotifier(buyMinion);
+    GlobalVariables::addGoldLimitNotifier(GlobalVariables::nextMinionGold(), buyMinion, SLOT(setShown(bool)));
+    goldLabel->setText(buyMinionText.arg(coolNumericFormat(GlobalVariables::nextMinionGold())));
 }

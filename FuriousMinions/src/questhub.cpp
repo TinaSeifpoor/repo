@@ -35,3 +35,20 @@ QuestSelectionWidget *QuestHub::getQuestSelectionWidget()
     }
     return 0;
 }
+
+QVariantHash QuestHub::toHash() const
+{
+    QVariantHash questProgressHubHash;
+    QList<QuestSelectionWidget*> qswList = findChildren<QuestSelectionWidget*>();
+    for (int i=0; i<qswList.count();++i) {
+        questProgressHubHash.insert(QString::number(i),qswList.value(i)->toHash());
+    }
+    return questProgressHubHash;
+}
+
+void QuestHub::fromHash(QVariantHash hash)
+{
+    foreach (QVariant var, hash) {
+        addQuestSelectionWidget(new QuestSelectionWidget(Quest::fromHash(var.toHash()),this));
+    }
+}

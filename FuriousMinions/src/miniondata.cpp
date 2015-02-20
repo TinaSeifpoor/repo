@@ -6,9 +6,9 @@
 #include <QPainter>
 #include <QFile>
 #include "qmath.h"
+#include "globalvariables.h"
 QStringList nameList;
-QHash<Rank, int> minionCounterHash;
-int minionCounter=0;
+
 
 
 
@@ -27,42 +27,70 @@ void MinionData::setName() {
         file.close();
     }
     __minionName = nameList.value(get()%nameList.count());
-    for (int i=0; i<__rank-1;++i)
-        __minionName.append('+');
 }
 
-QHash<AffinityTypes, Power> MinionData::setPowers(QList<AffinityTypes> types) {
-    QHash<AffinityTypes, Power> powers;
+void MinionData::setPowers(QList<AffinityTypes> types) {
+    __affinityPowers.clear();
     foreach (AffinityTypes type, types) {
         Power power = qrand()%80 + 30;
         Power ascendingPower = qPow(power,this->__rank);
-        if (ascendingPower<0)
-            qDebug(QString("Negative value from: %1, %2, %3").arg(power).arg(__rank).arg(ascendingPower).toLatin1());
-
-        powers.insert(type, ascendingPower);
+        __affinityPowers.insert(type, ascendingPower);
     }
-    return powers;
 }
 
 MinionData::MinionData(){}
 
 MinionData::~MinionData() {
-    minionCounterHash[__rank]--;
-    minionCounter--;
 }
 
 Rank MinionData::getRank() const {return __rank;}
-QString MinionData::getMinionResourceIcon() const {
-    return ":/icons/minions/35/minion1.gif";
+
+QVariantHash MinionData::toHash() const
+{
+        QVariantHash minionHash;
+        minionHash.insert("Rank", __rank);
+        minionHash.insert("Seed", get());
+        minionHash.insert("Icon", getMinionResourceIcon());
+        minionHash.insert("Name", minionName());
+        minionHash.insert("nQuests", __nQuestsCompleted);
+        QVariantHash powersHash;
+        foreach (AffinityTypes type, getAffinities()) {
+            powersHash.insert(affinityString(type), getAffinityPower(type));
+        }
+        minionHash.insert("Powers", powersHash);
+        return minionHash;
 }
 
-void MinionData::set(int seed)
+MinionData *MinionData::fromHash(QVariantHash hash)
 {
-    __rank = nextRank();
+    MinionData* md = new MinionData();
+    md->set(hash.value("Seed", qrand()).toInt(),true);
+    md->__rank = hash.value("Rank",1).toInt();
+    md->__icon = hash.value("Icon",md->__icon).toString();
+    md->__minionName = hash.value("Name", md->__minionName).toString();
+    md->__nQuestsCompleted = hash.value("nQuests",0).toInt();
+    md->__affinityPowers.clear();
+    QVariantHash powersHash = hash.value("Powers").toHash();
+    foreach (QString affinityStr, powersHash.keys())
+        md->__affinityPowers.insert(affinityFromString(affinityStr),powersHash.value(affinityStr).toDouble());
+    return md;
+}
+QString MinionData::getMinionResourceIcon() const {
+    return __icon;
+}
+
+void MinionData::set(int seed, bool isHidden)
+{
+    __rank = 1;
     AffiniteeTemplate::set(seed);
     setName();
-    minionCounterHash[__rank]++;
-    minionCounter++;
+    if (__affinityPowers.keys().contains(Earth))
+        __icon = ":/icons/minions/35/resources/35x35/minionearth1.gif";
+    else
+        __icon = ":/icons/minions/35/minion1.gif";
+    if (!isHidden)
+        GlobalVariables::addMinion(__rank);
+    __nQuestsCompleted=0;
     notify();
 }
 
@@ -91,24 +119,15 @@ void MinionData::notify() const
     }
 }
 
-int MinionData::minionCount(Rank rank)
+void MinionData::questCompleted()
 {
-    return minionCounterHash.value(rank);
+    ++__nQuestsCompleted;
+    if (GlobalVariables::calculateMinionRank(getRank(),__nQuestsCompleted)) {
+        ++__rank;
+        __minionName.append('+');
+        setPowers(getAffinities());
+    }
+
+
 }
 
-int MinionData::minionCount()
-{
-    return minionCounter;
-}
-
-GoldCurrency MinionData::nextMinionGold()
-{
-    if (minionCount()==0)
-        return 50;
-    return qPow(5,minionCount())*minionCount()+50;
-}
-
-Rank MinionData::nextRank()
-{
-    return calculateNextRank(minionCounterHash, 5);
-}

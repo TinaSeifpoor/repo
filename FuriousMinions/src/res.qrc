@@ -25,6 +25,7 @@
     </qresource>
     <qresource prefix="/icons/minions/35">
         <file alias="minion1.gif">resources/35x35/minion1.gif</file>
+        <file>resources/35x35/minionearth1.gif</file>
     </qresource>
     <qresource prefix="/icons/affinity/15">
         <file alias="airIcon.gif">resources/15x15/airIcon.gif</file>

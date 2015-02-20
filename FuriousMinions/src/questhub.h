@@ -14,6 +14,8 @@ public:
     void addQuest(Quest quest);
     void addQuestSelectionWidget(QuestSelectionWidget* qsw);
     QuestSelectionWidget* getQuestSelectionWidget();
+    QVariantHash toHash() const;
+    void fromHash(QVariantHash hash);
 public slots:
 };
 

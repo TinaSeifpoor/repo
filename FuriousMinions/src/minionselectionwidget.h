@@ -10,8 +10,10 @@ class MinionSelectionWidget : public FuriousPushButton
     Minion __mt;
 public:
     explicit MinionSelectionWidget(Minion mt, QWidget *parent = 0);
+    static MinionSelectionWidget* fromHash(QVariantHash hash, QWidget *parent = 0);
     ~MinionSelectionWidget();
     Minion getMinion() const;
+    QVariantHash toHash() const;
 public slots:
     void minionNotification();
 };

@@ -4,6 +4,7 @@
 #include "common.h"
 class QLabel;
 class QObject;
+#include <QVariantHash>
 class GlobalVariables
 {
     GlobalVariables();
@@ -14,6 +15,16 @@ public:
     static bool reduceGold(GoldCurrency gold);
     static bool addGoldLimitNotifier(GoldCurrency threshold, QObject* obj, const char* member);
     static void removeGoldLimitNotifier(QObject* obj);
+    static QVariantHash toHash();
+    static void fromHash(QVariantHash hash);
+    static void addMinion(Rank r);
+    static void addQuest (Rank r);
+    static bool calculateMinionRank(Rank currentRank, int nQuests);
+    static Rank calculateNextQuestRank();
+    static int minionCount(Rank __rank);
+    static int minionCount();
+    static GoldCurrency nextMinionGold();
+
 };
 
 #endif // GLOBALVARIABLES_H
