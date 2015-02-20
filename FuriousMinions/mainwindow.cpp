@@ -11,10 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<Minion>("Minion");
     qRegisterMetaType<Quest>("Quest");
     ui->setupUi(this);
-    for (int i=0; i<10; ++i)
+    for (int i=0; i<5; ++i)
         ui->wQuestHub->addQuest(Quest());
     GlobalVariables::setGoldLabel(ui->lblGold);
-    GlobalVariables::addGold(300);
+    GlobalVariables::addGold(100);
     connect(ui->wQuestProgressHub, SIGNAL(questComplete(Minion)), ui->wMinionHub, SLOT(addMinion(Minion)), Qt::QueuedConnection);
 }
 
