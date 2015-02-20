@@ -1,6 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
-#include <QList>
+#include <QHash>
 class QStringList;
 class QString;
 class QColor;
@@ -32,6 +32,10 @@ QString affinityString(AffinityTypes affinity);
 typedef qint64 GoldCurrency;
 
 typedef qint64 Power;
+typedef int Rank;
+const int rankConstant=1;
+
+Rank calculateNextRank(QHash<Rank,int> rankings);
 
 QString coolNumericFormat(double number);
 QLabel* genIconTextLabel(QString iconText, QString text, QWidget* parent);

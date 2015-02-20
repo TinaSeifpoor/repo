@@ -107,10 +107,10 @@ QString coolFormat(double numeric, int iteration) {
     double remainingNumeric = ((long) numeric / 100) / 10.0;
     bool isRound = int(remainingNumeric * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
     return (remainingNumeric < 1000? //this determines the class, i.e. 'k', 'm' etc
-        (QString("%1%2").arg(remainingNumeric > 99.9 || isRound || (!isRound && remainingNumeric > 9.99)? //this decides whether to trim the decimals
-         (int) remainingNumeric * 10 / 10 : remainingNumeric // (int) d * 10 / 10 drops the decimal
-         ).arg(numericIdentifier.value(iteration,"INF")))
-        : coolFormat(remainingNumeric, iteration+1));
+                                     (QString("%1%2").arg(remainingNumeric > 99.9 || isRound || (!isRound && remainingNumeric > 9.99)? //this decides whether to trim the decimals
+                                                                                                                                       (int) remainingNumeric * 10 / 10 : remainingNumeric // (int) d * 10 / 10 drops the decimal
+                                                                                                                                       ).arg(numericIdentifier.value(iteration,"INF")))
+                                   : coolFormat(remainingNumeric, iteration+1));
 
 }
 
@@ -161,4 +161,23 @@ QLabel *genAffinityLabel(Quest quest, AffinityTypes type, QWidget *parent) {
         return genIconTextLabel(affinityIconString(type),coolNumericFormat(quest.getAffinityPower(type)),parent);
     else
         return new QLabel(parent);
+}
+
+
+Rank calculateNextRank(QHash<Rank, int> rankings)
+{
+    QList<Rank> currentRanks = rankings.keys();
+    qSort(currentRanks);
+    int previousRankCounter =0;
+    while (!currentRanks.isEmpty()) {
+        Rank rank = currentRanks.takeLast();
+        int count = rankings.value(rank);
+        int expectedCount = count/rankConstant;
+        int missingCount = expectedCount-previousRankCounter;
+        int chance = qMin(qMax(missingCount,-rankConstant)+rankConstant+1,10);
+        if (qrand()%10<chance)
+            return rank+1;
+        previousRankCounter=count;
+    }
+    return 1;
 }

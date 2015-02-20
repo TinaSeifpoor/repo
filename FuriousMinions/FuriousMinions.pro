@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     synchronizedtimer.cpp \
     verticalscrollarea.cpp \
     globalvariables.cpp \
-    furiouspushbutton.cpp
+    furiouspushbutton.cpp \
+    miniondata.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -45,7 +46,8 @@ HEADERS  += mainwindow.h \
     synchronizedtimer.h \
     verticalscrollarea.h \
     globalvariables.h \
-    furiouspushbutton.h
+    furiouspushbutton.h \
+    miniondata.h
 
 FORMS    += mainwindow.ui
 

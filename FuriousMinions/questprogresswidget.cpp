@@ -6,11 +6,15 @@
 #include <QDateTime>
 #include <QGridLayout>
 #include <QLabel>
+#include "qmath.h"
 class QuestProgressWidgetPrivate
 {
 public:
     QuestProgressWidgetPrivate(Quest quest, Minion minion, QuestProgressWidget* parent):p(parent),quest(quest),minion(minion),timeLabel(0){
-        questEndTime = QDateTime::currentDateTime().addMSecs(quest.getTime()).toMSecsSinceEpoch();
+        int questRegularTime = quest.getTime();
+        Rank rankDif = quest.getRank()-minion.getRank();
+        int questActualTime = questRegularTime*qPow(2,rankDif);
+        questEndTime = QDateTime::currentDateTime().addMSecs(questActualTime).toMSecsSinceEpoch();
         p->connect(SynchronizedTimer::getInstance(), SIGNAL(epoch()), p, SLOT(epoch()));
     }
     Quest quest;

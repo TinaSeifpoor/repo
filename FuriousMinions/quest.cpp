@@ -6,6 +6,8 @@
 #include <QPixmap>
 #include <QTextDocument>
 #include <QPainter>
+QHash<Rank, int> questCounterHash;
+int questCounter=0;
 class QuestData : public AffiniteeTemplate
 {
 protected:
@@ -13,6 +15,7 @@ protected:
     QList<const char*> membersToNotify;
     int __questTime;
     QString __textDescription;
+    Rank __rank;
     void notify() const
     {
         for (int i=0; i<objsToNotify.count(); ++i) {
@@ -22,7 +25,7 @@ protected:
     virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes> types) {
         QHash<AffinityTypes, Power> powers;
         foreach (AffinityTypes type, types) {
-            powers.insert(type, qrand()%600 + 800);
+            powers.insert(type, qPow(qrand()%60 + 80,__rank));
         }
         return powers;
     }
@@ -37,11 +40,22 @@ protected:
         int time = 86*totalPower/nAffinities;
         return time;
     }
+
+    Rank nextRank()
+    {
+        return calculateNextRank(questCounterHash);
+    }
+
 public:
     QuestData() {}
+    Rank getRank() const {return __rank;}
     virtual void set(int seed)
     {
+        __rank = nextRank();
+        questCounterHash[__rank]++;
         __textDescription = "Building";
+        for (int i=0; i<__rank-1;++i)
+            __textDescription.append('+');
         AffiniteeTemplate::set(seed);
         __questTime = this->genTime();
         notify();
@@ -116,6 +130,11 @@ QString Quest::getQuestResourceIcon() const
 {
     return __data->getQuestResourceIcon();
 
+}
+
+Rank Quest::getRank() const
+{
+    return __data->getRank();
 }
 
 void Quest::reset()

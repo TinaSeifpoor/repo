@@ -5,7 +5,6 @@
 #include "common.h"
 class QPixmap;
 class QObject;
-typedef int MinionRank;
 class MinionData;
 class Minion
 {
@@ -15,6 +14,7 @@ public:
     explicit Minion();
     ~Minion();
     QString getName() const;
+    Rank getRank() const;
     QPixmap* getPixmap() const;
     QString getMinionResourceIcon() const;
     QList<AffinityTypes> getAffinities() const;
