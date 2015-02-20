@@ -7,10 +7,12 @@
 #include "synchronizedtimer.h"
 #include <QStandardPaths>
 #include <QFile>
+#include <QDateTime>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    srand(QDateTime::currentMSecsSinceEpoch());
     qRegisterMetaType<Minion>("Minion");
     qRegisterMetaType<Quest>("Quest");
     ui->setupUi(this);
