@@ -38,6 +38,11 @@ QuestProgressWidget::~QuestProgressWidget()
     delete d;
 }
 
+qint64 QuestProgressWidget::questEndTime() const
+{
+    return d->questEndTime;
+}
+
 void QuestProgressWidget::epoch()
 {
     qint64 current = QDateTime::currentDateTime().toMSecsSinceEpoch();

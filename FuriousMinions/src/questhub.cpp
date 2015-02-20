@@ -4,6 +4,7 @@
 QuestHub::QuestHub(QWidget *parent): QWidget(parent)
 {
     setLayout(new QGridLayout());
+    layout()->setMargin(4);
     layout()->addItem(new QSpacerItem(0,0,QSizePolicy::Preferred, QSizePolicy::Expanding));
 }
 

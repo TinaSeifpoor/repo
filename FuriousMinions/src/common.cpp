@@ -164,7 +164,7 @@ QLabel *genAffinityLabel(Quest quest, AffinityTypes type, QWidget *parent) {
 }
 
 
-Rank calculateNextRank(QHash<Rank, int> rankings)
+Rank calculateNextRank(QHash<Rank, int> rankings, int expectedNextRankRatio)
 {
     QList<Rank> currentRanks = rankings.keys();
     qSort(currentRanks);
@@ -172,7 +172,7 @@ Rank calculateNextRank(QHash<Rank, int> rankings)
     while (!currentRanks.isEmpty()) {
         Rank rank = currentRanks.takeLast();
         int count = rankings.value(rank);
-        int expectedCount = count/rankConstant;
+        int expectedCount = count/5;
         int missingCount = expectedCount-previousRankCounter;
         int chance = qMin(qMax(missingCount,-rankConstant)+rankConstant+1,10);
         if (qrand()%10<chance)

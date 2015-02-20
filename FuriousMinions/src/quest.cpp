@@ -48,7 +48,7 @@ protected:
 
     Rank nextRank()
     {
-        return calculateNextRank(questCounterHash);
+        return calculateNextRank(questCounterHash,15);
     }
 
 public:

@@ -35,7 +35,7 @@ typedef quint64 Power;
 typedef int Rank;
 const int rankConstant=1;
 
-Rank calculateNextRank(QHash<Rank,int> rankings);
+Rank calculateNextRank(QHash<Rank,int> rankings, int expectedNextRankRatio);
 
 QString coolNumericFormat(double number);
 QLabel* genIconTextLabel(QString iconText, QString text, QWidget* parent);

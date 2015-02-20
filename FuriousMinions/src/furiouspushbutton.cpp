@@ -33,6 +33,16 @@ bool FuriousPushButton::isChecked() const
     return d->button->isChecked();
 }
 
+void FuriousPushButton::setAutoExclusive(bool s)
+{
+    d->button->setAutoExclusive(s);
+}
+
+void FuriousPushButton::setCheckable(bool s)
+{
+    d->button->setCheckable(s);
+}
+
 void FuriousPushButton::setChecked(bool checked)
 {
     if (checked) {

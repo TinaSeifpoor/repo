@@ -12,6 +12,8 @@ public:
     explicit FuriousPushButton(QWidget *parent = 0);
     ~FuriousPushButton();
     bool isChecked() const;
+    void setAutoExclusive(bool s);
+    void setCheckable(bool s);
 signals:
     void clicked();
 public slots:

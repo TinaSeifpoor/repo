@@ -4,11 +4,12 @@
 #include <QWidget>
 #include "minion.h"
 class MinionSelectionWidget;
-class QPushButton;
+class FuriousPushButton;
 class MinionHub : public QWidget
 {
     Q_OBJECT
-    QPushButton* buyMinion;
+    FuriousPushButton* buyMinion;
+    QLabel* goldLabel;
 public:
     explicit MinionHub(QWidget *parent = 0);
     MinionSelectionWidget *getMinionSelectionWidget();

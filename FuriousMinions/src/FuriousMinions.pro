@@ -54,4 +54,4 @@ FORMS    += mainwindow.ui
 RESOURCES += \
     res.qrc
 
-DESTDIR = ../bin
+Release:DESTDIR = ../bin

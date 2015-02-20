@@ -38,4 +38,13 @@
     <qresource prefix="/icons/quests/35">
         <file alias="quest1.gif">resources/35x35/quest1.gif</file>
     </qresource>
+    <qresource prefix="/icons/currency/70">
+        <file alias="goldIcon.gif">resources/70x70/goldIcon.gif</file>
+    </qresource>
+    <qresource prefix="/icons/currency/35">
+        <file alias="goldIcon.gif">resources/35x35/goldIcon.gif</file>
+    </qresource>
+    <qresource prefix="/icons/currency/15">
+        <file alias="goldIcon.gif">resources/15x15/goldIcon.gif</file>
+    </qresource>
 </RCC>

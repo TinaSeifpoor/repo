@@ -13,6 +13,7 @@ class QuestProgressWidget : public FuriousPushButton
 public:
     QuestProgressWidget(Minion minion, Quest quest, QWidget* parent=0);
     ~QuestProgressWidget();
+    qint64 questEndTime() const;
 public slots:
     void epoch();
 private slots:

@@ -110,5 +110,5 @@ GoldCurrency MinionData::nextMinionGold()
 
 Rank MinionData::nextRank()
 {
-    return calculateNextRank(minionCounterHash);
+    return calculateNextRank(minionCounterHash, 5);
 }
