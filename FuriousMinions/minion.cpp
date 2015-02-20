@@ -54,6 +54,9 @@ public:
     MinionData():__pixmap(0){
 
     }
+    QString getMinionResourceIcon() const {
+        return ":/icons/minions/35/minion1.gif";
+    }
 
     virtual void set(int seed)
     {
@@ -125,6 +128,12 @@ QString Minion::getName() const
 QPixmap *Minion::getPixmap() const
 {
     return __data->getPixmap();
+}
+
+QString Minion::getMinionResourceIcon() const
+{
+    return __data->getMinionResourceIcon();
+
 }
 
 QList<AffinityTypes> Minion::getAffinities() const

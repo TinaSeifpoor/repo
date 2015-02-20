@@ -1,14 +1,15 @@
 #include "questprogresswidget.h"
-#include <QPropertyAnimation>
 #include "minion.h"
 #include "quest.h"
-#include <QDateTime>
 #include "synchronizedtimer.h"
 #include "reward.h"
+#include <QDateTime>
+#include <QGridLayout>
+#include <QLabel>
 class QuestProgressWidgetPrivate
 {
 public:
-    QuestProgressWidgetPrivate(Quest quest, Minion minion, QuestProgressWidget* parent):p(parent),quest(quest),minion(minion){
+    QuestProgressWidgetPrivate(Quest quest, Minion minion, QuestProgressWidget* parent):p(parent),quest(quest),minion(minion),timeLabel(0){
         questEndTime = QDateTime::currentDateTime().addMSecs(quest.getTime()).toMSecsSinceEpoch();
         p->connect(SynchronizedTimer::getInstance(), SIGNAL(epoch()), p, SLOT(epoch()));
     }
@@ -17,10 +18,11 @@ public:
 
     qint64 questEndTime;
     QuestProgressWidget* p;
+    QLabel* timeLabel;
 };
 
 QuestProgressWidget::QuestProgressWidget(Minion minion, Quest quest, QWidget *parent):
-    QPushButton(parent),
+    FuriousPushButton(parent),
     d(new QuestProgressWidgetPrivate(quest,minion,this))
 {
     connect (this, SIGNAL(clicked()), SLOT(onClicked()));
@@ -35,13 +37,19 @@ QuestProgressWidget::~QuestProgressWidget()
 void QuestProgressWidget::epoch()
 {
     qint64 current = QDateTime::currentDateTime().toMSecsSinceEpoch();
+    if (!d->timeLabel) {
+        QGridLayout* gridLayout = new QGridLayout();
+        gridLayout->addWidget(genIconTextLabel(d->minion.getMinionResourceIcon(), d->minion.getName(),this),0,0, Qt::AlignLeft);
+        gridLayout->addWidget(genIconTextLabel(d->quest.getQuestResourceIcon(), d->quest.getName(),this),0,1, Qt::AlignRight);
+        d->timeLabel = new QLabel(QTime().addMSecs(d->questEndTime-current).toString(),this);
+        gridLayout->addWidget(d->timeLabel, 1, 0, 1, 2, Qt::AlignHCenter);
+        setLayout(gridLayout);
+    }
     if (current > d->questEndTime) {
-        setText(QString("Claim rewards!"));
+        d->timeLabel->setText(QString("Claim rewards!"));
         setEnabled(true);
     } else {
-        QTime time;
-        setText(QString("%1\n%2\nTime Left: %3").arg(d->minion.getName(),d->quest.getText(),
-                                                     time.addMSecs(d->questEndTime-current).toString()));
+        d->timeLabel->setText(QTime().addMSecs(d->questEndTime-current).toString());
     }
 }
 

@@ -1,7 +1,9 @@
 #include "common.h"
-#include <QColor>
 #include "qmath.h"
 #include <QApplication>
+#include <QLabel>
+#include "minion.h"
+#include "quest.h"
 unsigned numDigits(const unsigned n) {
     if (n < 10) return 1;
     return 1 + numDigits(n / 10);
@@ -117,4 +119,46 @@ QString coolNumericFormat(double number)
     if (number<1000)
         return QString::number(number);
     return coolFormat(number,0);
+}
+
+
+QString affinityIconString(AffinityTypes affinity)
+{
+    switch (affinity) {
+    case Air:
+        return ":/icons/affinity/15/airIcon";
+    case Earth:
+        return ":/icons/affinity/15/earthIcon";
+    case Water:
+        return ":/icons/affinity/15/waterIcon";
+    case Fire:
+        return ":/icons/affinity/15/fireIcon";
+    case Death:
+        return ":/icons/affinity/15/deathIcon";
+    case Nature:
+        return ":/icons/affinity/15/natureIcon";
+    case Base:
+        return ":/icons/affinity/15/baseIcon";
+    }
+    return QString();
+}
+
+
+QLabel *genIconTextLabel(QString iconText, QString text, QWidget *parent) {
+    return new QLabel(QString("<html><dl align='middle'><img src='%1'>%2</img></dl></html>").arg(iconText, text),parent);
+}
+
+
+QLabel *genAffinityLabel(Minion minion, AffinityTypes type, QWidget *parent) {
+    if (minion.getAffinityPower(type)>0)
+        return genIconTextLabel(affinityIconString(type),coolNumericFormat(minion.getAffinityPower(type)),parent);
+    else
+        return new QLabel(parent);
+}
+
+QLabel *genAffinityLabel(Quest quest, AffinityTypes type, QWidget *parent) {
+    if (quest.getAffinityPower(type)>0)
+        return genIconTextLabel(affinityIconString(type),coolNumericFormat(quest.getAffinityPower(type)),parent);
+    else
+        return new QLabel(parent);
 }

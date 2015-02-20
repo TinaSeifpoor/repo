@@ -1,9 +1,9 @@
 #ifndef QUESTSELECTIONWIDGET_H
 #define QUESTSELECTIONWIDGET_H
 
-#include <QPushButton>
+#include "furiouspushbutton.h"
 #include "quest.h"
-class QuestSelectionWidget : public QPushButton
+class QuestSelectionWidget : public FuriousPushButton
 {
     Q_OBJECT
     Quest __quest;

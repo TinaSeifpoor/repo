@@ -4,6 +4,7 @@
 #include <QExplicitlySharedDataPointer>
 #include "common.h"
 class QPixmap;
+class QObject;
 typedef int MinionRank;
 class MinionData;
 class Minion
@@ -15,6 +16,7 @@ public:
     ~Minion();
     QString getName() const;
     QPixmap* getPixmap() const;
+    QString getMinionResourceIcon() const;
     QList<AffinityTypes> getAffinities() const;
     Power getAffinityPower(AffinityTypes affinity) const;
     void setMinionTrigger(QObject* obj, const char *member);

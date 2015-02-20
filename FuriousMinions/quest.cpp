@@ -12,8 +12,6 @@ protected:
     QList<QObject*> objsToNotify;
     QList<const char*> membersToNotify;
     int __questTime;
-    QPixmap __pixmap;
-    QTextDocument* __textDocument;
     QString __textDescription;
     void notify() const
     {
@@ -40,38 +38,29 @@ protected:
         return time;
     }
 public:
-    QuestData():__pixmap(QPixmap(1,1)),__textDocument(new QTextDocument()) {}
+    QuestData() {}
     virtual void set(int seed)
     {
-        __textDescription = "Garden";
+        __textDescription = "Building";
         AffiniteeTemplate::set(seed);
         __questTime = this->genTime();
         notify();
     }
+    QString getQuestResourceIcon() const
+    {
+        return ":/icons/quests/35/quest1.gif";
+    }
+
+    QString getName() const {
+        return __textDescription;
+    }
     ~QuestData() {
-//        delete __pixmap;
-        delete __textDocument;
     }
 
     int time() const {return __questTime;}
     void setTime(int time) {
         __questTime = time;
         notify();
-    }
-    QPixmap getPixmap() {
-        QStringList affinityTexts;
-        foreach (AffinityTypes type, getAffinities()) {
-            affinityTexts << QString("<font color=%1 size=\"4\">%2</font>").arg(affinityToColor(type).name()).arg(coolNumericFormat(getAffinityPower(type)));
-        }
-        QString timeText = QString("Time: %1").arg(QTime().addMSecs(time()).toString());
-        __textDocument->setHtml(QString("<i><font color=%1 size=\"6\">%2</font></i>&nbsp;&nbsp;&nbsp;(%3)<br>%4").arg("white",__textDescription,affinityTexts.join("&#09;"),
-                     QString("<i><font color=%1 size=\"6\">%2</font></i>").arg("white",timeText)));
-        __pixmap = __pixmap.scaled(__textDocument->size().width(), __textDocument->size().height());
-        __pixmap.fill(Qt::transparent);
-        QPainter painter(&__pixmap);
-        __textDocument->drawContents(&painter,__pixmap.rect());
-        __pixmap.toImage().save("d:/test.jpg");
-        return __pixmap;
     }
     void addObj(QObject* obj, const char* member) {
         objsToNotify << obj;
@@ -113,20 +102,20 @@ QList<AffinityTypes> Quest::getAffinities() const
     return __data->getAffinities();
 }
 
-QString Quest::getText() const
+QString Quest::getName() const
 {
-    QStringList affinityTexts;
-    foreach (AffinityTypes type, getAffinities()) {
-        affinityTexts << QString("%1 (%2)").arg(affinityString(type)).arg(coolNumericFormat(getAffinityPower(type)));
-    }
-    QString affinityText = affinityTexts.join(", ");
-    QTime time;
-    return QString("Time: %1\n%2").arg(time.addMSecs(getTime()).toString()).arg(affinityText);
+    return __data->getName();
 }
 
-QPixmap Quest::getPixmap() const
+QString Quest::getTimeText() const
 {
-return __data->getPixmap();
+    return QTime().addMSecs(getTime()).toString();
+}
+
+QString Quest::getQuestResourceIcon() const
+{
+    return __data->getQuestResourceIcon();
+
 }
 
 void Quest::reset()

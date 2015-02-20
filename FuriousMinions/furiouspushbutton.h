@@ -1,19 +1,19 @@
 #ifndef FURIOUSPUSHBUTTON_H
 #define FURIOUSPUSHBUTTON_H
 
-#include <QWidget>
-class QPushButton;
-class FuriousPushButton : public QWidget
+#include <QFrame>
+class FuriousPushButtonPrivate;
+class FuriousPushButton : public QFrame
 {
     Q_OBJECT
-    QPushButton* __button;
+    FuriousPushButtonPrivate* d;
+    virtual void mousePressEvent(QMouseEvent *);
 public:
     explicit FuriousPushButton(QWidget *parent = 0);
     ~FuriousPushButton();
-    void mousePressEvent(QMouseEvent *);
     bool isChecked() const;
 signals:
-
+    void clicked();
 public slots:
     void setChecked(bool checked);
 };

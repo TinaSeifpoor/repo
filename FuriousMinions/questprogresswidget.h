@@ -1,11 +1,11 @@
 #ifndef QUESTPROGRESSWIDGET_H
 #define QUESTPROGRESSWIDGET_H
 
-#include <QPushButton>
+#include "furiouspushbutton.h"
 #include "minion.h"
 class Quest;
 class QuestProgressWidgetPrivate;
-class QuestProgressWidget : public QPushButton
+class QuestProgressWidget : public FuriousPushButton
 {
     Q_OBJECT
     QuestProgressWidgetPrivate*d;

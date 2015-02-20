@@ -2,4 +2,40 @@
     <qresource prefix="/names">
         <file>names.txt</file>
     </qresource>
+    <qresource prefix="/icons/affinity/70">
+        <file alias="airIcon.gif">resources/70x70/airIcon.gif</file>
+        <file alias="baseIcon.gif">resources/70x70/baseIcon.gif</file>
+        <file alias="deathIcon.gif">resources/70x70/deathIcon.gif</file>
+        <file alias="earthIcon.gif">resources/70x70/earthIcon.gif</file>
+        <file alias="fireIcon.gif">resources/70x70/fireIcon.gif</file>
+        <file alias="natureIcon.gif">resources/70x70/natureIcon.gif</file>
+        <file alias="waterIcon.gif">resources/70x70/waterIcon.gif</file>
+    </qresource>
+    <qresource prefix="/icons/affinity/35">
+        <file alias="airIcon.gif">resources/35x35/airIcon.gif</file>
+        <file alias="baseIcon.gif">resources/35x35/baseIcon.gif</file>
+        <file alias="deathIcon.gif">resources/35x35/deathIcon.gif</file>
+        <file alias="earthIcon.gif">resources/35x35/earthIcon.gif</file>
+        <file alias="fireIcon.gif">resources/35x35/fireIcon.gif</file>
+        <file alias="natureIcon.gif">resources/35x35/natureIcon.gif</file>
+        <file alias="waterIcon.gif">resources/35x35/waterIcon.gif</file>
+    </qresource>
+    <qresource prefix="/icons/minions/70">
+        <file alias="minion1.gif">resources/70x70/minion1.gif</file>
+    </qresource>
+    <qresource prefix="/icons/minions/35">
+        <file alias="minion1.gif">resources/35x35/minion1.gif</file>
+    </qresource>
+    <qresource prefix="/icons/affinity/15">
+        <file alias="airIcon.gif">resources/15x15/airIcon.gif</file>
+        <file alias="baseIcon.gif">resources/15x15/baseIcon.gif</file>
+        <file alias="deathIcon.gif">resources/15x15/deathIcon.gif</file>
+        <file alias="earthIcon.gif">resources/15x15/earthIcon.gif</file>
+        <file alias="fireIcon.gif">resources/15x15/fireIcon.gif</file>
+        <file alias="natureIcon.gif">resources/15x15/natureIcon.gif</file>
+        <file alias="waterIcon.gif">resources/15x15/waterIcon.gif</file>
+    </qresource>
+    <qresource prefix="/icons/quests/35">
+        <file alias="quest1.gif">resources/35x35/quest1.gif</file>
+    </qresource>
 </RCC>

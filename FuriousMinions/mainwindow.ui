@@ -26,60 +26,39 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">            QWidget {                                          
-            background-color:             rgb(16, 37, 63);
-            }                                                  
-                                                               
-            QPushButton{                                       
-            background-color:             rgb(55, 96,146);
-            font:14pt 'Segoe UI Semibold';
-            color:                        rgb(220,230,242);
-            border-width:2px;
-            border-color:                 rgb(220,230,242);
-            }                                                  
-                                                               
-            QPushButton:checked{                               
-            background-color:             rgb(220,230,242);
-            color:                        rgb(55, 96,146);
-            }                                                  
-                                                               
-            QPushButton:disabled {                             
-            color:                        rgb(242,242,242);
-            background-color:             rgb(166,166,166);
-            border-color:                 rgb(166,166,166);
-            }                                                  
-                                                               
-            QLabel{                                            
-            font:14pt 'Segoe UI Semibold';
-            color:                        rgb(220,230,242);
-            text-align:center;                                 
-            border-style:none;                                 
-            }                                                  
-                                                               
-            QGroupBox{                                         
-            + largeFont +
-            color:                        rgb(220,230,242);
-            text-align:center;                                 
-            }                                                  
-                                                               
-            QComboBox {                                        
-            border-style:none;                                 
-            color:                        rgb(220,230,242);
-            background-color:             rgb(55, 96,146);
-            font:14pt 'Segoe UI Semibold';
-            }                                                  
-            QComboBox:disabled {                               
-            color:                        rgb(242,242,242);
-            background-color:             rgb(166,166,166);
-            }                                                  
-                                                               
-            QComboBox QAbstractItemView {                      
-            color:                        rgb(220,230,242);
-            background-color:             rgb(55, 96,146);
-            selection-color:              rgb(55, 96,146);
-            selection-background-color:   rgb(220,230,242);
-            }												    
-</string>
+   <string notr="true">QWidget {                                          
+background-color:             rgb(220,230,242);
+}                                                  
+
+QFrame{
+background-color:             rgb(149,179,215);
+}
+
+QPushButton{                                       
+background-color:             rgb(149,179,215);
+font:14pt 'Segoe UI Semibold';
+color:                        rgb(55, 96,146);
+border-width:2px;
+border-color:                rgb(55, 96,146);
+}                                                 
+
+QPushButton:disabled {                             
+color:                        rgb(166,166,166);
+background-color:             rgb(242,242,242);
+border-color:                 rgb(242,242,242);
+}                                                  
+                                                   
+QLabel{                                            
+font:14pt 'Segoe UI Semibold';
+color:                        rgb(55, 96,146);
+background-color:             rgb(220,230,242);
+text-align:center;                                 
+border-style:none;                                 
+}        
+
+QFrame&gt;QLabel{
+background-color:             rgb(149,179,215);
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">

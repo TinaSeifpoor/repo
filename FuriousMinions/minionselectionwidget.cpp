@@ -5,14 +5,13 @@ MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
     FuriousPushButton(parent),
     __mt(mt)
 {
-    int nAffinities = __mt.getAffinities().count();
     QGridLayout* gridLayout = new QGridLayout();
-    gridLayout->addWidget(new QLabel(__mt.getName(),this),0,0,1,nAffinities);
+    int nAffinities = allAffinityList().count()+1;
+    gridLayout->addWidget(genIconTextLabel(__mt.getMinionResourceIcon(), __mt.getName(),this),0,0,1,nAffinities);
     int i=0;
-    foreach(AffinityTypes type, __mt.getAffinities()) {
-        QColor affinityColor = affinityToColor(type);
-        gridLayout->addWidget(new QLabel(coolNumericFormat(__mt.getAffinityPower(type)),this),1,i++);
-    }
+    gridLayout->addWidget(genAffinityLabel(__mt,Base,this),1,i++,1,1);
+    foreach(AffinityTypes type, allAffinityList())
+        gridLayout->addWidget(genAffinityLabel(__mt,type,this),1,i++,1,1);
     setLayout(gridLayout);
     __mt.setMinionTrigger(this, SLOT(minionNotification()));
 }
@@ -29,5 +28,4 @@ Minion MinionSelectionWidget::getMinion() const
 
 void MinionSelectionWidget::minionNotification()
 {
-//    setIcon(QIcon(*__mt.getPixmap()));
 }

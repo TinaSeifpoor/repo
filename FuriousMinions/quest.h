@@ -4,6 +4,7 @@
 #include "common.h"
 class QuestData;
 class QPixmap;
+class QObject;
 class Quest
 {
 public:
@@ -13,8 +14,9 @@ public:
     ~Quest();
     int getTime() const;
     Power getAffinityPower(AffinityTypes type) const;
-    QString getText() const;
-    QPixmap getPixmap() const;
+    QString getName() const;
+    QString getTimeText() const;
+    QString getQuestResourceIcon() const;
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
     QList<AffinityTypes> getAffinities() const;

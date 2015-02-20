@@ -1,8 +1,13 @@
 #ifndef COMMON_H
 #define COMMON_H
-#include <QFlags>
-#include <QStringList>
+#include <QList>
+class QStringList;
+class QString;
 class QColor;
+class QWidget;
+class QLabel;
+class Minion;
+class Quest;
 enum AffinityTypes {
     Base    = 0,
     Air     = 1,
@@ -12,13 +17,14 @@ enum AffinityTypes {
     Death   = 16,
     Nature  = 32
 };
+QList<AffinityTypes> allAffinityList();
+QString affinityIconString(AffinityTypes affinity);
 
 unsigned numDigits(const unsigned n);
 QList<AffinityTypes> genAffinities(int seed);
 
 double genValue(int seed);
 int genTime(int seed);
-//QList<AffinityTypes> convertToAffinityList(Affinities affinities);
 QColor affinityToColor(QList<AffinityTypes> affinityList);
 QColor affinityToColor(AffinityTypes affinity);
 QStringList affinityStringList(QList<AffinityTypes> affinityList);
@@ -28,6 +34,11 @@ typedef qint64 GoldCurrency;
 typedef qint64 Power;
 
 QString coolNumericFormat(double number);
+QLabel* genIconTextLabel(QString iconText, QString text, QWidget* parent);
+QLabel* genAffinityLabel(Minion minion, AffinityTypes type, QWidget* parent);
+QLabel* genAffinityLabel(Quest quest, AffinityTypes type, QWidget* parent);
+
+
 
 
 
