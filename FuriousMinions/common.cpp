@@ -101,14 +101,14 @@ QStringList affinityStringList(QList<AffinityTypes> affinityList)
     return affinityTextList;
 }
 
-QStringList numericIdentifier = QStringList()<<"k"<< "m"<< "b" << "t" << "aa";
+QStringList numericIdentifier = QStringList()<<"k"<< "m"<< "b" << "t" << "aa" << "bb" << "cc" << "dd" << "ee" << "ff" << "gg" << "hh" << "ii";
 
 QString coolFormat(double numeric, int iteration) {
-    double remainingNumeric = ((long) numeric / 100) / 10.0;
-    bool isRound = int(remainingNumeric * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+    double remainingNumeric = qRound64(numeric / 100) / 10.0;
+    bool isRound = qint64(remainingNumeric * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
     return (remainingNumeric < 1000? //this determines the class, i.e. 'k', 'm' etc
                                      (QString("%1%2").arg(remainingNumeric > 99.9 || isRound || (!isRound && remainingNumeric > 9.99)? //this decides whether to trim the decimals
-                                                                                                                                       (int) remainingNumeric * 10 / 10 : remainingNumeric // (int) d * 10 / 10 drops the decimal
+                                                                                                                                       (double) remainingNumeric * 10 / 10 : remainingNumeric // (int) d * 10 / 10 drops the decimal
                                                                                                                                        ).arg(numericIdentifier.value(iteration,"INF")))
                                    : coolFormat(remainingNumeric, iteration+1));
 

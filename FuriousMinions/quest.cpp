@@ -25,7 +25,12 @@ protected:
     virtual QHash<AffinityTypes, Power> setPowers(QList<AffinityTypes> types) {
         QHash<AffinityTypes, Power> powers;
         foreach (AffinityTypes type, types) {
-            powers.insert(type, qPow(qrand()%60 + 80,__rank));
+            Power affPower = qrand()%60 + 80;
+            Power curPower = qPow(affPower,__rank);
+            if (curPower<0) {
+                qDebug(QString("Negative value from: %1, %2, %3").arg(affPower).arg(__rank).arg(curPower).toLatin1());
+            }
+            powers.insert(type, curPower);
         }
         return powers;
     }
@@ -52,7 +57,6 @@ public:
     virtual void set(int seed)
     {
         __rank = nextRank();
-        questCounterHash[__rank]++;
         __textDescription = "Building";
         for (int i=0; i<__rank-1;++i)
             __textDescription.append('+');
@@ -60,6 +64,10 @@ public:
         __questTime = this->genTime();
         notify();
     }
+    void markComplete() {
+        questCounterHash[__rank]++;
+    }
+
     QString getQuestResourceIcon() const
     {
         return ":/icons/quests/35/quest1.gif";
@@ -135,6 +143,11 @@ QString Quest::getQuestResourceIcon() const
 Rank Quest::getRank() const
 {
     return __data->getRank();
+}
+
+void Quest::markComplete()
+{
+    __data->markComplete();
 }
 
 void Quest::reset()

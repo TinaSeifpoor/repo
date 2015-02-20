@@ -38,7 +38,7 @@ void GlobalVariables::setGoldLabel(QLabel *label)
     goldLabel = label;
 }
 
-qint64 GlobalVariables::getRemainingGold()
+GoldCurrency GlobalVariables::getRemainingGold()
 {
     return allGold;
 }

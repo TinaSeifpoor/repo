@@ -29,9 +29,9 @@ QColor affinityToColor(QList<AffinityTypes> affinityList);
 QColor affinityToColor(AffinityTypes affinity);
 QStringList affinityStringList(QList<AffinityTypes> affinityList);
 QString affinityString(AffinityTypes affinity);
-typedef qint64 GoldCurrency;
+typedef quint64 GoldCurrency;
 
-typedef qint64 Power;
+typedef quint64 Power;
 typedef int Rank;
 const int rankConstant=1;
 

@@ -36,7 +36,7 @@ background-color:             rgb(149,179,215);
 
 QPushButton{                                       
 background-color:             rgb(149,179,215);
-font:14pt 'Segoe UI Semibold';
+font:10pt 'Segoe UI Semibold';
 color:                        rgb(55, 96,146);
 border-width:2px;
 border-color:                rgb(55, 96,146);
@@ -49,7 +49,7 @@ border-color:                 rgb(242,242,242);
 }                                                  
                                                    
 QLabel{                                            
-font:14pt 'Segoe UI Semibold';
+font:10pt 'Segoe UI Semibold';
 color:                        rgb(55, 96,146);
 background-color:             rgb(220,230,242);
 text-align:center;                                 
@@ -126,7 +126,7 @@ background-color:             rgb(149,179,215);
             <x>0</x>
             <y>0</y>
             <width>343</width>
-            <height>536</height>
+            <height>555</height>
            </rect>
           </property>
          </widget>
@@ -177,7 +177,7 @@ background-color:             rgb(149,179,215);
             <x>0</x>
             <y>0</y>
             <width>700</width>
-            <height>535</height>
+            <height>554</height>
            </rect>
           </property>
          </widget>
@@ -247,7 +247,7 @@ background-color:             rgb(149,179,215);
             <x>0</x>
             <y>0</y>
             <width>343</width>
-            <height>536</height>
+            <height>555</height>
            </rect>
           </property>
          </widget>

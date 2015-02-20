@@ -60,6 +60,7 @@ void QuestProgressWidget::epoch()
 void QuestProgressWidget::onClicked()
 {
     Reward::rewardGold(d->minion, d->quest);
+    d->quest.markComplete();
     emit questReward(d->minion);
     deleteLater();
 }

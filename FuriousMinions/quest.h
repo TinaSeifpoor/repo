@@ -18,6 +18,7 @@ public:
     QString getTimeText() const;
     QString getQuestResourceIcon() const;
     Rank getRank() const;
+    void markComplete();
     void reset();
     void setQuestTrigger(QObject* obj, const char *member);
     QList<AffinityTypes> getAffinities() const;

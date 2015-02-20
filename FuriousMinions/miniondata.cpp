@@ -34,8 +34,11 @@ void MinionData::setName() {
 QHash<AffinityTypes, Power> MinionData::setPowers(QList<AffinityTypes> types) {
     QHash<AffinityTypes, Power> powers;
     foreach (AffinityTypes type, types) {
-        double power = qrand()%80 + 30;
-        double ascendingPower = qPow(power,this->__rank);
+        Power power = qrand()%80 + 30;
+        Power ascendingPower = qPow(power,this->__rank);
+        if (ascendingPower<0)
+            qDebug(QString("Negative value from: %1, %2, %3").arg(power).arg(__rank).arg(ascendingPower).toLatin1());
+
         powers.insert(type, ascendingPower);
     }
     return powers;
