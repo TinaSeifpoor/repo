@@ -84,5 +84,6 @@ void QuestProgressWidget::onClicked()
     Reward::rewardGold(d->minion, d->quest);
     d->minion.questComplete();
     emit questReward(d->minion);
+    emit questComplete(d->quest);
     deleteLater();
 }

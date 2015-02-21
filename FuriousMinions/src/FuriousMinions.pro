@@ -55,3 +55,10 @@ RESOURCES += \
     res.qrc
 
 Release:DESTDIR = ../bin
+
+
+OTHER_FILES += \
+    stb.rc \
+    android/AndroidManifest.xml
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

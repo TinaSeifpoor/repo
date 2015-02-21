@@ -1,6 +1,6 @@
 #include "synchronizedtimer.h"
 #include <QTimer>
-SynchronizedTimer *sync=0;
+SynchronizedTimer *syncTimer=0;
 QTimer* epochTimer=0;
 QTimer* bigEpochTimer=0;
 SynchronizedTimer::SynchronizedTimer(QObject *parent) : QObject(parent)
@@ -17,14 +17,14 @@ SynchronizedTimer::SynchronizedTimer(QObject *parent) : QObject(parent)
 
 SynchronizedTimer *SynchronizedTimer::getInstance()
 {
-    if (!sync)
-        sync = new SynchronizedTimer();
-    return sync;
+    if (!syncTimer)
+        syncTimer = new SynchronizedTimer();
+    return syncTimer;
 }
 
 SynchronizedTimer::~SynchronizedTimer()
 {
-    sync = 0;
+    syncTimer = 0;
     if (epochTimer)
         epochTimer->deleteLater();
     if (bigEpochTimer)

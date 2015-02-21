@@ -6,7 +6,6 @@
 #include "qmath.h"
 GoldCurrency allGold=0;
 GoldCurrency allGoldAcquiredSinceAscension=0;
-QHash<Rank, int> minionCounterHash;
 QHash<Rank, int> questCounterHash;
 int minionCounter=0;
 int questCounter=0;
@@ -15,6 +14,9 @@ int questCounter=0;
 
 GlobalVariables* gv=0;
 QLabel* goldLabel=0;
+
+QObject* nextLevelNotifierObject=0;
+const char* nextLevelNotifierMember=0;
 typedef QMap<GoldCurrency, QAction*> GoldNotifierActionMap;
 QHash<QObject*, QAction*> objectActionHash;
 QHash<QAction*, GoldCurrency> actionThresholdHash;
@@ -120,13 +122,9 @@ QVariantHash GlobalVariables::toHash()
     globalVariablesHash.insert("AllGold", allGold);
     globalVariablesHash.insert("AllGoldSinceAscension", allGoldAcquiredSinceAscension);
     globalVariablesHash.insert("MinionCount", minionCounter);
-    QVariantHash minionCounterVariantHash;
-    foreach (Rank rank, minionCounterHash.keys())
-        minionCounterVariantHash.insert(QString::number(rank), minionCounterHash.value(rank));
-    globalVariablesHash.insert("MinionCounterHash", minionCounterVariantHash);
     QVariantHash questCounterVariantHash;
     foreach (Rank rank, questCounterHash.keys())
-        minionCounterVariantHash.insert(QString::number(rank), questCounterHash.value(rank));
+        questCounterVariantHash.insert(QString::number(rank), questCounterHash.value(rank));
     globalVariablesHash.insert("QuestCounterHash", questCounterVariantHash);
     return globalVariablesHash;
 }
@@ -137,10 +135,6 @@ void GlobalVariables::fromHash(QVariantHash hash)
     allGold = 0;
     addGold(hash.value("AllGold",300).toDouble());
     minionCounter = hash.value("MinionCount").toInt();
-    QVariantHash minionCounterVariantHash = hash.value("MinionCounterHash").toHash();
-    minionCounterVariantHash.clear();
-    foreach (QString rankKey, minionCounterVariantHash.keys())
-        minionCounterHash.insert(rankKey.toInt(), minionCounterVariantHash.value(rankKey).toInt());
     QVariantHash questCounterVariantHash = hash.value("QuestCounterHash").toHash();
     questCounterVariantHash.clear();
     foreach (QString rankKey, questCounterVariantHash.keys())
@@ -150,13 +144,14 @@ void GlobalVariables::fromHash(QVariantHash hash)
 
 void GlobalVariables::addMinion(Rank r)
 {
-    minionCounterHash[r]++;
     minionCounter++;
 }
-
+#include <QTimer>
 void GlobalVariables::addQuest(Rank r)
 {
     questCounterHash[r]++;
+    if (questCounterHash[r]==10)
+       QTimer::singleShot(0, nextLevelNotifierObject, nextLevelNotifierMember);
     questCounter++;
 }
 
@@ -198,11 +193,6 @@ Rank GlobalVariables::calculateNextQuestRank()
     return calculateNextRank(questCounterHash, 10);
 }
 
-int GlobalVariables::minionCount(Rank rank)
-{
-    return minionCounterHash.value(rank);
-}
-
 int GlobalVariables::minionCount()
 {
     return minionCounter;
@@ -211,6 +201,17 @@ int GlobalVariables::minionCount()
 GoldCurrency GlobalVariables::nextMinionGold()
 {
     return qPow(20,minionCount()+1)*(minionCount()+1)+50;
+}
+
+void GlobalVariables::setNextLevelNotifier(QObject *obj, const char *member)
+{
+    nextLevelNotifierObject=obj;
+    nextLevelNotifierMember=member;
+}
+
+int GlobalVariables::questCount(Rank rank)
+{
+    return questCounterHash.value(rank);
 }
 
 

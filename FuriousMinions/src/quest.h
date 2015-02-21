@@ -10,8 +10,8 @@ class Quest
 {
 public:
     Quest(const Quest &other);
-    explicit Quest(int seed);
-    explicit Quest();
+    explicit Quest(int seed, Rank rank);
+    explicit Quest(Rank rank=1);
     explicit Quest(QuestData* data);
     ~Quest();
     int getTime() const;

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "minion.h"
-class Quest;
+#include "quest.h"
 class QuestProgressWidget;
 class QuestProgressHub : public QWidget
 {
@@ -16,7 +16,8 @@ public:
     void fromHash(QVariantHash hash);
     void addQuestProgressWidget(QuestProgressWidget*qpw);
 signals:
-    void questComplete(Minion returningMinion);
+    void questReward(Minion returningMinion);
+    void questComplete(Quest quest);
 };
 
 #endif // QUESTPROGRESSHUB_H

@@ -3,7 +3,7 @@
 
 #include "furiouspushbutton.h"
 #include "minion.h"
-class Quest;
+#include "quest.h"
 class QuestProgressWidgetPrivate;
 class QuestProgressWidget : public FuriousPushButton
 {
@@ -22,6 +22,7 @@ private slots:
     void onClicked();
 signals:
     void questReward(Minion reward);
+    void questComplete(Quest quest);
 };
 
 #endif // QUESTPROGRESSWIDGET_H

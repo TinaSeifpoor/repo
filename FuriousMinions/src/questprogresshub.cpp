@@ -59,6 +59,7 @@ void QuestProgressHub::addQuestProgressWidget(QuestProgressWidget *qpw)
             layout()->addWidget(qpwList.takeLast());
     }
     layout()->addItem(item);
-    connect (qpw, SIGNAL(questReward(Minion)), SIGNAL(questComplete(Minion)));
+    connect (qpw, SIGNAL(questReward(Minion)), SIGNAL(questReward(Minion)));
+    connect (qpw, SIGNAL(questComplete(Quest)), SIGNAL(questComplete(Quest)));
 }
 

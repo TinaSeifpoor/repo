@@ -44,6 +44,5 @@ QLabel* genAffinityLabel(Quest quest, AffinityTypes type, QWidget* parent);
 
 
 
-
 #endif // COMMON_H
 

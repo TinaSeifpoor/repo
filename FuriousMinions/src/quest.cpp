@@ -75,9 +75,9 @@ public:
 
     QuestData() {}
     Rank getRank() const {return __rank;}
-    virtual void set(int seed)
+    virtual void set(int seed, Rank rank=1)
     {
-        __rank = nextRank();
+        __rank = rank;
         __textDescription = "Building";
         __icon = ":/icons/quests/35/quest1.gif";
         for (int i=0; i<__rank-1;++i)
@@ -85,7 +85,7 @@ public:
         AffiniteeTemplate::set(seed);
         __questTime = this->genTime();
         notify();
-        GlobalVariables::addQuest(__rank);
+//        GlobalVariables::addQuest(__rank);
     }
 
     QString getQuestResourceIcon() const
@@ -115,9 +115,9 @@ Quest::Quest(const Quest &other) : __data(other.__data)
 
 }
 
-Quest::Quest(int seed) : __data(new QuestData())
+Quest::Quest(int seed, Rank rank) : __data(new QuestData())
 {
-    __data->set(seed);
+    __data->set(seed,rank);
 }
 
 Quest::~Quest()
@@ -125,8 +125,8 @@ Quest::~Quest()
 
 }
 
-Quest::Quest():__data(new QuestData()){
-    __data->set(qrand());
+Quest::Quest(Rank rank):__data(new QuestData()){
+    __data->set(qrand(),rank);
 }
 
 Quest::Quest(QuestData *data): __data(data)
