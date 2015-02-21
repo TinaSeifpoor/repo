@@ -86,8 +86,16 @@ void MinionData::set(int seed, bool isHidden)
     setName();
     if (__affinityPowers.keys().contains(Earth))
         __icon = ":/icons/minions/35/resources/35x35/minionearth1.gif";
-    else
-        __icon = ":/icons/minions/35/minion1.gif";
+    else if(__affinityPowers.keys().contains(Air))
+        __icon = ":/icons/minions/35/resources/35x35/minionair1.gif";
+    else if(__affinityPowers.keys().contains(Fire))
+        __icon = ":/icons/minions/35/resources/35x35/minionfire1.gif";
+    else if(__affinityPowers.keys().contains(Water))
+        __icon = ":/icons/minions/35/resources/35x35/minionwater1.gif";
+    else if(__affinityPowers.keys().contains(Death))
+        __icon = ":/icons/minions/35/resources/35x35/miniondeath1.gif";
+    else //nature
+        __icon = ":/icons/minions/35/resources/35x35/minionnature1.gif";
     if (!isHidden)
         GlobalVariables::addMinion(__rank);
     __nQuestsCompleted=0;

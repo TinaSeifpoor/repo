@@ -18,12 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     GlobalVariables::setGoldLabel(ui->lblGold);
     connect(ui->wQuestProgressHub, SIGNAL(questComplete(Minion)), ui->wMinionHub, SLOT(addMinion(Minion)), Qt::QueuedConnection);
-    if (!loadProgress()) {
-        connect(SynchronizedTimer::getInstance(), SIGNAL(bigEpoch()), SLOT(saveProgress()));
-        GlobalVariables::addGold(100);
-        for (int i=0; i<5; ++i)
-            ui->wQuestHub->addQuest(Quest());
-    }
+    bool isReset = QApplication::arguments().contains("Reset");
+    if (isReset)
+        if (loadProgress()) {
+            return;
+        }
+    connect(SynchronizedTimer::getInstance(), SIGNAL(bigEpoch()), SLOT(saveProgress()));
+    GlobalVariables::addGold(100);
+    for (int i=0; i<5; ++i)
+        ui->wQuestHub->addQuest(Quest());
+
 }
 
 MainWindow::~MainWindow()

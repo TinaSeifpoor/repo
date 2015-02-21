@@ -21,11 +21,20 @@
         <file alias="waterIcon.gif">resources/35x35/waterIcon.gif</file>
     </qresource>
     <qresource prefix="/icons/minions/70">
-        <file alias="minion1.gif">resources/70x70/minion1.gif</file>
+        <file>resources/70x70/minionair1.gif</file>
+        <file>resources/70x70/miniondeath1.gif</file>
+        <file>resources/70x70/minionearth1.gif</file>
+        <file>resources/70x70/minionfire1.gif</file>
+        <file>resources/70x70/minionnature1.gif</file>
+        <file>resources/70x70/minionwater1.gif</file>
     </qresource>
     <qresource prefix="/icons/minions/35">
-        <file alias="minion1.gif">resources/35x35/minion1.gif</file>
         <file>resources/35x35/minionearth1.gif</file>
+        <file>resources/35x35/minionair1.gif</file>
+        <file>resources/35x35/miniondeath1.gif</file>
+        <file>resources/35x35/minionfire1.gif</file>
+        <file>resources/35x35/minionwater1.gif</file>
+        <file>resources/35x35/minionnature1.gif</file>
     </qresource>
     <qresource prefix="/icons/affinity/15">
         <file alias="airIcon.gif">resources/15x15/airIcon.gif</file>
