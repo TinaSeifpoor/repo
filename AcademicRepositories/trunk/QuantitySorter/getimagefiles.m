@@ -37,11 +37,7 @@ end
 baseFileNames = entryNameList(isubfile);
 childDirNames = entryNameList(isubdir);
 for i=1:numel(dirList)
-    if (nargin==3)
-        [subdirImageFileList, subdirBaseDirNames, subdirBaseFileNames]= getimagefiles(path,childDirNames{i},strcat(appPath,dirList{i}));    
-    else
-        [subdirImageFileList, subdirBaseDirNames, subdirBaseFileNames]= getimagefiles(path,childDirNames{i},dirList{i});
-    end
+    [subdirImageFileList, subdirBaseDirNames, subdirBaseFileNames]= getimagefiles(path,childDirNames{i},dirList{i});
     imageFileList = [imageFileList subdirImageFileList{:}]; %#ok<AGROW>
     baseDirNames = [baseDirNames subdirBaseDirNames{:}]; %#ok<AGROW>
     baseFileNames = [baseFileNames subdirBaseFileNames{:}]; %#ok<AGROW>
