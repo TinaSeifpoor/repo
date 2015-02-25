@@ -20,7 +20,6 @@ public:
     static void addMinion(Rank r);
     static void addQuest (Rank r);
     static bool calculateMinionRank(Rank currentRank, int nQuests);
-    static Rank calculateNextQuestRank();
     static int minionCount();
     static GoldCurrency nextMinionGold();
     static void setNextLevelNotifier(QObject* obj, const char* member);

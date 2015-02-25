@@ -165,34 +165,6 @@ bool GlobalVariables::calculateMinionRank(Rank currentRank, int nQuests)
         return false;
 }
 
-Rank calculateNextRank(QHash<Rank,int> rankings, int expectedNextRankRatio)
-{
-    QList<Rank> currentRanks = rankings.keys();
-    qSort(currentRanks);
-    int previousRankCounter = rankings.value(currentRanks.takeFirst());
-    while (previousRankCounter>0) {
-        Rank rank = currentRanks.takeFirst();
-        int count = rankings.value(rank);
-        int expectedCount = count/expectedNextRankRatio;
-        int missingCount = expectedCount-previousRankCounter;
-        int chance = qMin(qMax(missingCount,-rankConstant)+rankConstant+1,10);
-        if (qrand()%10<chance)
-            return rank;
-        previousRankCounter=count;
-    }
-    return 1;
-}
-
-Rank GlobalVariables::calculateNextQuestRank()
-{
-    if (questCounterHash.isEmpty()) {
-        for (Rank i=1; i<12; ++i) {
-            questCounterHash.insert(i,0);
-        }
-    }
-    return calculateNextRank(questCounterHash, 10);
-}
-
 int GlobalVariables::minionCount()
 {
     return minionCounter;

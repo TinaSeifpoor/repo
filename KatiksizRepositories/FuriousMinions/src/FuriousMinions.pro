@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     verticalscrollarea.cpp \
     globalvariables.cpp \
     furiouspushbutton.cpp \
-    miniondata.cpp
+    miniondata.cpp \
+    perktemplate.cpp
 
 HEADERS  += mainwindow.h \
     questhub.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     verticalscrollarea.h \
     globalvariables.h \
     furiouspushbutton.h \
-    miniondata.h
+    miniondata.h \
+    perktemplate.h
 
 FORMS    += mainwindow.ui
 

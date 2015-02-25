@@ -39,11 +39,6 @@ protected:
         return time;
     }
 
-    Rank nextRank()
-    {
-        return GlobalVariables::calculateNextQuestRank();
-    }
-
 public:
     QVariantHash toHash() const {
         QVariantHash questHash;
