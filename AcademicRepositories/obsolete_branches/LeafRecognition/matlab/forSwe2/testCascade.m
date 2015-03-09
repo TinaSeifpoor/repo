@@ -1,0 +1,95 @@
+clear;clc;close all;
+load('leaf-mdmForCascade');
+load('leaf-fdForCascade');
+load('leaf-globForCascade');
+load('idxTest');
+%%
+figure; hold on;
+plot(fdWeights,'b*');
+plot(mdmWeights,'g*');
+plot(globWeights,'r*');
+allWeights = cat(3,fdWeights,mdmWeights,globWeights);
+avgWeights = mean(allWeights,3);
+plot(avgWeights, 'm');
+xlabel('Species');ylabel('Validation performances')
+xlim([1 15]);
+legend('FD Performance', 'MDM Performance', 'Global Performance','Average Performance');
+%% Split
+nSpecies = numel(unique(species));
+% Scale FD
+fftXMListNorm = ((log(fftXMList) - fdNormalizer(2)) / (fdNormalizer(1)-fdNormalizer(2)));
+fftYMListNorm = ((log(fftYMList) - fdNormalizer(2)) / (fdNormalizer(1)-fdNormalizer(2)));
+% Scale FD
+[fftXMListTrain, ~, fftXMListTest, ~]...
+    = SplitDataset(idxTest, species, fftXMListNorm');
+[fftYMListTrain, ~, fftYMListTest, ~]...
+    = SplitDataset(idxTest, species, fftYMListNorm');
+[featGlobListTrain, ~, featGlobListTest, ~]...
+    = SplitDataset(idxTest, species, meas');
+[featMDMListTrain, speciesTrain, featMDMListTest, speciesTest]...
+    = SplitDataset(idxTest, species, featAMDMList);
+%% FD
+featFDListTrain = [fftXMListTrain(1:nHarmonics,:);fftYMListTrain(1:nHarmonics,:)];
+featFDListTest = [fftXMListTest(1:nHarmonics,:);fftYMListTest(1:nHarmonics,:)];
+svmModel = svmtrain(speciesTrain, featFDListTrain',sprintf('-q -c %f -g %f', svmParams(1), svmParams(2)));
+[speciesTestFDPre, ~] = svmpredict(speciesTest, featFDListTest', svmModel, '-q');
+% [means, covariances, priors] = CalculateParameters(featFDListTrain',speciesTrain,1);
+% speciesTestFDPre =...
+%     GaussianBasedParametricClassification(means, covariances, priors, featFDListTest');
+
+%% Glob
+[means, covariances, priors] = CalculateParameters(featGlobListTrain',speciesTrain,1);
+speciesTestGlobPre =...
+    GaussianBasedParametricClassification(means, covariances, priors, featGlobListTest');
+%% MDM
+speciesTestMDMPre=knnclassify(featMDMListTest', featMDMListTrain', speciesTrain, k);
+%% Performance with all
+nInst = size(speciesTest,1);
+%
+speciesTestPreMatAvg = zeros([nInst,nSpecies]);
+speciesTestPreMatMax = zeros([nInst,nSpecies]);
+for idx=1:nInst
+    speciesTestPreMatAvg(idx,speciesTestFDPre(idx))=...
+        speciesTestPreMatAvg(idx,speciesTestFDPre(idx)) + fdWeights(speciesTestFDPre(idx));
+%      speciesTestPreMatAvg(idx,speciesTestMDMPre(idx))=...
+%          speciesTestPreMatAvg(idx,speciesTestMDMPre(idx)) + mdmWeights(speciesTestMDMPre(idx));
+%      speciesTestPreMatAvg(idx,speciesTestGlobPre(idx))=...
+%          speciesTestPreMatAvg(idx,speciesTestGlobPre(idx)) + globWeights(speciesTestGlobPre(idx));
+end
+[~, speciesTestPreMean] = max(speciesTestPreMatAvg,[],2);
+[confusionMatMean, perfListMean] = genConfusionMatrix(speciesTest, speciesTestPreMean);
+figure;imagesc(confusionMatMean);
+xlabel('Predicted Class');ylabel('Actual Class'); 
+perfTest = mean(perfListMean);
+% [~, speciesTestPreMax] = max(speciesTestPreMatMax,[],2);
+% [confusionMatMax, perfListMax] = genConfusionMatrix(speciesTest, speciesTestPreMax);
+% figure;imagesc(confusionMatMax);
+% xlabel('Predicted Class');ylabel('Actual Class'); 
+% perfTestMax = mean(perfListMax);
+%%
+% FD
+featFDListTrain = [fftXMListTrain(1:nHarmonics,:);fftYMListTrain(1:nHarmonics,:)];
+svmModel = svmtrain(speciesTrain, featFDListTrain',sprintf('-q -c %f -g %f', svmParams(1), svmParams(2)));
+[speciesTrainFDPre, ~] = svmpredict(speciesTrain, featFDListTrain', svmModel, '-q');
+% Glob
+[means, covariances, priors] = CalculateParameters(featGlobListTrain',speciesTrain,1);
+speciesTrainGlobPre =...
+    GaussianBasedParametricClassification(means, covariances, priors, featGlobListTrain');
+% MDM
+speciesTrainMDMPre=knnclassify(featMDMListTrain', featMDMListTrain', speciesTrain, k);
+%
+nInst = size(speciesTrain,1);
+speciesTrainPreMat = zeros([nInst,nSpecies]);
+for idx=1:nInst
+     speciesTrainPreMat(idx,speciesTrainFDPre(idx))=...
+         speciesTrainPreMat(idx,speciesTrainFDPre(idx)) + fdWeights(speciesTrainFDPre(idx));
+%      speciesTrainPreMat(idx,speciesTrainMDMPre(idx))=...
+%          speciesTrainPreMat(idx,speciesTrainMDMPre(idx)) + mdmWeights(speciesTrainMDMPre(idx));
+%      speciesTrainPreMat(idx,speciesTrainGlobPre(idx))=...
+%          speciesTrainPreMat(idx,speciesTrainGlobPre(idx)) + globWeights(speciesTrainGlobPre(idx));
+end
+[~, speciesTrainPreMean] = max(speciesTrainPreMat,[],2);
+[confusionMat, perfList] = genConfusionMatrix(speciesTrain, speciesTrainPreMean);
+figure;imagesc(confusionMat);
+xlabel('Predicted Class');ylabel('Actual Class'); 
+perfTrain = mean(perfList);

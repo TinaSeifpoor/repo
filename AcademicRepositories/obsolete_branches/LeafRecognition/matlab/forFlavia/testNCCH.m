@@ -1,0 +1,41 @@
+clear;clc;close all;
+datasetPath = '../Dataset/flavia/';
+dataset = parseDataset(datasetPath);
+idxClass = 5;
+idxInstance = 5;
+class = dataset{idxClass};
+filename = class{idxInstance};
+filename = filename(1:numel(filename)-4);
+imInstance = imread(class{idxInstance});
+regLeaf = segmentLeaf(imInstance);
+coordList = bwboundaries(regLeaf);
+coordList = coordList{1};
+xList = coordList(:,1);
+yList = coordList(:,2);
+% idxBoundary =sub2ind(size(regLeaf), xList, yList);
+% regLeafBoundary = false(size(regLeaf));
+% regLeafBoundary(idxBoundary) = true;
+chainCode = zeros(size(coordList,1),1);
+diffCoordList = coordList(1:size(coordList,1)-1,:) - coordList(2:size(coordList,1),:);
+dCR = reshape(diffCoordList',1,[]);
+cchDir{1}=[1,0];
+cchDir{2}=[1,-1];
+cchDir{3}=[0,-1];
+cchDir{4}=[-1,-1];
+cchDir{5}=[-1,0];
+cchDir{6}=[-1,1];
+cchDir{7}=[0,1];
+cchDir{8}=[1,1];
+% cchMag(1:2:7) = 1;
+% cchMag(2:2:8) = 2^0.5;
+cchMag = zeros(1,numel(cchDir));
+for idx=1:numel(cchDir)
+    cchDirSelected = cchDir{idx};
+    idxDir = diffCoordList(:, 1) == cchDirSelected(:,1) & diffCoordList(:, 2) == cchDirSelected(:,2);
+    cchMag(idx) = sum(cchDir{idx}.^2).^0.5;
+    chainCode(idxDir) = idx;
+end
+cch = hist(chainCode, 1:numel(cchDir));
+%%
+ncch = cch .* cchMag;
+ncch = ncch/sum(ncch);
