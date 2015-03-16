@@ -1,10 +1,12 @@
 function model = libsvmtrain(X,y)
 %LIBSVMTRAIN Summary of this function goes here
 %   Detailed explanation goes here
-
-model.minX = min(min(X));
-model.maxX = max(max(X));
-X_norm = (X-model.minX) / ((model.maxX-model.minX) / 2) - 1;
-model.m = svmtrain(y,double(X_norm), '-b 1 -t 0 -q');
+model.mean = mean(X);
+X_meanFixer = repmat(-model.mean, size(X,1), 1);
+X_zmean = X + X_meanFixer;
+model.std  = sqrt(var(X_zmean));
+X_varFixer = repmat(1./model.std, size(X,1), 1);
+X_norm = X_zmean.*X_varFixer;
+model.m = svmtrain(y,double(X_norm), '-b 1 -t 0');
 end
 

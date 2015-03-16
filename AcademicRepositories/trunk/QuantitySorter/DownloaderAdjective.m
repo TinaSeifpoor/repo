@@ -20,20 +20,20 @@ classdef DownloaderAdjective < handle
             DL.adjectiveNames{length(DL.adjectiveNames)+1} = adjective;
         end
         function addAdjectives(DL, adjectives)
-            DL.adjectiveNames((length(DL.adjectiveNames)+1):length(adjectives)) = adjectives;
+            DL.adjectiveNames(length(DL.adjectiveNames)+1:length(DL.adjectiveNames)+length(adjectives)) = adjectives;
         end
         function addBase(DL, base)
             DL.baseNames{length(DL.baseNames)+1} = base;
         end
         function addBases(DL, bases)
-            DL.baseNames((length(DL.baseNames)+1):length(bases)) = bases;
+            DL.baseNames(length(DL.baseNames)+1:length(DL.baseNames)+length(bases)) = bases;
         end
         function updateObjectNames(DL)
             classNameBtw   = repmat({' '},size(DL.adjectiveNames,2),size(DL.baseNames,2));
             DL.objects.adjectives = repmat(DL.adjectiveNames',1,size(DL.baseNames,2));
             DL.objects.bases = repmat(DL.baseNames,size(DL.adjectiveNames,2),1);
             DL.objects.names = strcat(DL.objects.adjectives, classNameBtw, DL.objects.bases);
-            DL.objects.destinations = strcat(DL.destination, '/', DL.objects.adjectives);
+            DL.objects.destinations = strcat(DL.destination, '/', DL.objects.adjectives, '/', DL.objects.bases);
         end
         function out=download(DL, isFake)
             if (nargin<2)
@@ -64,7 +64,7 @@ classdef DownloaderAdjective < handle
             if (nargin>0)
                 DL.destination = destination;
             else
-                DL.destination = './downloaderOutput/';
+                DL.destination = './downloaderOutput';
             end
             if (nargin>1)
                 DL.executable = textToImagePath;
@@ -76,10 +76,12 @@ classdef DownloaderAdjective < handle
             else
                 DL.timeout = 20000;
             end
+            DL.adjectiveNames = cell(0);
+            DL.baseNames = cell(0);
         end
     end
 end
-function fileList = downloadSolo(objectName, destinationPath, executable, timeout)
+function downloadSolo(objectName, destinationPath, executable, timeout)
 evalStr = ['!"' executable '" "' objectName '" "' destinationPath '" ' num2str(timeout)];
 eval(evalStr);
 end

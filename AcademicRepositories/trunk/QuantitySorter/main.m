@@ -1,18 +1,30 @@
-init
+% init
+load('resume4');
+addpath('../libsvm-3.20/matlab/');
+%% Train SVM
+samples = e.samples;
+[classNames, ~, classes] = unique({samples(:).class});
+[XTrain, XTest, yTrain, yTest]=separateData(e.layerX{1},classes,2000);
+SVMG.model = libsvmtrain(XTrain,yTrain);
+yPredict = libsvmpredict(SVMG.model, XTrain);
+trainConfusion = calcConfusion(yPredict,yTrain)
 
-
-% %% Train SVM
-% for i=1:numel(Class)
-%     X = {Class(:).X};
-%     X(i)=[];
-%     XNegative = cell2mat(X');
-%     yNegative = -ones(size(XNegative,1),1);
-%     XPositive = Class(i).X;
+yPredict = libsvmpredict(SVMG.model, XTest);
+testConfusion = calcConfusion(yPredict, yTest)
+save('result', 'trainConfusion', 'testConfusion', 'classNames')
+% for idxClass=1:numel(classNames)
+%     className = classNames(idxClass);
+%     idxClassSamples = yTrain==idxClass;
+%     XPositive = XTrain(idxClassSamples,:);
 %     yPositive = ones(size(XPositive,1),1);
-%     SVM(i).model = libsvmtrain([XNegative;XPositive], [yNegative;yPositive]);
-%     %     X = [XNegative;XPositive];
-%     %     y = [yNegative;yPositive];
-%     %     save('svm_sample.mat','X','y');
+%     XNegative = XTrain(~idxClassSamples,:);
+%     yNegative = zeros(size(XNegative,1),1);
+%     SVM(idxClass).model = libsvmtrain([XNegative;XPositive], [yNegative;yPositive]);
+%     %test
+%     yPredict = libsvmpredict(SVM(idxClass).model,XPositive);
+%     TP = mean(yPositive==yPredict)
+%     yPredict = libsvmpredict(SVM(idxClass).model,XNegative);
+%     TN = mean(yNegative==yPredict)
 % end
 % %% Test SVM
 % load('db.mat');

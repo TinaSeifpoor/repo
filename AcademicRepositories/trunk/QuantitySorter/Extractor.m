@@ -6,7 +6,8 @@ classdef Extractor < handle
         net;
         layers;
         source;
-        extractOut;
+        layerX;
+        samples;
     end
     
     methods
@@ -16,31 +17,29 @@ classdef Extractor < handle
         function addLayer(e,layer)
             e.layers(length(e.layers)+1) = layer;
         end
+        function addLayers(e,layers)
+            e.layers(length(e.layers)+1:length(e.layers)+length(layers)) = layers;
+        end
         function setSource(e,source)
             e.source = source;
         end
-        function extractOut = extract(e)
+        function extract(e)
             successList = true(numel(e.source),1);
-            outputCell = cell(0);
+            e.layerX = cell(length(e.layers),1);
             for idxSample = 1:numel(e.source)
                 try
                     sampleOut = extractFromSample(e.source(idxSample),e.net,e.layers);
-                    outputCell(size(outputCell,1)+1,:)=sampleOut;
+                    for idxLayer=1:length(e.layers)
+                        sampleOutLayer = sampleOut{idxLayer};
+                        sampleOutLayer = reshape(sampleOutLayer,[1,size(sampleOutLayer)]);
+                        e.layerX{idxLayer} = [e.layerX{idxLayer};sampleOutLayer];
+                    end
                     fprintf('%s extracted.\n', e.source(idxSample).path);
                 catch
                     successList(idxSample)=false;
                 end
             end
-            samples = e.source(successList);
-
-            e.extractOut = cell(0);
-            for idxLayer = 1:numel(e.layers)
-                samplesLayer = samples;
-                layerX = outputCell(:,idxLayer);
-                [samplesLayer(:).X] = layerX{:};
-                e.extractOut{idxLayer} = samplesLayer;
-            end
-            extractOut = e.extractOut;
+            e.samples = e.source(successList);
         end
     end
     
