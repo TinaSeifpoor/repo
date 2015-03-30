@@ -8,7 +8,7 @@ model.std  = sqrt(var(X_zmean));
 X_varFixer = repmat(1./model.std, size(X,1), 1);
 X_norm = X_zmean.*X_varFixer;
 tic
-model.m = svmtrain(y,double(X_norm), '-b 1 -t 0');
+model.m = svmtrain(y,double(X_norm), '-b 1 -t 0 -q');
 toc
 end
 

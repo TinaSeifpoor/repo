@@ -7,18 +7,17 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QString searchString("http://www.google.com.tr/search?q=%1&biw=1920&bih=955&source=lnms&tbm=isch&sa=X&ei=sTyVVITxEKKY7gbEroHoDg&ved=0CAYQ_AUoAQ&gws_rd=ssl&sout=0");
 
-    QString savePath = "%1/%2";
+    QString savePath;
     if (argc>1)
-        savePath = savePath.arg(argv[2]);
+        savePath = argv[2];
     else
-        savePath = savePath.arg("./");
+        savePath = "./";
 
     QString query = argv[1];
     query.replace(" ", "+");
     query.append("\"");
     query.prepend("\"");
 
-    savePath = savePath.arg(argv[1]);
     searchString = searchString.arg(query);
 
     DownloadManager manager(new QNetworkAccessManager, savePath);

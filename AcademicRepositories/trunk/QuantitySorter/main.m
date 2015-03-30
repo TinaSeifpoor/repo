@@ -1,5 +1,5 @@
 % init
-load('resume4');
+load('resume');
 addpath('../libsvm-3.20/matlab/');
 %% Train SVM
 samples = e.samples;
