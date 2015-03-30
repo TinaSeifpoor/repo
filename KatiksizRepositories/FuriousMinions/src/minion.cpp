@@ -50,6 +50,16 @@ Power Minion::getAffinityPower(AffinityTypes affinity) const
     return __data->getAffinityPower(affinity);
 }
 
+GoldCurrency Minion::getGoldForNextLevel() const
+{
+    return __data->getGoldForNextLevel();
+}
+
+void Minion::nextLevelPurchased(bool isFree) const
+{
+    return __data->nextLevelPurchased(isFree);
+}
+
 void Minion::setMinionTrigger(QObject *obj, const char *member)
 {
     __data->addObj(obj, member);

@@ -139,3 +139,13 @@ void MinionData::questCompleted()
 
 }
 
+GoldCurrency MinionData::getGoldForNextLevel() const
+{
+    // TODO!
+}
+
+void MinionData::nextLevelPurchased(bool isFree)
+{
+    // TODO!
+}
+

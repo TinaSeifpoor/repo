@@ -9,19 +9,29 @@ class QLabel;
 class Minion;
 class Quest;
 enum AffinityTypes {
-    Base    = 0,
-    Air     = 1,
-    Earth   = 2,
-    Water   = 4,
-    Fire    = 8,
-    Death   = 16,
-    Nature  = 32
+    Earth   = 0,
+    Nature  = 1,
+    Fire    = 2,
+    Death   = 4,
+    Water   = 5,
+    Air     = 6
 };
+namespace Perks {
+enum PerkType {
+    MinionGoldGainFactor,
+    ChanceForInstantQuest,
+    ChanceForMoreQuestReward,
+    AmountForMoreQuestReward,
+    MinionUpgradeFactor,
+    ChanceForDoubleLevelUp
+};
+class PerkTemplate;
+}
 QList<AffinityTypes> allAffinityList();
 QString affinityIconString(AffinityTypes affinity);
 
 unsigned numDigits(const unsigned n);
-QList<AffinityTypes> genAffinities(int seed);
+QList<AffinityTypes> genAffinities(AffinityTypes base);
 
 double genValue(int seed);
 int genTime(int seed);
@@ -40,8 +50,6 @@ QString coolNumericFormat(double number);
 QLabel* genIconTextLabel(QString iconText, QString text, QWidget* parent);
 QLabel* genAffinityLabel(Minion minion, AffinityTypes type, QWidget* parent);
 QLabel* genAffinityLabel(Quest quest, AffinityTypes type, QWidget* parent);
-
-
 
 
 #endif // COMMON_H

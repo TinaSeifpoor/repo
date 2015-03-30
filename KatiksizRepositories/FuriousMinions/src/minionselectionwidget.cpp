@@ -13,7 +13,7 @@ MinionSelectionWidget::MinionSelectionWidget(Minion mt, QWidget *parent) :
 
     gridLayout->addWidget(genIconTextLabel(__mt.getMinionResourceIcon(), __mt.getName(),this),0,0,1,nFirstHalfAffinities);
     int i=0;
-    gridLayout->addWidget(genAffinityLabel(__mt,Base,this),1,i++,1,1);
+//    gridLayout->addWidget(genAffinityLabel(__mt,Base,this),1,i++,1,1);
     foreach(AffinityTypes type, allAffinityList())
         gridLayout->addWidget(genAffinityLabel(__mt,type,this),1,i++,1,1);
     setLayout(gridLayout);

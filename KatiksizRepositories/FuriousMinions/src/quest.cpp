@@ -70,14 +70,14 @@ public:
 
     QuestData() {}
     Rank getRank() const {return __rank;}
-    virtual void set(int seed, Rank rank=1)
+    virtual void set(AffinityTypes base, int seed, Rank rank=1)
     {
         __rank = rank;
         __textDescription = "Building";
         __icon = ":/icons/quests/35/quest1.gif";
         for (int i=0; i<__rank-1;++i)
             __textDescription.append('+');
-        AffiniteeTemplate::set(seed);
+        AffiniteeTemplate::set(base, seed);
         __questTime = this->genTime();
         notify();
 //        GlobalVariables::addQuest(__rank);

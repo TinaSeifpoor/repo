@@ -10,7 +10,7 @@ void QuestSelectionWidget::resetUI()
     int nSecondHalfAffinities = nAffinities-nFirstHalfAffinities;
     gridLayout->addWidget(genIconTextLabel(__quest.getQuestResourceIcon(), __quest.getName(),this),0,0,1,nFirstHalfAffinities);
     int i=0;
-    gridLayout->addWidget(genAffinityLabel(__quest,Base,this),1,i++,1,1);
+//    gridLayout->addWidget(genAffinityLabel(__quest,Base,this),1,i++,1,1);
     foreach(AffinityTypes type, allAffinityList())
         gridLayout->addWidget(genAffinityLabel(__quest,type,this),1,i++,1,1);
     gridLayout->addWidget(new QLabel(__quest.getTimeText(),this),0,nFirstHalfAffinities,1,nSecondHalfAffinities, Qt::AlignRight);

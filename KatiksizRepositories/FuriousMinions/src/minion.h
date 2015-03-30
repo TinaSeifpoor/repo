@@ -20,6 +20,8 @@ public:
     QString getMinionResourceIcon() const;
     QList<AffinityTypes> getAffinities() const;
     Power getAffinityPower(AffinityTypes affinity) const;
+    GoldCurrency getGoldForNextLevel() const;
+    void nextLevelPurchased(bool isFree=false) const;
     void setMinionTrigger(QObject* obj, const char *member);
     void removeMinionTrigger(QObject* obj);
     void questComplete();

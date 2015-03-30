@@ -4,6 +4,57 @@
 #include <QLabel>
 #include "minion.h"
 #include "quest.h"
+QList<AffinityTypes> affinityList = QList<AffinityTypes>() << Earth << Nature << Fire << Death << Water << Air;
+#define eachaffinity(var) (foreach (AffinityTypes var, affinityList) )
+QHash<QPair<AffinityTypes, AffinityTypes>, double> affinityConversionRatios;
+#define affPair(t1, t2) (qMakePair<AffinityTypes,AffinityTypes>(t1,t2))
+
+struct affinityPair
+{
+    QList<AffinityTypes> affinities;
+    QList<double> conversionRatios;
+    const affinityPair& gen(AffinityTypes type) {
+        foreach (AffinityTypes corType, affinityList) {
+            if (type == corType) {
+                conversionRatios << 1;
+                affinities << corType;
+            } else if (affinityConversionRatios.contains(affPair(type, corType))){
+                conversionRatios << affinityConversionRatios.value(affPair(type, corType));
+                affinities << corType;
+            } else if (affinityConversionRatios.contains(affPair(corType,type))){
+                conversionRatios << affinityConversionRatios.value(affPair(corType, type));
+                affinities << corType;
+            } else {
+                qWarning(QString("affinityPair::gen(): No matching affinity: %1 / %2").arg(type).arg(corType).toLatin1());
+            }
+            return *this;
+        }
+    }
+};
+
+void initAffinities()
+{
+    if (affinityConversionRatios.isEmpty()) {
+        affinityConversionRatios.insert(affPair(Earth,Nature), 0.8);
+        affinityConversionRatios.insert(affPair(Earth,Fire), 0.6);
+        affinityConversionRatios.insert(affPair(Earth,Death), 0.4);
+        affinityConversionRatios.insert(affPair(Earth,Water), 0.2);
+        affinityConversionRatios.insert(affPair(Earth,Air), 0);
+
+        affinityConversionRatios.insert(affPair(Nature,Fire), 0.2);
+        affinityConversionRatios.insert(affPair(Nature,Death), 0);
+        affinityConversionRatios.insert(affPair(Nature,Water), 0.6);
+        affinityConversionRatios.insert(affPair(Nature,Air), 0.4);
+
+        affinityConversionRatios.insert(affPair(Fire,Death), 0.8);
+        affinityConversionRatios.insert(affPair(Fire,Water), 0);
+        affinityConversionRatios.insert(affPair(Fire,Air), 0.4);
+
+        affinityConversionRatios.insert(affPair(Death,Water), 0.4);
+        affinityConversionRatios.insert(affPair(Death,Air), 0.4);
+    }
+}
+
 unsigned numDigits(const unsigned n) {
     if (n < 10) return 1;
     return 1 + numDigits(n / 10);
@@ -12,13 +63,7 @@ unsigned numDigits(const unsigned n) {
 
 QList<AffinityTypes> allAffinityList()
 {
-    return QList<AffinityTypes>() <<
-                                     Air <<
-                                     Earth <<
-                                     Water <<
-                                     Fire <<
-                                     Death <<
-                                     Nature;
+    return affinityList;
 }
 
 
@@ -36,8 +81,8 @@ QColor affinityToColor(AffinityTypes type) {
         return QColor(24,24,24);
     case Nature:
         return QColor(27,64,20);
-    case Base:
-        return QColor(127,127,127);
+//    case Base:
+//        return QColor(127,127,127);
     }
     return QColor();
 
@@ -58,20 +103,23 @@ QString affinityString(AffinityTypes affinity)
         return QApplication::tr("Death");
     case Nature:
         return QApplication::tr("Nature");
-    case Base:
-        return QApplication::tr("Base");
+//    case Base:
+//        return QApplication::tr("Base");
     }
     return QString();
 }
 
-QList<AffinityTypes> genAffinities(int seed)
+QList<AffinityTypes> genAffinities(AffinityTypes base)
 {
-    int nAffinities = 5 - ceil(((double)numDigits(seed))/2);
-    QList<AffinityTypes> allAffinities = allAffinityList();
+    initAffinities();
+    affinityPair pair;
+    pair.gen(base);
     QList<AffinityTypes> affinities;
-    for (int idxAffinity = 1; idxAffinity<nAffinities; ++idxAffinity)
-        affinities << allAffinities.takeAt(seed%allAffinities.count());
-    affinities << Base;
+    for (int i=0; i< pair.conversionRatios.count(); ++i) {
+        if (qrand()%100 < pair.conversionRatios.value(i)*100) {
+            affinities << pair.affinities.value(i);
+        }
+    }
     return affinities;
 }
 
@@ -137,8 +185,8 @@ QString affinityIconString(AffinityTypes affinity)
         return ":/icons/affinity/15/deathIcon";
     case Nature:
         return ":/icons/affinity/15/natureIcon";
-    case Base:
-        return ":/icons/affinity/15/baseIcon";
+//    case Base:
+//        return ":/icons/affinity/15/baseIcon";
     }
     return QString();
 }
@@ -169,5 +217,5 @@ AffinityTypes affinityFromString(QString string)
     foreach (AffinityTypes type, allAffinityList())
         if (string == affinityString(type))
             return type;
-    return Base;
+//    return Base;
 }

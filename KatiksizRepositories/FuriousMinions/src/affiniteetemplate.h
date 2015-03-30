@@ -8,7 +8,7 @@ class AffiniteeTemplate : public QSharedData
     int __seed;
 protected:
     QHash<AffinityTypes, Power> __affinityPowers;
-    virtual void set(int seed);
+    virtual void set(AffinityTypes type, int seed);
     virtual void setPowers(QList<AffinityTypes>)=0;
     int get() const;
     AffiniteeTemplate();

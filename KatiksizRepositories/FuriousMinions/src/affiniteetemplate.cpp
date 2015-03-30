@@ -2,16 +2,17 @@
 
 AffiniteeTemplate::AffiniteeTemplate()
 {
+
 }
 
 AffiniteeTemplate::~AffiniteeTemplate()
 {
 }
 
-void AffiniteeTemplate::set(int seed)
+void AffiniteeTemplate::set(AffinityTypes type, int seed)
 {
     __seed = seed;
-    setPowers(genAffinities(seed));
+    setPowers(genAffinities(type));
 }
 
 int AffiniteeTemplate::get() const

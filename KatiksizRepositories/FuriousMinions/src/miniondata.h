@@ -1,6 +1,7 @@
 #ifndef MINIONDATA_H
 #define MINIONDATA_H
 #include "affiniteetemplate.h"
+#include "perktemplate.h"
 #include <QVariantHash>
 class MinionData : public AffiniteeTemplate
 {
@@ -10,6 +11,7 @@ class MinionData : public AffiniteeTemplate
     void setName();
     virtual void setPowers(QList<AffinityTypes> types);
     Rank __rank;
+    Perks::PerkTemplate __minionPerks;
     int __nQuestsCompleted;
     QString __icon;
 
@@ -26,5 +28,7 @@ public:
     void removeObj(QObject* obj);
     void notify() const;
     void questCompleted();
+    GoldCurrency getGoldForNextLevel() const;
+    void nextLevelPurchased(bool isFree);
 };
 #endif // MINIONDATA_H
