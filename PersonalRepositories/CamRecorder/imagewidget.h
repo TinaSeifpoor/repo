@@ -11,6 +11,8 @@ public:
 
 public slots:
     void setImage(QImage im);
+
+
 };
 
 #endif // IMAGEWIDGET_H
