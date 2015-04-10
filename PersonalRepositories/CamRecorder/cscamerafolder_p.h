@@ -37,7 +37,7 @@ public slots:
     void sendNext() {
         int currentIndex = (counter++)%files.count();
         QFileInfo currentFile = files.value(currentIndex);
-        QImage image = QImage(currentFile.filePath());
+        CSImage image = CSImage(currentFile.filePath());
 
         if (!image.isNull()) {
             p->imageUpdated(image);
@@ -47,7 +47,7 @@ public slots:
             QTimer::singleShot(timeout, this, SLOT(sendNext()));
 #endif
         } else {
-            QMetaObject::invokeMethod(this, SLOT(sendNext()), Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, "sendNext", Qt::QueuedConnection);
         }
     }
 

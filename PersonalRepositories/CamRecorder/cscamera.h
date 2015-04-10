@@ -2,7 +2,7 @@
 #define CSCAMERA_H
 
 #include <QObject>
-#include <QImage>
+#include "csimage.h"
 class CSCameraPrivate;
 class CSCamera : public QObject
 {
@@ -15,10 +15,10 @@ public:
 
 signals:
     void updated();
-    void updated(QImage image);
+    void updated(CSImage image);
 
 public slots:
-    virtual void imageUpdated(QImage image);
+    virtual void imageUpdated(CSImage image);
 };
 
 #endif // CSCAMERA_H

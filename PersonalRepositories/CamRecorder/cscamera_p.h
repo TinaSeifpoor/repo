@@ -11,15 +11,15 @@ class CSCameraPrivate : public QObject
 public:
     CSCameraPrivate(CSCamera* cam, CSCamera* parent=0, QRect rect=QRect()):p(cam),gp(parent),rect(rect){
         if (parent) {
-            connect(parent, SIGNAL(updated(QImage)), SLOT(parentUpdated(QImage)));
+            connect(parent, SIGNAL(updated(CSImage)), SLOT(parentUpdated(CSImage)));
         }
     }
     QRect rect;
-    QImage currentImage;
+    CSImage currentImage;
     CSCamera *p;
     CSCamera *gp;
 public slots:
-    void parentUpdated(QImage parentImage) {
+    void parentUpdated(CSImage parentImage) {
         p->imageUpdated(parentImage.copy(rect));
     }
 

@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "cscamerafolder.h"
 #include "imagewidget.h"
+#include <QGraphicsView>
 int getRand() {return qrand()%250;}
 QRect getRandomRect() {
     return QRect(getRand(),getRand(),getRand(),getRand());
@@ -9,8 +10,10 @@ QRect getRandomRect() {
 
 void makePair (CSCamera* c) {
     ImageWidget*    iw= new ImageWidget();
-    iw->connect(c, SIGNAL(updated(QImage)), SLOT(setImage(QImage)));
-    iw->show();
+    iw->connect(c, SIGNAL(updated(CSImage)), SLOT(setImage(CSImage)));
+    QGraphicsView* v = new QGraphicsView();
+    v->setScene(iw);
+    v->show();
 }
 
 int main(int argc, char *argv[])

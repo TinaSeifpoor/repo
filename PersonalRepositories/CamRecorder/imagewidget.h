@@ -1,18 +1,18 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <QLabel>
-
-class ImageWidget : public QLabel
+#include <QGraphicsScene>
+#include "csimage.h"
+class ImageWidgetPrivate;
+class ImageWidget : public QGraphicsScene
 {
     Q_OBJECT
+    ImageWidgetPrivate*d;
 public:
-    explicit ImageWidget(QWidget *parent = 0);
+    explicit ImageWidget(QObject *parent = 0);
 
 public slots:
-    void setImage(QImage im);
-
-
+    void setImage(CSImage im);
 };
 
 #endif // IMAGEWIDGET_H
