@@ -1,0 +1,9 @@
+close all; clear; clc;
+
+xmlBasePath = 'D:\downloads\rijksjpg\xml2\';
+xmlList = getFileList(xmlBasePath);
+xmlList = strcat(xmlBasePath,xmlList);
+
+id = randperm(numel(xmlList),150);
+xmlList = xmlList(id);
+readRijksXML(xmlList)
