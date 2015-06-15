@@ -1,8 +1,8 @@
 clear; close all; clc;
 run('../matconvnet-1.0-beta7/matlab/vl_setupnn.m')
 % adjectives = {'lots of', 'dozens of', 'a few', 'single'};
+adjectivesPre = cellfun(@num2str, num2cell(1901:3:2015), 'UniformOutput', false);
 adjectivesMid = {' painting portraits of '};
-adjectivesPre = cellfun(@num2str, num2cell(1400:3:1900), 'UniformOutput', false);
 adjectives = strcat(adjectivesPre, repmat(adjectivesMid,1,size(adjectivesPre,2)));
 bases = {'men', 'women'};
 net = 'imagenet-vgg-f.mat';
