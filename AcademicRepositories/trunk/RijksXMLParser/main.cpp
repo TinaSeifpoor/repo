@@ -1,12 +1,13 @@
-//#include "mainwindow.h"
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
+#include "adddatatoimages.h"
 //#define WriteIndividualFiles
-#define WriteReport
+//#define WriteReport
 //#define trace
-
+#define MakeCopy
+#define PrependDate
 QString between(QString source, QString begin, QString end) {
     QString beginString;
     {
@@ -78,8 +79,22 @@ void parseXMLInfo(QFileInfo xmlFileInfo, QString xmlFileContents) {
         QString key = contents.takeFirst();
         key = key.remove("/").trimmed();
         QString val = contents.takeFirst();
-        val = val.split("<").takeFirst();
-        val = val.split("-").takeFirst();
+        val = val.split("</").takeFirst();
+        if (key.contains("date")) {
+            val = val.split("-").takeFirst();
+            if (val.toInt()==0) {
+                QStringList valContents = val.split(" ", QString::SkipEmptyParts);
+                while (!valContents.isEmpty()) {
+                    if (valContents.first().toInt()) {
+                        val = valContents.takeFirst();
+                        break;
+                    }
+                    else
+                        valContents.removeFirst();
+                }
+            }
+            val = QString::number(val.toInt());
+        }
         if (!keyIndices.contains(key))
             keyIndices.insert(key,nextIndex++);
         keyVal.insert(key,val);
@@ -126,11 +141,15 @@ int main(int argc, char *argv[])
 
     if (argc>1)
         QDir::setCurrent(argv[1]);
-#if defined(WriteReport)||defined(WriteIndividualFiles)
-    parseXMLFiles();
+#if defined(WriteReport)||defined(WriteIndividualFiles)||defined(PrependDate)
+    parseXMLFiles(); // outputs hasher
 #endif
 #ifdef WriteReport
     reportHasher();
 #endif
+    QDir baseDir = QDir::current();
+    baseDir.cdUp();
+    AddDataToImages adti(hasher, baseDir.filePath("jpg2"),baseDir.filePath("typeDate2"));
+    adti.justDoIt(QStringList()<<"date"<<"type");
     return 0;
 }

@@ -12,8 +12,10 @@ TARGET = RijksXMLParser
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    adddatatoimages.cpp
 
-HEADERS  +=
+HEADERS  += \
+    adddatatoimages.h
 
 FORMS    +=
