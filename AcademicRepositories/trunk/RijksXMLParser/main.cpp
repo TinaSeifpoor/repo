@@ -4,7 +4,7 @@
 #include <QTextStream>
 #include "adddatatoimages.h"
 //#define WriteIndividualFiles
-//#define WriteReport
+#define WriteReport
 //#define trace
 #define MakeCopy
 #define PrependDate
@@ -147,9 +147,9 @@ int main(int argc, char *argv[])
 #ifdef WriteReport
     reportHasher();
 #endif
-    QDir baseDir = QDir::current();
-    baseDir.cdUp();
-    AddDataToImages adti(hasher, baseDir.filePath("jpg2"),baseDir.filePath("typeDate2"));
-    adti.justDoIt(QStringList()<<"date"<<"type");
+//    QDir baseDir = QDir::current();
+//    baseDir.cdUp();
+//    AddDataToImages adti(hasher, baseDir.filePath("jpg2"),baseDir.filePath("typeDate2"));
+//    adti.justDoIt(QStringList()<<"date"<<"type");
     return 0;
 }
