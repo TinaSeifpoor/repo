@@ -47,13 +47,19 @@ void FaceCropperBatch::go()
     qDebug() << sourceInfoList.count() << " files found!";
     foreach (QFileInfo sourceInfo, sourceInfoList) {
         QImage sourceImage(sourceInfo.absoluteFilePath());
+        QImage scaledSourceImage = sourceImage.scaled(225,225,Qt::KeepAspectRatio);
+        int sourceWidth = sourceImage.width();
+        int destWidth = scaledSourceImage.width();
+        double scaleBackFactor = (double)sourceWidth/destWidth; // as we keep aspect ratio, this is sufficient to scale rectangle back
         qDebug() << sourceInfo.fileName();
-        QList<QImage> destImages;
+        QList<QRect> destRects;
         QFileInfo destFileInfo = makeDestFileInfo(sourceDir, sourceInfo, destDir);
-        if (faceCropper->crop(sourceImage,destImages)) {
-            if (destImages.count()>1) {
-                for (int i=0; i< destImages.count(); ++i) {
-                    QImage destImage = destImages.at(i);
+        if (faceCropper->crop(scaledSourceImage,destRects)) {
+            if (destRects.count()>1) {
+                for (int i=0; i< destRects.count(); ++i) {
+                    QRect destRect = destRects.at(i);
+                    QRect destRectScaled(destRect.topLeft()*scaleBackFactor, destRect.bottomRight()*scaleBackFactor);
+                    QImage destImage = sourceImage.copy(destRectScaled);
                     QString destString = destFileInfo.absolutePath();
                     destString.append(QDir::separator());
                     destDir.mkpath(destString);
@@ -64,8 +70,10 @@ void FaceCropperBatch::go()
                     destString.append(destFileInfo.suffix());
                     destImage.save(destString);
                 }
-            } else if (destImages.count()==1){
-                QImage destImage = destImages.takeFirst();
+            } else if (destRects.count()==1){
+                QRect destRect = destRects.first();
+                QRect destRectScaled(destRect.topLeft()*scaleBackFactor, destRect.bottomRight()*scaleBackFactor);
+                QImage destImage = sourceImage.copy(destRectScaled);
                 destDir.mkpath(destFileInfo.absolutePath());
                 destImage.save(destFileInfo.absoluteFilePath());
             }

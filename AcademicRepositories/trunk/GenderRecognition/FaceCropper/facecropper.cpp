@@ -30,12 +30,13 @@ public:
             faceDetectors << faceDetector;
         }
     }
+
     double scalingFactor;
     int minimumSize;
     int minNeighbors;
     QString faceDetectorXML;
     QList<CascadeClassifier> faceDetectors;
-    QList<Mat> detectAndCrop( Mat frame );
+    std::vector<Rect> detect( Mat frame );
 };
 
 FaceCropper::FaceCropper() : d(new FaceCropperPrivate())
@@ -51,8 +52,17 @@ FaceCropper::~FaceCropper()
 bool FaceCropper::crop(QImage inputImage, QList<QImage>& outputImages)
 {
     Mat inputMat = Common::QImageToCvMat(inputImage, true);
-    foreach(Mat outputMat, d->detectAndCrop(inputMat)) {
-        outputImages << Common::cvMatToQImage(outputMat).copy();
+    foreach(Rect rect, d->detect(inputMat)) {
+        outputImages << Common::cvMatToQImage(inputMat(rect)).copy();
+    }
+    return true;
+}
+
+bool FaceCropper::crop(QImage inputImage, QList<QRect>& outputRects)
+{
+    Mat inputMat = Common::QImageToCvMat(inputImage, true);
+    foreach(Rect rect, d->detect(inputMat)) {
+        outputRects << QRect(rect.x, rect.y, rect.width, rect.height);
     }
     return true;
 }
@@ -79,8 +89,7 @@ void FaceCropper::setScalingFactor(double scalingFactor)
 }
 
 
-/** @function detectAndDisplay */
-QList<Mat> FaceCropperPrivate::detectAndCrop( Mat frame )
+std::vector<Rect> FaceCropperPrivate::detect( Mat frame )
 {
     std::vector<Rect> faces;
     Mat frameGray;
@@ -99,10 +108,5 @@ QList<Mat> FaceCropperPrivate::detectAndCrop( Mat frame )
             break;
         }
     }
-
-    for( size_t i = 0; i < faces.size(); i++ )
-    {
-        results << frame(faces[i]);
-    }
-    return results;
+    return faces;
 }

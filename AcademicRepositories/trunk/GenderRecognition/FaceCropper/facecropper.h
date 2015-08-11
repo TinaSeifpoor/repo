@@ -3,6 +3,7 @@
 class QString;
 class QImage;
 #include <QList>
+class QRect;
 class FaceCropperPrivate;
 class FaceCropper
 {
@@ -11,6 +12,7 @@ public:
     explicit FaceCropper();
     virtual ~FaceCropper();
     bool crop(QImage inputImage, QList<QImage>& outputImages);
+    bool crop(QImage inputImage, QList<QRect>& outputRects);
     void setMinNeighbors(int minNeighbors);
     void setMinimumSize(int minimumSize);
     void setScalingFactor(double scalingFactor);
