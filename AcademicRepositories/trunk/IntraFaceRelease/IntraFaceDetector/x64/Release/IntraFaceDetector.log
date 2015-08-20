@@ -1,0 +1,68 @@
+﻿Build started 1/25/2014 2:51:22 PM.
+     1>Project "C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\IntraFaceDetector\IntraFaceDetector.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "x64\Release\IntraFaceDetector.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /I..\include /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc100.pdb" /Gd /TP /errorReport:prompt ..\src\DemoDetector.cpp
+         DemoDetector.cpp
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(74): warning C4251: 'INTRAFACE::FaceAlignment::m_DR' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=cv::Mat
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(74): warning C4251: 'INTRAFACE::FaceAlignment::m_Db' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=cv::Mat
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(74): warning C4251: 'INTRAFACE::FaceAlignment::m_TR' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=cv::Mat
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(74): warning C4251: 'INTRAFACE::FaceAlignment::m_Tb' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=cv::Mat
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(75): warning C4251: 'INTRAFACE::FaceAlignment::m_winsize' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(76): warning C4251: 'INTRAFACE::FaceAlignment::m_flags' : class 'std::vector<_Ty,_Ax>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Ty=bool,
+                     _Ax=std::allocator<bool>
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(77): warning C4251: 'INTRAFACE::FaceAlignment::m_w' : class 'cv::Mat' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\opencv2/core/core.hpp(1684) : see declaration of 'cv::Mat'
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(78): warning C4251: 'INTRAFACE::FaceAlignment::m_meanShape2D' : class 'cv::Mat' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\opencv2/core/core.hpp(1684) : see declaration of 'cv::Mat'
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(80): warning C4251: 'INTRAFACE::FaceAlignment::m_cropROI' : class 'cv::Rect_<_Tp>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Tp=int
+                 ]
+     1>C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\include\intraface/FaceAlignment.h(81): warning C4251: 'INTRAFACE::FaceAlignment::m_offset' : class 'cv::Rect_<_Tp>' needs to have dll-interface to be used by clients of class 'INTRAFACE::FaceAlignment'
+                 with
+                 [
+                     _Tp=double
+                 ]
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\x64\Release\IntraFaceDetector.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\lib\Release opencv_core246.lib opencv_highgui246.lib opencv_imgproc246.lib opencv_objdetect246.lib IntraFaceDLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Release\IntraFaceDetector.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\x64\Release\IntraFaceDetector.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\x64\Release\IntraFaceDetector.lib" /MACHINE:X64 x64\Release\binary_model_file.obj
+         x64\Release\DemoDetector.obj
+         Generating code
+         Finished generating code
+         IntraFaceDetector.vcxproj -> C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\x64\Release\IntraFaceDetector.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\x64\Release\IntraFaceDetector.exe;#1" /manifest x64\Release\IntraFaceDetector.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "x64\Release\IntraFaceDetector.unsuccessfulbuild".
+         Touching "x64\Release\IntraFaceDetector.lastbuildstate".
+     1>Done Building Project "C:\Users\xxiong\Documents\Visual Studio 2010\Projects\win64_c++_v1.2(head pose integrated)\IntraFaceRelease\IntraFaceDetector\IntraFaceDetector.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.61
