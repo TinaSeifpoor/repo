@@ -229,7 +229,6 @@ class StyleTransfer(object):
             :param bool use_pbar:
                 Use progressbar flag.
         """
-        print('Initializing')
         base_path = os.path.join("models", model_name)
 
         # vgg19
@@ -263,18 +262,10 @@ class StyleTransfer(object):
         else:
             assert False, "model not available"
 
-        print('Model found!')
-        print(pretrained_file)
-
         # add model and weights
         self.load_model(model_file, pretrained_file, mean_file)
-        print('Model loaded!')
-
         self.weights = weights.copy()
-        print('Model weights found!')
-
         self.use_pbar = use_pbar
-        print('Progress bar!')
         self.layers = []
         for layer in self.net.params.keys():
             if layer in self.weights["style"] or layer in self.weights["content"]:
@@ -309,14 +300,11 @@ class StyleTransfer(object):
                 Path to mean file.
         """
 
-        print('Load start..')
         # load net (supressing stderr output)
         null_fds = os.open(os.devnull, os.O_RDWR)
         out_orig = os.dup(2)
         os.dup2(null_fds, 2)
-        print('Load half way..')
         net = caffe.Net(model_file, pretrained_file, caffe.TEST)
-        print('Load half way2..')
         os.dup2(out_orig, 2)
         os.close(null_fds)
 
@@ -326,8 +314,6 @@ class StyleTransfer(object):
         transformer.set_channel_swap("data", (2,1,0))
         transformer.set_transpose("data", (2,0,1))
         transformer.set_raw_scale("data", 255)
-
-        print('Load end..')
 
         # add net parameters
         self.net = net
