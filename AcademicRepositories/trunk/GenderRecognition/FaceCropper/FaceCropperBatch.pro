@@ -19,9 +19,11 @@ CONFIG += opencv
 SOURCES +=\
     facecropper.cpp \
     common.cpp \
-    facecropperbatch.cpp
+    facecropperbatch.cpp \
+    facelookuptable.cpp
 
 HEADERS  += \
     facecropper.h \
     common.h \
-    facecropperbatch.h
+    facecropperbatch.h \
+    facelookuptable.h

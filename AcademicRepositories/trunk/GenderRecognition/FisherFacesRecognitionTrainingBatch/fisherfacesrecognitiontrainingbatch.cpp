@@ -6,6 +6,8 @@
 #include <QImageReader>
 #include <QDebug>
 #include <QMetaMethod>
+#include <QTimer>
+#include <QWidget>
 const int FEMALEINDEX=1;
 const int MALEINDEX=0;
 int main(int argc, char *argv[])
@@ -14,10 +16,13 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName("FaceCropper");
     QApplication::setApplicationVersion("0.1");
     QApplication::setOrganizationName("Katiksiz");
-
+    QWidget w;
+    w.show();
     FisherFacesRecognitionTrainingBatch batch;
-    QMetaObject::invokeMethod(&batch, "go", Qt::QueuedConnection);
-    return a.exec();
+//    QTimer::singleShot(10000,&a, SLOT(quit()));
+    batch.go();
+//    QMetaObject::invokeMethod(&batch, "go", Qt::QueuedConnection);
+    return 1;
 }
 
 
@@ -65,10 +70,9 @@ private:
 
     void addFile(QFileInfo fileInfo)
     {
-        QImage image(fileInfo.filePath());
-        if (!image.isNull()) {
+        QImageReader reader(fileInfo.filePath());
+        if (reader.canRead())
             files << fileInfo;
-        }
     }
 
     void addDir(QFileInfo dirInfo)
@@ -106,7 +110,7 @@ void FisherFacesRecognitionTrainingBatch::go()
         qDebug() << "Males: " << maleTrainingData.count() << "\tFemales:" << femaleTrainingData.count();
         recognizer->prepareFaces(trainingImages,trainingLabels);
     }
-
+    qDebug() << "Training started";
     recognizer->trainFaces();
     qDebug() << "Training complete!";
     int maleTrueRecognition = 0;

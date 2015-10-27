@@ -93,7 +93,6 @@ std::vector<Rect> FaceCropperPrivate::detect( Mat frame )
 {
     std::vector<Rect> faces;
     Mat frameGray;
-    QList<Mat> results;
     if (frame.channels()>1) {
         cvtColor( frame, frameGray, CV_BGR2GRAY );
     } else {

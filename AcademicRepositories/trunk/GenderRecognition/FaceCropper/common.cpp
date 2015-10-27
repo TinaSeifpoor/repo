@@ -109,3 +109,8 @@ void Common::clearLayout(QLayout *layout)
     }
     delete layout;
 }
+
+//QSettings Common::settings()
+//{
+//    return  QSettings(QSettings::IniFormat, QSettings::UserScope);
+//}

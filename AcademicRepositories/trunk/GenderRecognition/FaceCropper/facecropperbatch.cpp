@@ -6,6 +6,7 @@
 #include <QImageReader>
 #include <QDebug>
 #include <QMetaMethod>
+#include "facelookuptable.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -45,6 +46,7 @@ void FaceCropperBatch::go()
     }
     QFileInfoList sourceInfoList = findFilesRecursively(sourceDir, nameFilters);
     qDebug() << sourceInfoList.count() << " files found!";
+    FaceLookupTable facelookupTable;
     foreach (QFileInfo sourceInfo, sourceInfoList) {
         QImage sourceImage(sourceInfo.absoluteFilePath());
         QImage scaledSourceImage = sourceImage.scaled(225,225,Qt::KeepAspectRatio);
@@ -55,6 +57,7 @@ void FaceCropperBatch::go()
         QList<QRect> destRects;
         QFileInfo destFileInfo = makeDestFileInfo(sourceDir, sourceInfo, destDir);
         if (faceCropper->crop(scaledSourceImage,destRects)) {
+//            facelookupTable.addFile(sourceInfo, destRects, destFileInfo, scaleBackFactor);
             if (destRects.count()>1) {
                 for (int i=0; i< destRects.count(); ++i) {
                     QRect destRect = destRects.at(i);
