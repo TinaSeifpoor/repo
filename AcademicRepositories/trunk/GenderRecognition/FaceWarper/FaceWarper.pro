@@ -16,4 +16,8 @@ TEMPLATE = app
 
 CONFIG += opencv
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    facewarpermodule.cpp
+
+HEADERS += \
+    facewarpermodule.h
