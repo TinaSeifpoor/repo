@@ -21,10 +21,13 @@ int main(int argc, char *argv[])
     }
     cv::PCA pca(landmarksMat,cv::Mat(), CV_PCA_DATA_AS_ROW);
 
+
+
     cv::write(cv::FileStorage("d:/landmarks.test",cv::FileStorage::WRITE), landmarksMat);
     cv::write(cv::FileStorage("d:/pcaeigenvectors.test",cv::FileStorage::WRITE), pca.eigenvectors);
     cv::write(cv::FileStorage("d:/pcaeigenvalues.test",cv::FileStorage::WRITE), pca.eigenvalues);
-
+    cv::Mat postPCACoefficients = landmarksMat*pca.eigenvectors;
+    cv::write(cv::FileStorage("d:/pcaCoefficients.test",cv::FileStorage::WRITE), postPCACoefficients);
 
     return -1;
 }
