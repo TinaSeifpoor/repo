@@ -112,7 +112,7 @@ int main()
 		return -1;
 	}
 	// read image
-	string filename("../data/pic.jpg");
+    string filename("G:/rijksjpg/face2/0001753_SK-A-746.jpg");
 	cv::Mat frame  = cv::imread(filename);
 	// create a window
 	string winname("Demo IntraFace Detector");

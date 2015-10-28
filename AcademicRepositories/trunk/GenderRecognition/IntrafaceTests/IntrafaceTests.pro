@@ -17,16 +17,12 @@ TEMPLATE = app
 CONFIG += opencv
 
 SOURCES += \
-    binary_model_file.cpp \
     DemoDetector.cpp
 
 HEADERS += \
-    intraface/binary_model_file.h \
-    intraface/FaceAlignment.h \
-    intraface/Marcos.h \
-    intraface/XXDescriptor.h
 
-INTRAFACEPATH = "D:\CihanRepo\AcademicRepositories\trunk\IntraFaceRelease"
+
+INTRAFACEPATH = "../../IntraFaceRelease"
 
 INCLUDEPATH += $${INTRAFACEPATH}/include
 LIBS += -L"$${INTRAFACEPATH}/lib/Debug"
