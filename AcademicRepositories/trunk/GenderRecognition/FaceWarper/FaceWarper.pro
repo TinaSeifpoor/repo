@@ -21,3 +21,9 @@ SOURCES += main.cpp \
 
 HEADERS += \
     facewarpermodule.h
+
+DLIBPATH = D:/Downloads/dlib-18.17/dlib-18.17
+INCLUDEPATH *= $${DLIBPATH}
+
+LIBS *= -L"$${DLIBPATH}/lib/Debug"
+LIBS *= -ldlib
