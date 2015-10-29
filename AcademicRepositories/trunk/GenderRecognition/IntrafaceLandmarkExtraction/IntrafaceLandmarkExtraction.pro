@@ -1,31 +1,30 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-10-29T10:05:55
+# Project created by QtCreator 2015-10-27T17:21:21
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core
 
-TARGET = FaceWarper
+QT       -= gui
+
+TARGET = IntrafaceLandmarkExtraction
 CONFIG   += console
+CONFIG   -= app_bundle
 
 TEMPLATE = app
 
 CONFIG += opencv
 
-SOURCES += main.cpp \
-    extractlandmarks.cpp
+SOURCES += \
+    DemoDetector.cpp
+
+HEADERS +=
 
 
 INTRAFACEPATH = "../../IntraFaceRelease"
 
 INCLUDEPATH += $${INTRAFACEPATH}/include
 LIBS += -L"$${INTRAFACEPATH}/lib/Debug"
-LIBS += -lIntraFaceDLLd
-
-HEADERS += \
-    extractlandmarks.h
-
-
 INCLUDEPATH += "$${INTRAFACEPATH}/x64/Debug"
-INCLUDEPATH += "D:\opencv\2.4.10\build\x64\vc10\bin"
+LIBS += -lIntraFaceDLLd
