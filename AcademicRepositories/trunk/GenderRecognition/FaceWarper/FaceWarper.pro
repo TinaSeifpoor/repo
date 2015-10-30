@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     extractlandmarks.cpp
 
 
-INTRAFACEPATH = "../../IntraFaceRelease"
+INTRAFACEPATH="../../IntraFaceRelease"
+DEFINES += INTRAFACEPATH='\\"$${INTRAFACEPATH}\\"'
 
 INCLUDEPATH += $${INTRAFACEPATH}/include
 LIBS += -L"$${INTRAFACEPATH}/lib/Debug"
@@ -26,6 +27,5 @@ LIBS += -lIntraFaceDLLd
 HEADERS += \
     extractlandmarks.h
 
-
-INCLUDEPATH += "$${INTRAFACEPATH}/x64/Debug"
-INCLUDEPATH += "D:\opencv\2.4.10\build\x64\vc10\bin"
+LIBS *= -L"D:/OpenCV/2.4.11/build/x64/vc10/bin"
+LIBS += -L"$${INTRAFACEPATH}/x64/Debug"

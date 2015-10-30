@@ -2,14 +2,14 @@
 #include <opencv2/opencv.hpp>
 #include <intraface/FaceAlignment.h>
 #include <intraface/XXDescriptor.h>
-
+#include <QString>
 struct Essentials{
     Essentials() {
-        char detectionModel[] = "../models/DetectionModel-v1.5.bin";
-        char trackingModel[] = "../models/TrackingModel-v1.10.bin";
+        std::string detectionModel = INTRAFACEPATH "/models/DetectionModel-v1.5.bin";
+        std::string trackingModel = INTRAFACEPATH "/models/TrackingModel-v1.10.bin";
         INTRAFACE::XXDescriptor xxd(4);
 
-        fa = new INTRAFACE::FaceAlignment(detectionModel, trackingModel, &xxd);
+        fa = new INTRAFACE::FaceAlignment(detectionModel.data(), trackingModel.data(), &xxd);
 
         if (!fa->Initialized()) {
             cerr << "FaceAlignment cannot be initialized." << endl;
@@ -47,18 +47,18 @@ cv::Mat ExtractLandmarks::calculateHomography(cv::Mat fromPoints, cv::Mat toPoin
     return cv::findHomography(fromPointsVector, toPointsVector);
 }
 
-cv::Mat ExtractLandmarks::calculateOPA(cv::Mat fromPoints, cv::Mat toPoints)
-{
-    cv::Mat normalizedFromPoints = normalizePoints(fromPoints);
-    cv::Mat normalizedToPoints   = normalizePoints(toPoints);
+//cv::Mat ExtractLandmarks::calculateOPA(cv::Mat fromPoints, cv::Mat toPoints)
+//{
+//    cv::Mat normalizedFromPoints = normalizePoints(fromPoints);
+//    cv::Mat normalizedToPoints   = normalizePoints(toPoints);
 
-    cv::Mat transposeNormalizedFromPoints;
-    cv::transpose(normalizedFromPoints,transposeNormalizedFromPoints);
-    cv::Mat U, S, Vt;
-    cv::SVDecomp(transposeNormalizedFromPoints*normalizedToPoints, S, U, Vt);
-    cv::Mat R;
-    cv::transpose((U*Vt),R);
-}
+//    cv::Mat transposeNormalizedFromPoints;
+//    cv::transpose(normalizedFromPoints,transposeNormalizedFromPoints);
+//    cv::Mat U, S, Vt;
+//    cv::SVDecomp(transposeNormalizedFromPoints*normalizedToPoints, S, U, Vt);
+//    cv::Mat R;
+//    cv::transpose((U*Vt),R);
+//}
 
 cv::Mat ExtractLandmarks::normalizePoints(cv::Mat points)
 {
