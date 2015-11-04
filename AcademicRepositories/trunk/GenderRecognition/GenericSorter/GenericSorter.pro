@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     imageresultviewer.cpp \
-    visionitem.cpp
+    visionitem.cpp \
+    imagemover.cpp
 
 HEADERS  += mainwindow.h \
     imageresultviewer.h \
-    visionitem.h
+    visionitem.h \
+    imagemover.h
 
 FORMS    += mainwindow.ui

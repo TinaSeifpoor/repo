@@ -4,11 +4,9 @@
 ImageResultViewer::ImageResultViewer(QWidget *parent) :
     QListWidget(parent)
 {
-    setIconSize(QSize(200,200));
-    setAcceptDrops(false);
-    dir = QDir::current();
     new QShortcut(Qt::Key_A, this, SLOT(sendLeftTriggered()), SLOT(sendLeftTriggered()), Qt::WidgetShortcut);
     new QShortcut(Qt::Key_D, this, SLOT(sendRightTriggered()), SLOT(sendRightTriggered()), Qt::WidgetShortcut);
+    new QShortcut(Qt::Key_F5, this, SLOT(refresh()), SLOT(refresh()), Qt::WidgetShortcut);
 }
 
 ImageResultViewer::~ImageResultViewer()
@@ -17,44 +15,55 @@ ImageResultViewer::~ImageResultViewer()
 
 void ImageResultViewer::setDir(QString path)
 {
-    dir = QDir(path);
-    if (!dir.exists())
-        dir.mkpath(dir.path());
+    if (QDir(path)!=__dir) {
+        __dir = QDir(path);
+        if (!__dir.exists())
+            __dir.mkpath(__dir.path());
+        refresh();
+    }
+}
+
+QDir ImageResultViewer::dir() const
+{
+    return __dir;
 }
 
 void ImageResultViewer::sendLeft(QListWidgetItem* widgetItem)
 {
-    widgetItem->setBackgroundColor(VisionItem::leftColor());
     VisionItem* item = items.key(widgetItem);
     emit sendLeftSignal(item);
-    if (behaviour&RemoveOnSend) {
-        QString potentialFilepath = dir.filePath(item->FileInfo().fileName());
-        QFile::remove(potentialFilepath);
-        items.remove(item);
-        setSelectionMode(SingleSelection);
-        delete widgetItem;
-        setSelectionMode(ExtendedSelection);
-    }
+    items.remove(item);
+    setSelectionMode(SingleSelection);
+    delete widgetItem;
+    setSelectionMode(ExtendedSelection);
 }
 
 void ImageResultViewer::sendRight(QListWidgetItem* widgetItem)
 {
-    widgetItem->setBackgroundColor(VisionItem::rightColor());
     VisionItem* item = items.key(widgetItem);
     emit sendRightSignal(item);
-    if (behaviour&RemoveOnSend) {
-        QString potentialFilepath = dir.filePath(item->FileInfo().fileName());
-        QFile::remove(potentialFilepath);
-        items.remove(item);
-        setSelectionMode(SingleSelection);
-        delete widgetItem;
-        setSelectionMode(ExtendedSelection);
-    }
+    items.remove(item);
+    setSelectionMode(SingleSelection);
+    delete widgetItem;
+    setSelectionMode(ExtendedSelection);
 }
 
-void ImageResultViewer::setBehaviourEnum(BehaviourEnum val)
+void ImageResultViewer::clear()
 {
-    behaviour=val;
+    foreach (QListWidgetItem* item, items.values()) {
+        delete item;
+    }
+    items.clear();
+}
+
+void ImageResultViewer::refresh()
+{
+    clear();
+    foreach (QFileInfo info, __dir.entryInfoList(QDir::Files)) {
+        VisionItem* item = new VisionItem(info);
+        QListWidgetItem* widgetItem = new QListWidgetItem(item->Icon(), item->Name(), this);
+        items.insert(item, widgetItem);
+    }
 }
 
 void ImageResultViewer::received(VisionItem* item)
@@ -67,17 +76,9 @@ void ImageResultViewer::received(VisionItem* item)
         widgetItem->setIcon(item->Icon());
         widgetItem->setText(item->Name());
     }
-    widgetItem->setBackgroundColor(VisionItem::centerColor());
+    item->moveTo(__dir.path());
     items.insert(item, widgetItem);
-    if (behaviour&CopyOnReceive) {
-        QString from = item->FileInfo().filePath();
-        QString to   = dir.filePath(item->FileInfo().fileName());
-        if (QFile::copy(from, to)) {
-            qDebug("Success: %s to %s", from.toLatin1().constData(), to.toLatin1().constData());
-        } else {
-            qWarning("Failed: %s to %s", from.toLatin1().constData(), to.toLatin1().constData());
-        }
-    }
+    scrollToItem(widgetItem, QAbstractItemView::EnsureVisible);
 }
 
 void ImageResultViewer::sendLeftTriggered()

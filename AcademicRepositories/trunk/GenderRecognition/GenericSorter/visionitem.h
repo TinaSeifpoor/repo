@@ -20,9 +20,7 @@ class VisionItem
     myproperty(FileInfo,QFileInfo)
 public:
     VisionItem(QFileInfo fileInfo);
-    static inline QColor leftColor() {return Qt::blue;}
-    static inline QColor rightColor() {return Qt::magenta;}
-    static inline QColor centerColor() {return Qt::white;}
+    void moveTo(QString path);
 };
 
 #endif // VISIONITEM_H

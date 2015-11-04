@@ -10,19 +10,14 @@ class ImageResultViewer : public QListWidget
     Q_OBJECT
 
 public:
-    enum Behaviour
-    {
-        CopyOnReceive=1,
-        RemoveOnSend=2
-    };
-    Q_DECLARE_FLAGS(BehaviourEnum, ImageResultViewer::Behaviour)
+
     explicit ImageResultViewer(QWidget *parent = 0);
     ~ImageResultViewer();
     void setDir(QString path);
+    QDir dir() const;
     void sendLeft(QListWidgetItem* widgetItem);
     void sendRight(QListWidgetItem* widgetItem);
-
-    void setBehaviourEnum(BehaviourEnum val);
+    void clear();
 
 signals:
     void sendLeftSignal(VisionItem*);
@@ -30,14 +25,15 @@ signals:
 
 public slots:
     void received(VisionItem* item);
+    void refresh();
+
 private slots:
     void sendLeftTriggered();
     void sendRightTriggered();
 
 private:
     QHash<VisionItem*, QListWidgetItem*> items;
-    QDir dir;
-    BehaviourEnum behaviour;
+    QDir __dir;
 };
 
 #endif // IMAGERESULTVIEWER_H

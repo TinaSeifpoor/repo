@@ -15,13 +15,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_leRight_editingFinished();
-
-    void on_leOriginal_editingFinished();
-
-    void on_leLeft_editingFinished();
-
 private:
     Ui::MainWindow *ui;
 };

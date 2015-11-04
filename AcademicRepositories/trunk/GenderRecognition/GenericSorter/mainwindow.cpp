@@ -18,44 +18,21 @@ MainWindow::MainWindow(QWidget *parent) :
         LeftDirPath = argList.takeFirst();
         RightDirPath = argList.takeFirst();
     }
-    ui->leOriginal->setText(OriginalDirPath);
-    this->on_leOriginal_editingFinished();
+    ui->Original->setPath(OriginalDirPath);
+    ui->Left->setPath(LeftDirPath);
+    ui->Right->setPath(RightDirPath);
 
-    ui->leLeft->setText(LeftDirPath);
-    this->on_leLeft_editingFinished();
+    connect(ui->Original, SIGNAL(sendLeftSignal(VisionItem*)), ui->Left, SIGNAL(received(VisionItem*)));
+    connect(ui->Right, SIGNAL(sendLeftSignal(VisionItem*)), ui->Left, SIGNAL(received(VisionItem*)));
 
-    ui->leRight->setText(RightDirPath);
-    this->on_leRight_editingFinished();
+    connect(ui->Original, SIGNAL(sendRightSignal(VisionItem*)), ui->Right, SIGNAL(received(VisionItem*)));
+    connect(ui->Left, SIGNAL(sendRightSignal(VisionItem*)), ui->Right, SIGNAL(received(VisionItem*)));
 
-    ui->lwOriginal->setBehaviourEnum(ImageResultViewer::BehaviourEnum(ImageResultViewer::RemoveOnSend)|ImageResultViewer::CopyOnReceive);
-    ui->lwLeft->setBehaviourEnum(ImageResultViewer::BehaviourEnum(ImageResultViewer::RemoveOnSend)|ImageResultViewer::CopyOnReceive);
-    ui->lwRight->setBehaviourEnum(ImageResultViewer::BehaviourEnum(ImageResultViewer::RemoveOnSend)|ImageResultViewer::CopyOnReceive);
-
-    connect(ui->lwOriginal, SIGNAL(sendLeftSignal(VisionItem*)), ui->lwLeft, SLOT(received(VisionItem*)));
-    connect(ui->lwRight, SIGNAL(sendLeftSignal(VisionItem*)), ui->lwLeft, SLOT(received(VisionItem*)));
-
-    connect(ui->lwOriginal, SIGNAL(sendRightSignal(VisionItem*)), ui->lwRight, SLOT(received(VisionItem*)));
-    connect(ui->lwLeft, SIGNAL(sendRightSignal(VisionItem*)), ui->lwRight, SLOT(received(VisionItem*)));
-
-    connect(ui->lwLeft, SIGNAL(sendLeftSignal(VisionItem*)), ui->lwOriginal, SLOT(received(VisionItem*)));
-    connect(ui->lwRight, SIGNAL(sendRightSignal(VisionItem*)), ui->lwOriginal, SLOT(received(VisionItem*)));
+    connect(ui->Left, SIGNAL(sendLeftSignal(VisionItem*)), ui->Original, SIGNAL(received(VisionItem*)));
+    connect(ui->Right, SIGNAL(sendRightSignal(VisionItem*)), ui->Original, SIGNAL(received(VisionItem*)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-#define editFinish(WidgetKey) \
-    void MainWindow::on_le ##WidgetKey## _editingFinished() {    \
-    QString originalDirPath = ui->le##WidgetKey##->text();\
-    QSettings settings; \
-    ui->lw##WidgetKey##->setDir(originalDirPath); \
-    foreach (QFileInfo info, QDir(originalDirPath).entryInfoList(QDir::Files)) { \
-        ui->lw##WidgetKey##->received(new VisionItem(info)); \
-    } \
-    settings.setValue(#WidgetKey "DirPath",originalDirPath); \
-    }
-
-editFinish(Right)
-editFinish(Original)
-editFinish(Left)
