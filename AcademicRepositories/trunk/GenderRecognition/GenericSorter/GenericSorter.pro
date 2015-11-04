@@ -23,4 +23,5 @@ HEADERS  += mainwindow.h \
     visionitem.h \
     imagemover.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    imagemover.ui

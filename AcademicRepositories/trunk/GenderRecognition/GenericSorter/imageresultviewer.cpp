@@ -4,8 +4,6 @@
 ImageResultViewer::ImageResultViewer(QWidget *parent) :
     QListWidget(parent)
 {
-    new QShortcut(Qt::Key_A, this, SLOT(sendLeftTriggered()), SLOT(sendLeftTriggered()), Qt::WidgetShortcut);
-    new QShortcut(Qt::Key_D, this, SLOT(sendRightTriggered()), SLOT(sendRightTriggered()), Qt::WidgetShortcut);
     new QShortcut(Qt::Key_F5, this, SLOT(refresh()), SLOT(refresh()), Qt::WidgetShortcut);
 }
 

@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 namespace Ui {
 class MainWindow;
 }
@@ -14,6 +13,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void moverClosed(QWidget* w);
 
 private:
     Ui::MainWindow *ui;

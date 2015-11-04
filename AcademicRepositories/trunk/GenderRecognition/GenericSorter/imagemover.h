@@ -3,16 +3,20 @@
 
 #include <QWidget>
 
-class ImageResultViewer;
-class VisionItem;
-class QLineEdit;
+namespace Ui{
+class ImageMover;
+}
 
+class VisionItem;
 class ImageMover : public QWidget
 {
     Q_OBJECT
 public:
     explicit ImageMover(QWidget *parent = 0);
+    ~ImageMover();
     void setPath(QString path);
+    void setRightShortcut(QKeySequence rightShortcut);
+    void setLeftShortcut(QKeySequence leftShortcut);
 
 signals:
 // Signals going outside
@@ -22,9 +26,9 @@ signals:
     void received(VisionItem *item);
 public slots:
     void leChanged();
+
 private:
-    QLineEdit* le;
-    ImageResultViewer* irv;
+    Ui::ImageMover* ui;
 };
 
 #endif // IMAGEMOVER_H
