@@ -27,6 +27,7 @@ signals:
 public slots:
     void leChanged();
 
+
 private:
     Ui::ImageMover* ui;
 };

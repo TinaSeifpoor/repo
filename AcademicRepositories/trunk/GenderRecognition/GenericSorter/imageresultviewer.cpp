@@ -1,6 +1,7 @@
 #include "imageresultviewer.h"
 #include "visionitem.h"
 #include <QShortcut>
+#include <QWheelEvent>
 ImageResultViewer::ImageResultViewer(QWidget *parent) :
     QListWidget(parent)
 {
@@ -48,7 +49,8 @@ void ImageResultViewer::sendRight(QListWidgetItem* widgetItem)
 
 void ImageResultViewer::clear()
 {
-    foreach (QListWidgetItem* item, items.values()) {
+    foreach (VisionItem* item, items.keys()) {
+        delete items.value(item);
         delete item;
     }
     items.clear();
@@ -61,6 +63,18 @@ void ImageResultViewer::refresh()
         VisionItem* item = new VisionItem(info);
         QListWidgetItem* widgetItem = new QListWidgetItem(item->Icon(), item->Name(), this);
         items.insert(item, widgetItem);
+    }
+}
+
+void ImageResultViewer::wheelEvent(QWheelEvent* w)
+{
+    if (w->modifiers()&Qt::ControlModifier) {
+        int sizeInt = iconSize().width();
+        sizeInt=qMax(sizeInt+w->delta(),20);
+        setIconSize(QSize(sizeInt,sizeInt));
+        w->accept();
+    } else {
+        QListWidget::wheelEvent(w);
     }
 }
 
@@ -92,4 +106,3 @@ void ImageResultViewer::sendRightTriggered()
         sendRight(widgetItem);
     }
 }
-

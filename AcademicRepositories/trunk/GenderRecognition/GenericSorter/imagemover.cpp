@@ -20,7 +20,6 @@ ImageMover::ImageMover(QWidget *parent) :
     ui->irv->setDragDropMode(QListView::NoDragDrop);
     ui->irv->setResizeMode(QListView::Adjust);
     ui->irv->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->irv->setIconSize(QSize(200,200));
     ui->irv->setAcceptDrops(false);
 
     connect(this, SIGNAL(received(VisionItem*)), ui->irv, SLOT(received(VisionItem*)));
@@ -49,6 +48,7 @@ void ImageMover::leChanged()
     settings.setValue("Path", path);
     ui->irv->setDir(path);
 }
+
 
 void ImageMover::setRightShortcut(QKeySequence rightShortcut)
 {

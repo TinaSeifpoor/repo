@@ -27,6 +27,9 @@ public slots:
     void received(VisionItem* item);
     void refresh();
 
+protected:
+    void wheelEvent(QWheelEvent *w);
+
 private slots:
     void sendLeftTriggered();
     void sendRightTriggered();
