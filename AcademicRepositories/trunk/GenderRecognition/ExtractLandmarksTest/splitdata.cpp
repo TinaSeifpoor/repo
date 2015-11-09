@@ -26,6 +26,11 @@ QFileInfoList SplitData::operator ()() const
     return __fileList;
 }
 
+QFileInfo SplitData::operator [](int index) const
+{
+    return __fileList.value(index);
+}
+
 void SplitData::load(QFileInfo info, QStringList filter)
 {
     QDir dir(info.filePath());

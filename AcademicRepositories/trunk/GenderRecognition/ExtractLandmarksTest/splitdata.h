@@ -11,6 +11,7 @@ public:
     SplitData(const SplitData& other);
     QFileInfoList files() const;
     QFileInfoList operator () () const;
+    QFileInfo operator [] (int index) const;
 
 protected:
     void load(QFileInfo info, QStringList filter);

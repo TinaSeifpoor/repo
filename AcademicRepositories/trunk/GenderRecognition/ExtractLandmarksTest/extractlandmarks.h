@@ -12,11 +12,11 @@ class ExtractLandmarks
 public:
     static cv::Mat extractLandmarks(cv::Mat frame, bool *isSuccessful=0);
     static cv::Mat extractLandmarks(cv::Mat frame, cv::Rect frameRect, bool *isSuccessful=0);
-    static cv::Mat extractFaceAndLandmarks(cv::Mat frame);
-    static cv::Mat calculateHomography(cv::Mat fromPoints, cv::Mat toPoints);
+    static cv::Mat extractFaceAndLandmarks(cv::Mat frame, cv::Mat& face);
+    static float calculateHomography(cv::Mat fromPoints, cv::Mat toPoints, cv::Mat& homography);
+
+    static cv::Mat alignImage(cv::Mat frame, cv::Mat goldenLandmarks);
 //    static cv::Mat calculateOPA(cv::Mat fromPoints, cv::Mat toPoints);
-    static cv::Mat normalizePoints(cv::Mat points);
-    static cv::Mat alignLandmarks(cv::Mat from, cv::Mat to);
 };
 
 #endif // EXTRACTLANDMARKS_H

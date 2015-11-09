@@ -19,11 +19,13 @@ CONFIG += opencv
 
 SOURCES += main.cpp \
     extractlandmarks.cpp \
-    splitdata.cpp
+    splitdata.cpp \
+    procrustes.cpp
 
 HEADERS += \
     extractlandmarks.h \
-    splitdata.h
+    splitdata.h \
+    procrustes.h
 
 INTRAFACEPATH="../../IntraFaceRelease"
 DEFINES += INTRAFACEPATH='\\"$${INTRAFACEPATH}\\"'
