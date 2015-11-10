@@ -58,10 +58,10 @@ float Procrustes::procrustes(vector<Point2f> &X, vector<Point2f> &Y) {
  */
 float Procrustes::procrustes( const Mat& X, const Mat& Y ){
     /* Recenter the points based on their mean ... */
-    Scalar mu_x = cv::mean(X);
+    mu_x = cv::mean(X);
     Mat X0      = X - Mat(X.size(), X.type(), mu_x);
 
-    Scalar mu_y = cv::mean(Y);
+    mu_y = cv::mean(Y);
     Mat Y0      = Y - Mat(Y.size(), Y.type(), mu_y);
 
     /* ... and normalize them */

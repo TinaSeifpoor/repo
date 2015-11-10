@@ -5,7 +5,7 @@
 #include <QString>
 #include <cmath>
 #include "procrustes.h"
-
+#define DEBUGGER
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / PI))
 const int lmMatType = CV_32FC1;
 typedef float lmType;
@@ -154,34 +154,72 @@ cv::Mat ExtractLandmarks::alignImage(cv::Mat frame, cv::Mat goldenLandmarks)
             cv::warpPerspective(frame, imageP, homography, imageP.size());
         } else {
             Procrustes p;
-            p.procrustes(convertLandmarksForProcrustes(landmarks),convertLandmarksForProcrustes(goldenLandmarks));
+            cv::Mat procrustesLandmarks = convertLandmarksForProcrustes(landmarks);
+            p.procrustes(convertLandmarksForProcrustes(goldenLandmarks), procrustesLandmarks);
 
+#ifdef DEBUGGER
+            cv::FileStorage debugger("d:/log.txt",cv::FileStorage::WRITE);
+#endif
 
+#ifdef DEBUGGER
+            debugger << "LandmarksFrom" << procrustesLandmarks;
+            debugger << "LandmarksTo" << p.Yprime;
+#endif
+
+            cout << "From: " << endl << procrustesLandmarks << endl << "To:" << p.Yprime << endl;
+
+            // Translate our image coordinates to mean so that we can apply rotation & scale
+            // Our 0,0 should be mean of our landmark points in frame
+            cv::Mat translationToZero = cv::Mat::eye(3,3,CV_32F);
+            translationToZero.at<float>(0,2) = - p.mu_y(0);
+            translationToZero.at<float>(1,2) = - p.mu_y(1);
+            std::cout << "translation 1 matrix" << std::endl << translationToZero << std::endl;
+
+#ifdef DEBUGGER
+            debugger << "translationToZero" << translationToZero;
+#endif
+
+            // Rotation
             cv::Mat rotationPart = cv::Mat::eye(3,3,CV_32F);
-            p.rotation.copyTo(rotationPart(cv::Range(0,2),cv::Range(0,2)));
-//            std::cout << "rotation matrix" << std::endl << rotationPart << std::endl;
+            cv::Mat(p.rotation.t()).copyTo(rotationPart(cv::Range(0,2),cv::Range(0,2)));
+            std::cout << "rotation matrix" << std::endl << rotationPart << std::endl;
 
-            cv::Mat scalePart = cv::Mat::eye(3,3,CV_32F) * p.scale;
-//            std::cout << "scale matrix" << std::endl << scalePart << std::endl;
+#ifdef DEBUGGER
+            debugger << "rotation" << rotationPart;
+#endif
+            // Scale
+            cv::Mat scalePart = cv::Mat::eye(3,3,CV_32F);
+            scalePart.at<float>(0,0) =  p.scale;
+            scalePart.at<float>(1,1) =  p.scale;
+            std::cout << "scale matrix" << std::endl << scalePart << std::endl;
 
-//            std::cout << "scale & rotate" << std::endl << rotationPart*scalePart << std::endl;
+#ifdef DEBUGGER
+            debugger << "scalePart" << scalePart;
+#endif
+            // Translate our image coordinates to mean of target so that we are translated back to image domain (0,0) is top-left
+            // AND we align our faces
 
-            cv::Mat translatePart = cv::Mat::eye(3,3,CV_32F);
-            translatePart.at<float>(1,2) = p.translation.at<float>(0,0);
-            translatePart.at<float>(0,2) = p.translation.at<float>(0,1);
-//            std::cout << "translate matrix" << std::endl << translatePart << std::endl;
+            cv::Mat translationFromZero = cv::Mat::eye(3,3,CV_32F);
+            translationFromZero.at<float>(0,2) = p.mu_x(0);
+            translationFromZero.at<float>(1,2) = p.mu_x(1);
+            std::cout << "translation 2 matrix" << std::endl << translationFromZero << std::endl;
 
-            cv::Mat affinePart = cv::Mat::eye(2,3,CV_32F);
+#ifdef DEBUGGER
+            debugger << "translationFromZero" << translationFromZero;
+#endif
+            // Affine
+            cv::Mat affinePart = translationFromZero * scalePart * rotationPart * translationToZero;
 
-            cv::Mat(scalePart * rotationPart * translatePart)(cv::Range(0,2),cv::Range(0,3)).copyTo(affinePart);
+#ifdef DEBUGGER
+            debugger << "affinePart" << affinePart;
+#endif
 
+            cout << "Affine part" << endl << affinePart << endl;
             imageP = frame.clone();
-//            cv::warpAffine(imageP, imageP,affinePart, imageP.size());
+            cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
 
+//            cv::warpAffine(imageP, imageP,affineTrans, imageP.size());
 
-            showLandmarksProcrustes(p.Yprime, imageP, cv::Scalar(0,255,0));
-
-            showLandmarks(landmarks, imageP, cv::Scalar(0,0,255));
 
             showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
         }

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     cv::read(storage["Golden"],goldenLandmarks);
 
     foreach (QFileInfo fileInfo, fromData()) {
-        //    QFileInfo fileInfo = fromData[2]; {
+        //    QFileInfo fileInfo = fromData[0]; {
         cv::Mat alignedImage = ExtractLandmarks::alignImage(cv::imread(fileInfo.filePath().toStdString()),goldenLandmarks);
         if (alignedImage.cols && alignedImage.rows) {
             cv::imwrite(fileInfo.fileName().prepend("d:/AlignedImagesPro/").toLatin1().constData(), alignedImage);
@@ -60,7 +60,7 @@ vector<Mat> generateTestData( int size ) {
     vector<Mat> result;
 
     /* First create random points X, centered at (250, 250) with stddev of 80 */
-//    Mat X(40, 1, CV_32FC2 );
+    //    Mat X(40, 1, CV_32FC2 );
     cv::FileStorage storage("D:/CihanRepo/AcademicRepositories/trunk/GenderRecognition/golden_landmarks.yaml", cv::FileStorage::READ);
     cv::Mat X;
     cv::read(storage["Golden"],X);

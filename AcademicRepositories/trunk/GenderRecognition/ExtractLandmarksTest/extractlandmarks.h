@@ -5,6 +5,8 @@ namespace cv{
 class Mat;
 template <typename> class Rect_;
 typedef Rect_<int> Rect;
+template <typename> class Size_;
+typedef Size_<int> Size;
 }
 
 class ExtractLandmarks

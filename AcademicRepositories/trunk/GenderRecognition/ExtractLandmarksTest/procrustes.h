@@ -22,7 +22,8 @@ public:
     float error;            /* Squared error of final result */
     bool scaling;
     bool bestReflection;
-
+    cv::Scalar mu_x;
+    cv::Scalar mu_y;
     Procrustes();
     Procrustes( bool use_scaling, bool best_reflection );
     ~Procrustes();
