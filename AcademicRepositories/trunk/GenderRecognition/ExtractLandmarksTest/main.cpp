@@ -9,16 +9,29 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication(argc, argv);
-    SplitData fromData(argv[1]);
-    cv::FileStorage storage(argv[2], cv::FileStorage::READ);
+    cv::FileStorage storage(argv[1], cv::FileStorage::READ);
     cv::Mat goldenLandmarks;
     cv::read(storage["Golden"],goldenLandmarks);
+    int goldenImageWidth, goldenImageHeight;
+    storage["ImageWidth"] >> goldenImageWidth ;
+    storage["ImageHeight"] >> goldenImageHeight ;
 
-    foreach (QFileInfo fileInfo, fromData()) {
-        //    QFileInfo fileInfo = fromData[0]; {
-        cv::Mat alignedImage = ExtractLandmarks::alignImage(cv::imread(fileInfo.filePath().toStdString()),goldenLandmarks);
-        if (alignedImage.cols && alignedImage.rows) {
-            cv::imwrite(fileInfo.fileName().prepend("d:/AlignedImagesPro/").toLatin1().constData(), alignedImage);
+    for (int idxArg=2;idxArg<argc;idxArg+=2) {
+        SplitData data(argv[idxArg]);
+        QDir dest(argv[idxArg+1]);
+        dest.mkpath(dest.path());
+        foreach (QFileInfo fileInfo, data()) {
+            cv::Mat alignedImage = ExtractLandmarks::alignImage(cv::imread(fileInfo.filePath().toStdString()),goldenLandmarks);
+            if (alignedImage.cols && alignedImage.rows) {
+                cv::Mat croppedImage = cv::Mat(goldenImageHeight,goldenImageWidth,alignedImage.type());
+                int croppableWidth = qMin(goldenImageWidth,alignedImage.cols);
+                int croppableHeight= qMin(goldenImageHeight,alignedImage.rows);
+                cv::Rect roi = cv::Rect(0,0,croppableWidth,croppableHeight);
+                cv::Mat croppableImage = croppedImage(roi);
+                cv::Mat alignedImageCroped = alignedImage(roi);
+                alignedImageCroped.copyTo(croppableImage);
+                cv::imwrite(dest.filePath(fileInfo.fileName()).toLatin1().constData(), croppedImage);
+            }
         }
     }
 
