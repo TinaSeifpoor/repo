@@ -1,5 +1,5 @@
 ################################################################
-# halcon pri
+# opencv pri
 ################################################################
 CONFIG(debug, debug|release) {
     SUFFIX = d
@@ -7,8 +7,10 @@ CONFIG(debug, debug|release) {
     SUFFIX =
  }
 
-INCLUDEPATH *= "D:/OpenCV/2.4.11/build/include"
-LIBS *= -L"D:/OpenCV/2.4.11/build/x64/vc10/lib"
+OPENCVBUILDPATH = "D:/OpenCV/2.4.11/build"
+ 
+INCLUDEPATH *= "$${OPENCVBUILDPATH}/include"
+LIBS *= -L"$${OPENCVBUILDPATH}/x64/vc10/lib"
 
 LIBS *= \
 -lopencv_calib3d2411$${SUFFIX}\
@@ -31,4 +33,7 @@ LIBS *= \
 -lopencv_video2411$${SUFFIX}\
 -lopencv_videostab2411$${SUFFIX}
 
-message("OpenCV loaded: $${SUFFIX}")
+LIBS *= -L"$${OPENCVBUILDPATH}/x64/vc10/bin"
+
+
+message("OpenCV at $${OPENCVBUILDPATH} loaded: $${SUFFIX}")

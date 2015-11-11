@@ -9,7 +9,7 @@ template <typename> class Size_;
 typedef Size_<int> Size;
 }
 
-class ExtractLandmarks
+class FaceLandmarks
 {
 public:
     static cv::Mat extractLandmarks(cv::Mat frame, bool *isSuccessful=0);

@@ -41,13 +41,13 @@ struct Essentials{
 } d;
 
 
-cv::Mat ExtractLandmarks::extractLandmarks(cv::Mat frame, bool* isSuccessful)
+cv::Mat FaceLandmarks::extractLandmarks(cv::Mat frame, bool* isSuccessful)
 {
     cv::Rect frameRect = cv::Rect(0,0,frame.cols,frame.rows);
-    return ExtractLandmarks::extractLandmarks(frame,frameRect,isSuccessful);
+    return FaceLandmarks::extractLandmarks(frame,frameRect,isSuccessful);
 }
 
-cv::Mat ExtractLandmarks::extractLandmarks(cv::Mat frame, cv::Rect frameRect, bool* isSuccessful)
+cv::Mat FaceLandmarks::extractLandmarks(cv::Mat frame, cv::Rect frameRect, bool* isSuccessful)
 {
     cv::Mat landmarks;
     float score;
@@ -63,7 +63,7 @@ cv::Mat ExtractLandmarks::extractLandmarks(cv::Mat frame, cv::Rect frameRect, bo
     return landmarks;
 }
 
-cv::Mat ExtractLandmarks::extractFaceAndLandmarks(cv::Mat frame, cv::Mat& face)
+cv::Mat FaceLandmarks::extractFaceAndLandmarks(cv::Mat frame, cv::Mat& face)
 {
     vector<cv::Rect> faces;
     cv::Mat gray_frame;
@@ -89,7 +89,7 @@ cv::Mat ExtractLandmarks::extractFaceAndLandmarks(cv::Mat frame, cv::Mat& face)
     return landmark;
 }
 
-float ExtractLandmarks::calculateHomography(cv::Mat fromPoints, cv::Mat toPoints, cv::Mat& homography)
+float FaceLandmarks::calculateHomography(cv::Mat fromPoints, cv::Mat toPoints, cv::Mat& homography)
 {
     std::vector<cv::Point2f> fromPointsVector, toPointsVector;
     for (int i=0; i<fromPoints.cols;++i) {
@@ -142,15 +142,15 @@ cv::Mat convertLandmarksForProcrustes(cv::Mat in) {
     return out;
 }
 
-cv::Mat ExtractLandmarks::alignImage(cv::Mat frame, cv::Mat goldenLandmarks)
+cv::Mat FaceLandmarks::alignImage(cv::Mat frame, cv::Mat goldenLandmarks)
 {
     cv::Mat face;
-    cv::Mat landmarks = ExtractLandmarks::extractFaceAndLandmarks(frame,face);
+    cv::Mat landmarks = FaceLandmarks::extractFaceAndLandmarks(frame,face);
     if (landmarks.cols==goldenLandmarks.cols && landmarks.rows==goldenLandmarks.rows) {
         cv::Mat imageP;
         if (false) {
             cv::Mat homography;
-            float error = ExtractLandmarks::calculateHomography(landmarks, goldenLandmarks, homography);
+            float error = FaceLandmarks::calculateHomography(landmarks, goldenLandmarks, homography);
             cv::warpPerspective(frame, imageP, homography, imageP.size());
         } else {
             Procrustes p;
