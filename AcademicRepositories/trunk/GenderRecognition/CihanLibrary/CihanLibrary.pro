@@ -20,14 +20,21 @@ DEFINES += CIHANLIBRARY_LIBRARY
 SOURCES += \
     procrustes.cpp \
     cihandata.cpp \
-    cihanlandmarks.cpp
+    cihanlandmark.cpp \
+    histogram.cpp \
+    lbp.cpp \
+    cihanlbp.cpp
 
-HEADERS += cihanlibrary.h\
+HEADERS +=\
     asmopencv.h \
     procrustes.h \
     cihandata.h \
     cihan_global.h \
-    cihanlandmarks.h
+    cihanlandmark.h \
+    cihanlib.h \
+    histogram.hpp \
+    lbp.hpp \
+    cihanlbp.h
 
 CONFIG += opencv intraface
 
@@ -60,4 +67,4 @@ DESTDIR = $$PWD/distribute/lib
 DLLDESTDIR = $$PWD/distribute/bin
 
 
-copyHeader($$PWD/cihanlibrary.h $$PWD/cihandata.h $$PWD/cihanlandmarks.h $$PWD/cihan_global.h)
+copyHeader($$PWD/cihanlib.h $$PWD/cihandata.h $$PWD/cihanlandmark.h $$PWD/cihanlbp.h $$PWD/cihan_global.h)

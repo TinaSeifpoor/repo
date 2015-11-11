@@ -2,6 +2,7 @@
 #define CIHANLIBRARY_H
 
 #include "cihandata.h"
-#include "cihanlandmarks.h"
+#include "cihanlandmark.h"
+#include "cihanlbp.h"
 
 #endif // CIHANLIBRARY_H

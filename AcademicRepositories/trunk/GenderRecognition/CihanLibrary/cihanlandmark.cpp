@@ -1,14 +1,16 @@
-#include "cihanlandmarks.h"
+#include "cihanlandmark.h"
 #include <opencv2/opencv.hpp>
 #include <intraface/FaceAlignment.h>
 #include <intraface/XXDescriptor.h>
 #include <QString>
 #include <cmath>
 #include "procrustes.h"
+#include <QFileInfo>
 //#define DEBUGGER
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / PI))
 const int lmMatType = CV_32FC1;
 typedef float lmType;
+namespace CihanLib {
 
 struct Essentials{
     Essentials() {
@@ -40,17 +42,22 @@ struct Essentials{
 
 } essentials;
 
-class FaceLandmarksPrivate
+class LandmarkPrivate
 {
 public:
     static cv::Mat affineFromProcrustes(Procrustes* p);
 
+    void init(cv::Mat faceImage) {
+        this->faceImage = faceImage;
+        this->landmarks = CLandmark::extractFaceAndLandmarks(this->faceImage,this->faceRect);
+    }
+
     cv::Mat faceImage;
     cv::Rect faceRect;
-    Landmarks landmarks;
+    LandmarkMat landmarks;
 };
 
-Landmarks FaceLandmarks::extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRect)
+LandmarkMat CLandmark::extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRect)
 {
     vector<cv::Rect> faces;
     cv::Mat gray_frame;
@@ -59,7 +66,7 @@ Landmarks FaceLandmarks::extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRe
     // face detection
     Essentials* e = &essentials;
     e->face_cascade->detectMultiScale(gray_frame, faces, 1.2, 2, 0, cv::Size(50, 50));
-    Landmarks X, landmark;
+    LandmarkMat X, landmark;
     float bestScore = -1, score=0;
     for (int idxFace = 0 ;idxFace < faces.size(); ++idxFace) {
         cv::Rect faceRectCur = faces[idxFace];
@@ -109,16 +116,16 @@ cv::Mat convertLandmarksForProcrustes(cv::Mat in) {
     return out;
 }
 
-cv::Mat FaceLandmarks::alignImage(cv::Mat frame, Landmarks goldenLandmarks)
+cv::Mat CLandmark::alignImage(cv::Mat frame, LandmarkMat goldenLandmarks)
 {
     cv::Rect face;
-    cv::Mat landmarks = FaceLandmarks::extractFaceAndLandmarks(frame,face);
+    cv::Mat landmarks = CLandmark::extractFaceAndLandmarks(frame,face);
     if (landmarks.cols==goldenLandmarks.cols && landmarks.rows==goldenLandmarks.rows) {
         cv::Mat imageP;
         Procrustes p;
         cv::Mat procrustesLandmarks = convertLandmarksForProcrustes(landmarks);
         p.procrustes(convertLandmarksForProcrustes(goldenLandmarks), procrustesLandmarks);
-        cv::Mat affinePart = FaceLandmarksPrivate::affineFromProcrustes(&p);
+        cv::Mat affinePart = LandmarkPrivate::affineFromProcrustes(&p);
         imageP = frame.clone();
         cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
 #ifdef DEBUGGER
@@ -130,42 +137,67 @@ cv::Mat FaceLandmarks::alignImage(cv::Mat frame, Landmarks goldenLandmarks)
     }
 }
 
-FaceLandmarks::FaceLandmarks(cv::Mat faceImage):
-    d(new FaceLandmarksPrivate())
+CLandmark::CLandmark():
+    d(new LandmarkPrivate())
 {
-    d->faceImage = faceImage;
-    d->landmarks = extractFaceAndLandmarks(faceImage,d->faceRect);
+
 }
 
-FaceLandmarks::FaceLandmarks(const FaceLandmarks& other):
-    d(new FaceLandmarksPrivate())
+CLandmark::CLandmark(cv::Mat faceImage):
+    d(new LandmarkPrivate())
+{
+    d->init(faceImage);
+
+}
+
+CLandmark::CLandmark(QFileInfo fileInfo):
+    d(new LandmarkPrivate())
+{
+    d->init(cv::imread(fileInfo.filePath().toStdString()));
+}
+
+CLandmark::CLandmark(const char* filepath):
+    d(new LandmarkPrivate())
+{
+    d->init(cv::imread(filepath));
+}
+
+CLandmark::CLandmark(const CLandmark& other):
+    d(new LandmarkPrivate())
 {
     *this = other;
 }
 
-FaceLandmarks::~FaceLandmarks()
+CLandmark::~CLandmark()
 {
     delete d;
 }
 
-FaceLandmarks FaceLandmarks::alignTo(const FaceLandmarks destinationImage)
+CLandmark CLandmark::alignTo(const CLandmark destinationImage)
 {
-    return FaceLandmarks(alignImage(d->faceImage,destinationImage.landmarks()));
+    return CLandmark(alignImage(d->faceImage,destinationImage.landmarks()));
 }
 
-cv::Mat FaceLandmarks::operator ()() const
+cv::Mat CLandmark::operator ()() const
 {
     return d->faceImage;
 }
 
-void FaceLandmarks::operator =(const FaceLandmarks& other)
+CLandmark& CLandmark::operator =(const CLandmark& other)
 {
     d->faceImage = other.d->faceImage;
     d->faceRect = other.d->faceRect;
     d->landmarks = other.d->landmarks;
+    return *this;
 }
 
-Landmarks FaceLandmarks::landmarks() const
+CLandmark& CLandmark::operator =(const cv::Mat& mat)
+{
+    d->init(mat);
+    return *this;
+}
+
+LandmarkMat CLandmark::landmarks() const
 {
     return d->landmarks;
 }
@@ -173,7 +205,7 @@ Landmarks FaceLandmarks::landmarks() const
 
 
 
-cv::Mat FaceLandmarksPrivate::affineFromProcrustes(Procrustes* p) {
+cv::Mat LandmarkPrivate::affineFromProcrustes(Procrustes* p) {
 #ifdef DEBUGGER
     cv::FileStorage debugger("d:/log.txt",cv::FileStorage::APPEND);
 #endif
@@ -233,4 +265,5 @@ cv::Mat FaceLandmarksPrivate::affineFromProcrustes(Procrustes* p) {
 #endif
 
     return affinePart;
+}
 }
