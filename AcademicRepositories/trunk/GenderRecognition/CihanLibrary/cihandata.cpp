@@ -38,9 +38,8 @@ QFileInfo CData::operator [](int index) const
 
 const CData& CData::operator >>(QFileInfo& fileInfo) const
 {
-    if (__it==__fileList.end()) {
+    if (!hasNext())
         __it = __fileList.begin();
-    }
     fileInfo = *__it;
     ++__it;
     return *this;
@@ -52,6 +51,11 @@ const CData&CData::operator >>(cv::Mat& image) const
     *this >> fileInfo;
     image = cv::imread(fileInfo.filePath().toStdString());
     return *this;
+}
+
+bool CData::hasNext() const
+{
+    return __it != __fileList.end();
 }
 
 void CData::load(QFileInfo info, QStringList filter)

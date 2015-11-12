@@ -32,4 +32,12 @@ void CLBP::VARLBP(const Mat& src, Mat& dst, int radius, int neighbors)
 {
     lbp::VARLBP(src,dst,radius,neighbors);
 }
+
+Mat CLBP::extractFeaturesOLBP(const Mat& src, int threshold, int nRowCells, int nColCells)
+{
+    cv::Mat dst = OLBP(src);
+    dst = dst>threshold;
+    int nRowSteps = dst.rows / 8;
+    for (int idxRow=0; idxRow=)
+}
 }

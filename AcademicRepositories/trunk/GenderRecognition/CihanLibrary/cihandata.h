@@ -24,6 +24,8 @@ public:
     const CData& operator >> (QFileInfo& fileInfo) const;
     const CData& operator >> (FaceLandmark& faceLandmark) const;
     const CData& operator >> (cv::Mat& image) const;
+    bool hasNext() const;
+
 
 protected:
     void load(QFileInfo info, QStringList filter);

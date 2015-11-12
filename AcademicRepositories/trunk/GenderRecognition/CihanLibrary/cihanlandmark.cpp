@@ -4,6 +4,7 @@
 #include <intraface/XXDescriptor.h>
 #include <QString>
 #include <cmath>
+#include "cihanlbp.h"
 #include "procrustes.h"
 #include <QFileInfo>
 //#define DEBUGGER
@@ -135,6 +136,30 @@ cv::Mat CLandmark::alignImage(cv::Mat frame, LandmarkMat goldenLandmarks)
     } else {
         return cv::Mat();
     }
+}
+
+cv::Mat CLandmark::maskImage(const cv::Mat frame, const cv::Mat mask)
+{
+    cv::Mat croppedImage = cv::Mat(mask.rows,mask.cols,frame.type());
+    int croppableWidth = qMin(mask.cols,frame.cols);
+    int croppableHeight= qMin(mask.rows,frame.rows);
+    cv::Rect roi = cv::Rect(0,0,croppableWidth,croppableHeight);
+    cv::Mat croppableImage = croppedImage(roi);
+    cv::Mat alignedImageCropped = frame(roi);
+    alignedImageCropped.copyTo(croppableImage);
+    cv::Mat alignedImageMasked = cv::Mat(mask.rows, mask.cols, mask.type(), cv::Scalar(255,255,255));
+    croppableImage.copyTo(alignedImageMasked,mask(roi));
+    return alignedImageMasked;
+}
+
+cv::Mat CLandmark::lbpImage(const cv::Mat frame, const cv::Mat mask)
+{
+    using namespace cv;
+    Mat dst;
+    Mat maskedImage = CihanLib::CLandmark::maskImage(frame, mask);
+    cvtColor(maskedImage, dst, CV_BGR2GRAY);
+    GaussianBlur(dst, dst, Size(7,7), 5, 3, BORDER_CONSTANT); // tiny bit of smoothing is always a good idea
+    return CihanLib::CLBP::OLBP(dst);
 }
 
 CLandmark::CLandmark():

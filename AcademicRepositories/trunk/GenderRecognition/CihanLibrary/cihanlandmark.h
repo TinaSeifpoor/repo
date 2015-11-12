@@ -17,7 +17,9 @@ class CIHANLIBRARYSHARED_EXPORT CLandmark
 {
 public:
     static LandmarkMat extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRect);
-    static cv::Mat alignImage(cv::Mat frame, LandmarkMat goldenLandmarks);
+    static cv::Mat alignImage(const cv::Mat frame, const LandmarkMat goldenLandmarks);
+    static cv::Mat maskImage(const cv::Mat frame, const cv::Mat mask);
+    static cv::Mat lbpImage(const cv::Mat frame, const cv::Mat mask);
 
     CLandmark();
     CLandmark(cv::Mat faceImage);

@@ -16,6 +16,8 @@ public:
     static void ELBP(const cv::Mat& src, cv::Mat& dst, int radius = 1, int neighbors = 8);
     static void VARLBP(const cv::Mat& src, cv::Mat& dst, int radius = 1, int neighbors = 8);
 
+    static cv::Mat extractFeaturesOLBP(const cv::Mat& src, int threshold=123.0, int nRowCells, int nColCells);
+
 };
 }
 #endif // CIHANLBP
