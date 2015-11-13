@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
             cv::Mat alignedImage = CLandmark::alignImage(landmark,goldenLandmarkMat);
             if (alignedImage.rows && alignedImage.cols) {
                 cv::Mat lbpImage = CLandmark::lbpImage(alignedImage, goldenMask);
-                cv::Mat lbpThreshold =
+                cv::Mat lbpThreshold = CLBP
                 landmarkStorage << "lbpImage" << lbpImage;
             }
             //            cv::Mat lbpImageToShow;

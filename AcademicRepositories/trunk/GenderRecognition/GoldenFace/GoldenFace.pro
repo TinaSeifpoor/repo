@@ -12,9 +12,7 @@ TARGET = GoldenFace
 
 TEMPLATE = app
 
-CONFIG += opencv
-
-LIBS *= -L"D:/OpenCV/2.4.11/build/x64/vc10/bin"
+CONFIG += console cihanlib
 
 SOURCES += main.cpp
 

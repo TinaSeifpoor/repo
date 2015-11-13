@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/golden/image">
         <file alias="goldenimage.jpg">Aaron Booth_5_oval.jpg</file>
-        <file>Aaron Booth_5_oval_mask.png</file>
         <file alias="goldenmask.jpg">Aaron Booth_5_oval_mask.jpg</file>
     </qresource>
 </RCC>

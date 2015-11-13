@@ -9,6 +9,9 @@ typedef Rect_<int> Rect;
 template <typename> class Size_;
 typedef Size_<int> Size;
 }
+namespace std{
+template<class _Ty,class _Ax = allocator<_Ty> >class vector;
+}
 class QFileInfo;
 namespace CihanLib {
 typedef cv::Mat LandmarkMat;
@@ -20,6 +23,7 @@ public:
     static cv::Mat alignImage(const cv::Mat frame, const LandmarkMat goldenLandmarks);
     static cv::Mat maskImage(const cv::Mat frame, const cv::Mat mask);
     static cv::Mat lbpImage(const cv::Mat frame, const cv::Mat mask);
+    static LandmarkMat generalizedProcrustes(std::vector<LandmarkMat> landmarks);
 
     CLandmark();
     CLandmark(cv::Mat faceImage);

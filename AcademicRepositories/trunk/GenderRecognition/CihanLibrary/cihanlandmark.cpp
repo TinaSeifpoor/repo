@@ -162,6 +162,14 @@ cv::Mat CLandmark::lbpImage(const cv::Mat frame, const cv::Mat mask)
     return CihanLib::CLBP::OLBP(dst);
 }
 
+LandmarkMat CLandmark::generalizedProcrustes(std::vector<LandmarkMat> landmarks)
+{
+    Procrustes p;
+    LandmarkMat meanShape;
+    p.generalizedProcrustes(landmarks, meanShape,5000);
+    return meanShape;
+}
+
 CLandmark::CLandmark():
     d(new LandmarkPrivate())
 {

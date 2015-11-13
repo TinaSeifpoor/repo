@@ -9,7 +9,6 @@ namespace cv{
 class Mat;
 }
 namespace CihanLib {
-class FaceLandmark;
 class CIHANLIBRARYSHARED_EXPORT CData
 {
 public:
@@ -20,9 +19,8 @@ public:
     QFileInfoList operator () () const;
     QFileInfo operator [] (int index) const;
     template <typename type>
-    const CData& operator >> (type& fileInfo) const;
+    const CData& operator >> (type& out) const;
     const CData& operator >> (QFileInfo& fileInfo) const;
-    const CData& operator >> (FaceLandmark& faceLandmark) const;
     const CData& operator >> (cv::Mat& image) const;
     bool hasNext() const;
 

@@ -14,7 +14,7 @@ using namespace cv;
 
 
 Procrustes::Procrustes() :
-scale(1.0f), error(0.0f), scaling( true ), bestReflection( true ) {
+    scale(1.0f), error(0.0f), scaling( true ), bestReflection( true ) {
 }
 
 Procrustes::Procrustes( bool use_scaling, bool best_reflection ) : scale(1.0f), error(0.0f), scaling( use_scaling ), bestReflection( best_reflection ) {
@@ -126,7 +126,7 @@ vector<Mat> Procrustes::recenter( const vector<Mat>& X ) {
     vector<Mat> result;
     for(vector<Mat>::const_iterator it = X.begin(); it!=X.end(); ++it) {
         Mat x = *it;
-//        for( Mat x : X ) {
+        //        for( Mat x : X ) {
         Scalar mu_x = cv::mean(x);
         Mat temp    = x - Mat(x.size(), x.type(), mu_x);
         result.push_back( temp );
@@ -141,7 +141,7 @@ vector<Mat> Procrustes::normalize( const vector<Mat>& X ) {
     vector<Mat> result;
     for(vector<Mat>::const_iterator it = X.begin(); it!=X.end(); ++it) {
         Mat x = *it;
-//        for( Mat x : X )
+        //        for( Mat x : X )
         result.push_back( x / cv::norm( x ) );
     }
     return result;
@@ -154,7 +154,7 @@ vector<Mat> Procrustes::normalize( const vector<Mat>& X ) {
 vector<Mat> Procrustes::align( const vector<Mat>& X, Mat& mean_shape ) {
     vector<Mat> result;
     Mat w, u, vt;
-//    for( Mat x : X ){
+    //    for( Mat x : X ){
     for(vector<Mat>::const_iterator it = X.begin(); it!=X.end(); ++it) {
         Mat x = *it;
         SVDecomp( mean_shape.reshape(1).t() * x.reshape(1) , w, u, vt);
@@ -181,9 +181,9 @@ vector<vector<Point2f>> Procrustes::generalizedProcrustes( vector<vector<Point2f
 
     /* Copy the transformed X as vector of vector of Point2f, very circuitous way of doing thing */
     vector<vector<Point2f>> result;
-//    for( Mat mat : temp ){
-        for(vector<Mat>::const_iterator it = temp.begin(); it!=temp.end(); ++it) {
-            Mat mat = *it;
+    //    for( Mat mat : temp ){
+    for(vector<Mat>::const_iterator it = temp.begin(); it!=temp.end(); ++it) {
+        Mat mat = *it;
 
         vector<Point2f> vec;
         mat.reshape(2).copyTo( vec );
@@ -210,7 +210,15 @@ vector<Mat> Procrustes::generalizedProcrustes( std::vector<cv::Mat>& X, Mat& mea
 
         /* Find a new mean shape from all the set of points */
         Mat new_mean = Mat::zeros( mean_shape.size(), mean_shape.type() );
-        accumulate( *X.begin(), *X.end(), new_mean );
+
+        // Below line doesn't work, dirty fix afterwards..
+        //        accumulate(*X.begin(), *X.end(), new_mean );
+        // dirty fix here
+        for(vector<Mat>::const_iterator it = X.begin(); it!=X.end(); ++it) {
+            Mat mat = *it;
+            new_mean+=mat;
+        }
+        // dirty fix finished
 
         new_mean = new_mean / X.size();
         new_mean = new_mean / norm( new_mean );
