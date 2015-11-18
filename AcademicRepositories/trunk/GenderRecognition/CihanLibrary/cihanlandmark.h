@@ -15,12 +15,15 @@ template<class _Ty,class _Ax = allocator<_Ty> >class vector;
 class QFileInfo;
 namespace CihanLib {
 typedef cv::Mat LandmarkMat;
+typedef cv::Mat AffineMat;
 class LandmarkPrivate;
+class CGoldenLandmark;
 class CIHANLIBRARYSHARED_EXPORT CLandmark
 {
 public:
     static LandmarkMat extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRect);
     static cv::Mat alignImage(const cv::Mat frame, const LandmarkMat goldenLandmarks);
+    static AffineMat alignLandmark(const LandmarkMat from, const LandmarkMat to);
     static cv::Mat maskImage(const cv::Mat frame, const cv::Mat mask);
     static cv::Mat lbpImage(const cv::Mat frame, const cv::Mat mask);
     static LandmarkMat generalizedProcrustes(std::vector<LandmarkMat> landmarks);
@@ -31,7 +34,8 @@ public:
     CLandmark(const char* filepath);
     CLandmark(const CLandmark& other);
     ~CLandmark();
-    CLandmark alignTo(const CLandmark alignImage);
+    CLandmark alignTo(const CGoldenLandmark goldenLandmark);
+    CLandmark alignTo(const LandmarkMat goldenLandmark, bool isNormalized=true);
     cv::Mat operator () () const;
     CLandmark& operator = (const CLandmark& other);
     CLandmark& operator = (const cv::Mat& mat);

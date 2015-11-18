@@ -23,7 +23,9 @@ SOURCES += \
     cihanlandmark.cpp \
     histogram.cpp \
     lbp.cpp \
-    cihanlbp.cpp
+    cihanlbp.cpp \
+    cihangoldenlandmark.cpp \
+    cihancommon.cpp
 
 HEADERS +=\
     asmopencv.h \
@@ -34,7 +36,9 @@ HEADERS +=\
     cihanlib.h \
     histogram.hpp \
     lbp.hpp \
-    cihanlbp.h
+    cihanlbp.h \
+    cihangoldenlandmark.h \
+    cihancommon.h
 
 CONFIG += opencv intraface
 
@@ -67,4 +71,4 @@ DESTDIR = $$PWD/distribute/lib
 DLLDESTDIR = $$PWD/distribute/bin
 
 
-copyHeader($$PWD/cihanlib.h $$PWD/cihandata.h $$PWD/cihanlandmark.h $$PWD/cihanlbp.h $$PWD/cihan_global.h)
+copyHeader($$PWD/cihanlib.h $$PWD/cihandata.h $$PWD/cihanlandmark.h $$PWD/cihanlbp.h $$PWD/cihan_global.h $$PWD/cihancommon.h $$PWD/cihangoldenlandmark.h)

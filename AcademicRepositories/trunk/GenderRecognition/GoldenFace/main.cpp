@@ -3,13 +3,38 @@
 #include "opencv2/opencv.hpp"
 #include "asmopencv.h"
 #include "cihanlib.h"
+//#define BREAKEARLY
 using namespace CihanLib;
+void extractGoldenLandmarks(int argc, char* argv[]);
+void alignGoldenLandmarks();
+
 int main(int argc, char *argv[])
 {
+    alignGoldenLandmarks();
+    return 1;
+}
+
+void extractGoldenLandmarks(int argc, char *argv[])
+{
+        QStringList folders;
+        for (int i=1; i<argc; ++i) {
+            folders << argv[i];
+        }
     std::vector<LandmarkMat> landmarks;
-    for (int i=1; i<argc; ++i) {
-        CData data(argv[i]);
+#ifdef BREAKEARLY
+    int breakIt=0;
+#endif
+    for (int i=1; i<folders.count(); ++i) {
+#ifdef BREAKEARLY
+        if (++breakIt>10)
+            break;
+#endif
+        CData data(folders[i]);
         while(data.hasNext()) {
+#ifdef BREAKEARLY
+            if (++breakIt>10)
+                break;
+#endif
             QFileInfo fileInfo;
             data >> fileInfo;
             CLandmark landmark(fileInfo);
@@ -19,15 +44,22 @@ int main(int argc, char *argv[])
         }
     }
     LandmarkMat goldenLandmark = CLandmark::generalizedProcrustes(landmarks);
-    cv::FileStorage storage ("goldenlandmark.yaml", cv::FileStorage::WRITE);
-    storage << "goldenlandmark" << goldenLandmark;
-//    QApplication a(argc, argv);
-//    cv::Mat goldenMask = ASM::QImageToCvMat(QImage(":/golden/image/goldenmask.jpg"));
-//    cv::cvtColor(goldenMask, goldenMask, CV_BGRA2GRAY);
-//    cv::threshold(goldenMask, goldenMask, 128, 255, cv::THRESH_BINARY);
-//    qDebug() << goldenMask.type();
-//    cv::FileStorage storage("storeit.yaml", cv::FileStorage::WRITE);
-//    storage << "mask" << goldenMask;
-//    cv::imwrite("goldenMask.png",goldenMask);
-    return 1;
+    cv::FileStorage storage ("goldenLandmark.yaml", cv::FileStorage::WRITE);
+    storage << "goldenLandmark" << goldenLandmark;
+}
+
+void alignGoldenLandmarks()
+{
+    LandmarkMat goldenLandmark;
+    {
+        cv::FileStorage storage("goldenLandmark.yaml", cv::FileStorage::READ);
+        storage["goldenLandmark"] >> goldenLandmark;
+    }
+
+    CGoldenLandmark golden("aligned_goldenLandmark.yaml");
+    golden.truncate(goldenLandmark);
+    cv::Mat goldenOut = golden.mask().clone();
+    CihanLib::CCommon::showLandmarks(golden.landmarks(), goldenOut, cv::Scalar(127));
+    golden.save();
+    cv::imwrite("d:/golden.jpg", goldenOut);
 }

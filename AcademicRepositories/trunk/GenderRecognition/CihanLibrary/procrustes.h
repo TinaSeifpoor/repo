@@ -33,12 +33,13 @@ public:
     float procrustes( const cv::Mat& X, const cv::Mat& Y );
 
     std::vector<std::vector<cv::Point2f>> generalizedProcrustes( std::vector<std::vector<cv::Point2f>>& X, std::vector<cv::Point2f>& mean_shape, const int itol = 1000, const float ftol = 1e-6 );
-    std::vector<cv::Mat> generalizedProcrustes( std::vector<cv::Mat>& X, cv::Mat& mean_shape, const int itol = 1000, const float ftol = 1e-6 );
+    std::vector<cv::Mat> generalizedProcrustes(std::vector<cv::Mat>& X, cv::Mat& mean_shape, const int itol = 1000, const float ftol = 1e-6 );
 
 protected:
     static inline float sumSquared( const cv::Mat& mat );
     std::vector<cv::Mat> recenter( const std::vector<cv::Mat>& X );
     std::vector<cv::Mat> normalize( const std::vector<cv::Mat>& X );
+    std::vector<cv::Mat> normalizeWithNormOut(const std::vector<cv::Mat>& X, double& mean_norm );
     std::vector<cv::Mat> align( const std::vector<cv::Mat>& X, cv::Mat& mean_shape );
 
 };

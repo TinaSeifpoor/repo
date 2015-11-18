@@ -148,6 +148,25 @@ vector<Mat> Procrustes::normalize( const vector<Mat>& X ) {
 }
 
 /**
+ * Normalize each set of points
+ */
+vector<Mat> Procrustes::normalizeWithNormOut( const vector<Mat>& X, double& mean_norm ) {
+    vector<Mat> result;
+    mean_norm=0;
+    for(vector<Mat>::const_iterator it = X.begin(); it!=X.end(); ++it) {
+        Mat x = *it;
+        //        for( Mat x : X )
+        mean_norm+=cv::norm(x);
+
+        result.push_back( x / cv::norm( x ) );
+    }
+
+    mean_norm /= result.size();
+
+    return result;
+}
+
+/**
  * Perform rotation alignment between a set of points / shapes and a chosen mean shape
  * Points and mean shape should already be centered and normalize prior to the call of this function
  */
@@ -172,6 +191,7 @@ vector<vector<Point2f>> Procrustes::generalizedProcrustes( vector<vector<Point2f
     for( int i = 0; i < temp.size(); i++ )
         temp[i] = Mat( X[i] );
 
+    vector<double> dummy;
     Mat mean_shape_mat;
     temp = generalizedProcrustes( temp, mean_shape_mat, itol, ftol );
 
@@ -201,12 +221,13 @@ vector<Mat> Procrustes::generalizedProcrustes( std::vector<cv::Mat>& X, Mat& mea
     mean_shape = X[0].reshape( 1 );
 
     int counter = 0;
-    while( true ) {
-        /* recenter, normalize, align */
-        X = recenter( X );
-        X = normalize( X );
-        X = align( X, mean_shape );
+    double mean_norm;
+    /* recenter, normalize, align */
+    X = recenter( X );
+    X = normalizeWithNormOut( X , mean_norm);
+    X = align( X, mean_shape );
 
+    while( true ) {
 
         /* Find a new mean shape from all the set of points */
         Mat new_mean = Mat::zeros( mean_shape.size(), mean_shape.type() );
@@ -229,7 +250,13 @@ vector<Mat> Procrustes::generalizedProcrustes( std::vector<cv::Mat>& X, Mat& mea
             break;
 
         mean_shape = new_mean;
+        /* recenter, normalize, align */
+        X = recenter( X );
+        X = normalize( X );
+        X = align( X, mean_shape );
     }
+    mean_shape *= mean_norm;
+
 
     return X;
 }
