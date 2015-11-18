@@ -10,7 +10,11 @@ void alignGoldenLandmarks();
 
 int main(int argc, char *argv[])
 {
-    alignGoldenLandmarks();
+//    alignGoldenLandmarks();
+    CGoldenLandmark golden("aligned_goldenLandmark.yaml");
+    golden.load();
+    CLandmark landmark("D:/Downloads/10k Adult Faces/10kfaces/10k US Adult Faces Database/female/Aaron_Boothe_5_oval.jpg");
+    cv::imwrite("d:/test.jpg",landmark.alignTo(golden));
     return 1;
 }
 

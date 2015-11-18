@@ -8,6 +8,7 @@
 #include "procrustes.h"
 #include <QFileInfo>
 #include "cihancommon.h"
+#include "cihangoldenlandmark.h"
 //#define DEBUGGER
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / PI))
 const int lmMatType = CV_32FC1;
@@ -119,25 +120,10 @@ void showLandmarks(const cv::Mat landmarks, cv::Mat& frame, cv::Scalar color = c
     }
 }
 
-cv::Mat CLandmark::alignImage(cv::Mat frame, LandmarkMat goldenLandmarks)
+cv::Mat CLandmark::alignImage(cv::Mat frame, const CGoldenLandmark goldenLandmarks)
 {
     CLandmark clandmark(frame);
-    return clandmark.alignTo(goldenLandmarks)();
-//    if (procrustesLandmarks.cols==goldenLandmarks.cols && procrustesLandmarks.rows==goldenLandmarks.rows && procrustesLandmarks.channels()==goldenLandmarks.channels()) {
-//        alignTo()
-//        cv::Mat imageP;
-//        Procrustes p;
-//        p.procrustes(goldenLandmarks, procrustesLandmarks);
-//        cv::Mat affinePart = LandmarkPrivate::affineFromProcrustes(&p);
-//        imageP = frame.clone();
-//        cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
-//#ifdef DEBUGGER
-//        showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
-//#endif
-//        return imageP;
-//    } else {
-//        return cv::Mat();
-//    }
+    return clandmark.alignTo(goldenLandmarks);
 }
 
 AffineMat CLandmark::alignLandmark(const LandmarkMat from, const LandmarkMat to)
@@ -216,37 +202,50 @@ CLandmark::~CLandmark()
     delete d;
 }
 
+cv::Mat CLandmark::alignTo(const CGoldenLandmark goldenLandmark)
+{
+    AffineMat affinePart = CLandmark::alignLandmark(goldenLandmark.landmarks(), d->landmarks);
+    cv::Mat imageP = d->faceImage.clone();
+    cv::Mat res = goldenLandmark.mask();
+    cv::warpPerspective(imageP, imageP,affinePart, res.size());
+    imageP.copyTo(res,res);
+#ifdef DEBUGGER
+    showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
+#endif
+    return res;
+}
+
 //CLandmark CLandmark::alignTo(const CLandmark destinationImage)
 //{
 //    return CLandmark(alignImage(d->faceImage,destinationImage.landmarks()));
 //}
 
-CLandmark CLandmark::alignTo(const CihanLib::LandmarkMat goldenLandmark, bool isNormalized)
-{
-    LandmarkMat goldenLandmarkReadyForAffine = goldenLandmark;
-    if (isNormalized) {
-        LandmarkMat landmarkMat = d->landmarks;
-        cv::Mat moveMatrix = cv::Mat(landmarkMat.size(), landmarkMat.type(), cv::mean(landmarkMat));
-        LandmarkMat zeroLandmark = landmarkMat - moveMatrix;
-        double norm = cv::norm(zeroLandmark);
+//CLandmark CLandmark::alignTo(const CihanLib::LandmarkMat goldenLandmark, bool isNormalized)
+//{
+//    LandmarkMat goldenLandmarkReadyForAffine = goldenLandmark;
+//    if (isNormalized) {
+//        LandmarkMat landmarkMat = d->landmarks;
+//        cv::Mat moveMatrix = cv::Mat(landmarkMat.size(), landmarkMat.type(), cv::mean(landmarkMat));
+//        LandmarkMat zeroLandmark = landmarkMat - moveMatrix;
+//        double norm = cv::norm(zeroLandmark);
 
-        // Rescale
-        goldenLandmarkReadyForAffine = goldenLandmark * norm;
+//        // Rescale
+//        goldenLandmarkReadyForAffine = goldenLandmark * norm;
 
-        // Recenter
-        goldenLandmarkReadyForAffine += moveMatrix;
-    }
+//        // Recenter
+//        goldenLandmarkReadyForAffine += moveMatrix;
+//    }
 
 
-    AffineMat affinePart = CLandmark::alignLandmark(goldenLandmarkReadyForAffine, d->landmarks);
+//    AffineMat affinePart = CLandmark::alignLandmark(goldenLandmarkReadyForAffine, d->landmarks);
 
-    cv::Mat imageP = d->faceImage.clone();
-    cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
-#ifdef DEBUGGER
-    showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
-#endif
-    return imageP;
-}
+//    cv::Mat imageP = d->faceImage.clone();
+//    cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
+//#ifdef DEBUGGER
+//    showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
+//#endif
+//    return imageP;
+//}
 
 cv::Mat CLandmark::operator ()() const
 {
