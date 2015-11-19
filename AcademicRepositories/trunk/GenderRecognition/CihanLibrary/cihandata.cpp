@@ -3,45 +3,74 @@
 #include <QDir>
 #include <QFile>
 #include "opencv2/opencv.hpp"
+class CDataPrivate
+{
+public:
+    QFileInfoList __fileList;
+    QFileInfoList::const_iterator __it;
+};
 namespace CihanLib {
-CData::CData(QString filepath, QStringList filter)
+
+CData::CData(QString filepath, QStringList filter):
+    d(new CDataPrivate())
 {
     QFileInfo fileInfo(filepath);
     if (fileInfo.isDir())
         load(filepath, filter);
     else
-        __fileList << fileInfo;
-    __it = __fileList.begin();
+        d->__fileList << fileInfo;
+    d->__it = d->__fileList.begin();
 }
 
-CData::CData()
+QList<CData> CData::multiData(int argc, const char* argv[])
+{
+    QList<CData> multiCData;
+    for (int i=1; i<argc;++i) {
+        multiCData << CData(argv[i]);
+    }
+    return multiCData;
+}
+
+CData::CData():
+    d(new CDataPrivate())
 {
 
 }
 
 CData::CData(const CData& other):
-    __fileList(other.__fileList),
-    __it(other.__it)
+    d(new CDataPrivate())
 {
+    d->__fileList = other.d->__fileList;
+    d->__it = other.d->__it;
+}
 
+CData::~CData()
+{
+    delete d;
 }
 
 QFileInfoList CData::operator ()() const
 {
-    return __fileList;
+    return d->__fileList;
 }
 
 QFileInfo CData::operator [](int index) const
 {
-    return __fileList.value(index);
+    return d->__fileList.value(index);
+}
+
+QString CData::path() const
+{
+    if (!d->__fileList.isEmpty())
+        return d->__fileList.first().path();
 }
 
 const CData& CData::operator >>(QFileInfo& fileInfo) const
 {
     if (!hasNext())
-        __it = __fileList.begin();
-    fileInfo = *__it;
-    ++__it;
+        d->__it = d->__fileList.begin();
+    fileInfo = *d->__it;
+    ++d->__it;
     return *this;
 }
 
@@ -55,7 +84,7 @@ const CData&CData::operator >>(cv::Mat& image) const
 
 bool CData::hasNext() const
 {
-    return __it != __fileList.end();
+    return d->__it != d->__fileList.end();
 }
 
 void CData::load(QFileInfo info, QStringList filter)
@@ -65,7 +94,7 @@ void CData::load(QFileInfo info, QStringList filter)
     foreach (QFileInfo subdirInfo, subdirInfoList) {
         load(subdirInfo, filter);
     }
-    __fileList << dir.entryInfoList(filter, QDir::Files);
+    d->__fileList << dir.entryInfoList(filter, QDir::Files);
 }
 
 

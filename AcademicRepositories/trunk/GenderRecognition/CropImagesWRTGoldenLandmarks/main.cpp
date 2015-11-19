@@ -15,11 +15,12 @@ int main(int argc, char *argv[])
         target.mkpath(target.path());
         foreach (QFileInfo wildInfo, wildData()) {
             CLandmark landmark(wildInfo);
-            if (landmark.isValid()) {
+            cv::Mat aligned = landmark.alignTo(golden);
+            if (aligned.cols && aligned.rows) {
                 QString targetFilePath = target.filePath(wildInfo.fileName());
-                cv::imwrite(targetFilePath.toStdString(), landmark.alignTo(golden));
+                cv::imwrite(targetFilePath.toStdString(), aligned);
             }
         }
     }
-    return a.exec();
+    return 1;
 }

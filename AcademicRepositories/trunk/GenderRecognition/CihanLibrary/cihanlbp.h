@@ -4,20 +4,29 @@
 namespace cv {
 class Mat;
 }
+namespace std{
+template<class _Ty,class _Ax = allocator<_Ty> >class vector;
+}
+class QFileInfo;
+class CLBPPrivate;
 namespace CihanLib {
 class CIHANLIBRARYSHARED_EXPORT CLBP
 {
 public:
-    static cv::Mat OLBP(const cv::Mat& src);
-    static cv::Mat ELBP(const cv::Mat& src, int radius = 1, int neighbors = 8);
-    static cv::Mat VARLBP(const cv::Mat& src, int radius = 1, int neighbors = 8);
+    CLBP(cv::Mat image, int nCellWidth=16, int nCellHeight=16);
+    CLBP(QFileInfo imageFile, int nCellWidth=16, int nCellHeight=16);
+    CLBP(const CLBP& other);
+    ~CLBP();
+    std::vector<std::vector<int> > regularCellHistograms() const;
+    std::vector<std::vector<int> > uniformCellHistograms() const;
+    std::vector<int> regularHistogram() const; // concatenated
+    std::vector<int> uniformHistogram() const; // concatenated
+    std::vector<double> regularNHistogram() const; // concatenated & normalized (total is 1)
+    std::vector<double> uniformNHistogram() const; // concatenated & normalized (total is 1)
 
-    static void OLBP(const cv::Mat& src, cv::Mat& dst);
-    static void ELBP(const cv::Mat& src, cv::Mat& dst, int radius = 1, int neighbors = 8);
-    static void VARLBP(const cv::Mat& src, cv::Mat& dst, int radius = 1, int neighbors = 8);
-
-//    static cv::Mat extractFeaturesOLBP(const cv::Mat& src, int threshold=123.0, int nRowCells, int nColCells);
-
+    static cv::Mat extractFeaturesOLBP(const cv::Mat& src, int nCellWidth=16, int nCellHeight=16);
+private:
+    CLBPPrivate*d;
 };
 }
 #endif // CIHANLBP

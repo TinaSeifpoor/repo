@@ -23,9 +23,7 @@ class CIHANLIBRARYSHARED_EXPORT CLandmark
 public:
     static LandmarkMat extractFaceAndLandmarks(cv::Mat frame, cv::Rect& faceRect);
     static cv::Mat alignImage(const cv::Mat frame, const CGoldenLandmark goldenLandmarks);
-    static AffineMat alignLandmark(const LandmarkMat from, const LandmarkMat to);
-    static cv::Mat maskImage(const cv::Mat frame, const cv::Mat mask);
-    static cv::Mat lbpImage(const cv::Mat frame, const cv::Mat mask);
+    static AffineMat alignLandmark(const LandmarkMat from, const LandmarkMat to, double& scale);
     static LandmarkMat generalizedProcrustes(std::vector<LandmarkMat> landmarks);
 
     CLandmark();
@@ -34,7 +32,7 @@ public:
     CLandmark(const char* filepath);
     CLandmark(const CLandmark& other);
     ~CLandmark();
-    cv::Mat alignTo(const CGoldenLandmark goldenLandmark);
+    cv::Mat alignTo(const CGoldenLandmark goldenLandmark, double scaleThresholdMin=.5, double scaleThresholdMax = 2);
     cv::Mat operator () () const;
     CLandmark& operator = (const CLandmark& other);
     CLandmark& operator = (const cv::Mat& mat);

@@ -9,13 +9,29 @@ public:
     cv::Mat maskImage;
     QString filepath;
     cv::RotatedRect rect;
-    cv::Size2i maskSize;};
+    cv::Size2i maskSize;
+};
 
 
 CGoldenLandmark::CGoldenLandmark(QString filepath):
     d(new CGoldenLandmarkPrivate())
 {
     d->filepath = filepath;
+}
+
+CGoldenLandmark::CGoldenLandmark(const CGoldenLandmark& other):
+    d(new CGoldenLandmarkPrivate())
+{
+    d->filepath = other.d->filepath;
+    d->landmarks = other.d->landmarks;
+    d->maskImage = other.d->maskImage;
+    d->maskSize = other.d->maskSize;
+    d->rect = other.d->rect;
+}
+
+CGoldenLandmark::~CGoldenLandmark()
+{
+    delete d;
 }
 
 bool CGoldenLandmark::load()
@@ -74,12 +90,12 @@ void CGoldenLandmark::truncate(LandmarkMat goldenLandmarks)
 
 LandmarkMat CGoldenLandmark::landmarks() const
 {
-    return d->landmarks;
+    return d->landmarks.clone();
 }
 
 cv::Mat CGoldenLandmark::mask() const
 {
-    return d->maskImage;
+    return d->maskImage.clone();
 }
 
 bool CGoldenLandmark::save() const

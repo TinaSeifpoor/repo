@@ -13,6 +13,8 @@ class CIHANLIBRARYSHARED_EXPORT CGoldenLandmark
 {
 public:
     CGoldenLandmark(QString filepath);
+    CGoldenLandmark(const CGoldenLandmark& other);
+    ~CGoldenLandmark();
     bool load();
     void truncate(LandmarkMat goldenLandmarks);
     bool save() const;
