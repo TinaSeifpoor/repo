@@ -206,46 +206,16 @@ cv::Mat CLandmark::alignTo(const CGoldenLandmark goldenLandmark)
 {
     AffineMat affinePart = CLandmark::alignLandmark(goldenLandmark.landmarks(), d->landmarks);
     cv::Mat imageP = d->faceImage.clone();
-    cv::Mat res = goldenLandmark.mask();
+    cv::Mat mask   = goldenLandmark.mask();
+    cv::Mat res = cv::Mat(mask.size(), d->faceImage.type(), cv::Scalar(255,255,255));
+
     cv::warpPerspective(imageP, imageP,affinePart, res.size());
-    imageP.copyTo(res,res);
+    imageP.copyTo(res,mask);
 #ifdef DEBUGGER
     showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
 #endif
     return res;
 }
-
-//CLandmark CLandmark::alignTo(const CLandmark destinationImage)
-//{
-//    return CLandmark(alignImage(d->faceImage,destinationImage.landmarks()));
-//}
-
-//CLandmark CLandmark::alignTo(const CihanLib::LandmarkMat goldenLandmark, bool isNormalized)
-//{
-//    LandmarkMat goldenLandmarkReadyForAffine = goldenLandmark;
-//    if (isNormalized) {
-//        LandmarkMat landmarkMat = d->landmarks;
-//        cv::Mat moveMatrix = cv::Mat(landmarkMat.size(), landmarkMat.type(), cv::mean(landmarkMat));
-//        LandmarkMat zeroLandmark = landmarkMat - moveMatrix;
-//        double norm = cv::norm(zeroLandmark);
-
-//        // Rescale
-//        goldenLandmarkReadyForAffine = goldenLandmark * norm;
-
-//        // Recenter
-//        goldenLandmarkReadyForAffine += moveMatrix;
-//    }
-
-
-//    AffineMat affinePart = CLandmark::alignLandmark(goldenLandmarkReadyForAffine, d->landmarks);
-
-//    cv::Mat imageP = d->faceImage.clone();
-//    cv::warpPerspective(imageP, imageP,affinePart, imageP.size());
-//#ifdef DEBUGGER
-//    showLandmarks(goldenLandmarks, imageP, cv::Scalar(255,0,0));
-//#endif
-//    return imageP;
-//}
 
 cv::Mat CLandmark::operator ()() const
 {
@@ -269,6 +239,11 @@ CLandmark& CLandmark::operator =(const cv::Mat& mat)
 LandmarkMat CLandmark::landmarks() const
 {
     return d->landmarks;
+}
+
+bool CLandmark::isValid() const
+{
+    return d->landmarks.rows && d->landmarks.cols;
 }
 
 

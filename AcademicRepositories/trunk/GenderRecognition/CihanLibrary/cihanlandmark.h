@@ -39,6 +39,8 @@ public:
     CLandmark& operator = (const CLandmark& other);
     CLandmark& operator = (const cv::Mat& mat);
     LandmarkMat landmarks() const;
+    bool isValid() const;
+
 private:
     LandmarkPrivate*d;
 };

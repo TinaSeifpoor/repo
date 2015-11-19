@@ -30,15 +30,16 @@ bool CGoldenLandmark::load()
         storage["mask_width"                ]    >> d->maskSize.width;
         storage["mask_height"               ]    >> d->maskSize.height;
 
-        d->maskImage = cv::Mat(d->maskSize, CV_8UC1, cv::Scalar(0));
-        cv::ellipse(d->maskImage, d->rect, cv::Scalar(255),-1);
+//        d->maskImage = cv::Mat(d->maskSize, CV_8UC1, cv::Scalar(0));
+//        cv::ellipse(d->maskImage, d->rect, cv::Scalar(255),-1);
+        d->maskImage = cv::Mat(d->maskSize, CV_8UC1, cv::Scalar(255));
         return true;
     }
     return false;
 }
-const float scaleFactor=2.5;
+const float scaleFactor=1.f;
 const int safetyPadding = 2;
-const float yFactor = 1.3f;  // y axes is 30% bigger
+const float yFactor = 1.f;  // y axes is 30% bigger
 void CGoldenLandmark::truncate(LandmarkMat goldenLandmarks)
 {
     d->landmarks = goldenLandmarks;
@@ -55,7 +56,8 @@ void CGoldenLandmark::truncate(LandmarkMat goldenLandmarks)
         radius = cv::max(radius, values.x);
         radius = cv::max(radius, values.y);
     }
-    cv::Size2i sizeOfEllipse = cv::Size2i(radius*scaleFactor, radius*scaleFactor * yFactor);
+    float diameter = radius*2;
+    cv::Size2i sizeOfEllipse = cv::Size2i(diameter*scaleFactor, diameter*scaleFactor * yFactor);
     d->maskSize = cv::Size2i(sizeOfEllipse.width+safetyPadding*scaleFactor, sizeOfEllipse.height+safetyPadding*scaleFactor*yFactor);
 
 
@@ -63,7 +65,9 @@ void CGoldenLandmark::truncate(LandmarkMat goldenLandmarks)
     cv::Point2i centerOfEllipse = cv::Point2i(d->maskSize.width/2, d->maskSize.height/2);
     d->rect = cv::RotatedRect(centerOfEllipse, sizeOfEllipse, 0);
 
-    cv::ellipse(d->maskImage, d->rect,cv::Scalar(255),-1);
+//    cv::ellipse(d->maskImage, d->rect,cv::Scalar(255),-1);
+    d->maskImage = cv::Mat(d->maskSize, CV_8UC1, cv::Scalar(255));
+
     cv::Mat moveMatrix = cv::Mat(d->landmarks.size(), d->landmarks.type(), cv::Scalar(centerOfEllipse.x, centerOfEllipse.y));
     d->landmarks += moveMatrix;
 }
