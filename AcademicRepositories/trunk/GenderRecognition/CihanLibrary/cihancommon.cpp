@@ -1,6 +1,7 @@
 #include "cihancommon.h"
 #include "opencv2/opencv.hpp"
 #include "cihanlandmark.h"
+
 using namespace CihanLib;
 
 
@@ -15,3 +16,5 @@ void CCommon::showLandmarks(const LandmarkMat points, cv::Mat& img, cv::Scalar c
         circle( img, p, 2, color, 2 );
     }
 }
+
+
