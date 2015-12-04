@@ -10,6 +10,7 @@ class ImageWidget : public QGraphicsScene
     ImageWidgetPrivate*d;
 public:
     explicit ImageWidget(QObject *parent = 0);
+    ~ImageWidget();
 
 public slots:
     void setImage(CSImage im);

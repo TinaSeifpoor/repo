@@ -11,9 +11,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CamRecorder
 TEMPLATE = app
 
+CONFIG(debug, debug|release) {
+    SUFFIX = d
+} else {
+    SUFFIX =
+}
+
 CONFIG+=opencv
 OPENCV+=all
-include(opencv2411.pri)
+
+include(opencv.pri)
+
+
 
 
 SOURCES += main.cpp\

@@ -15,6 +15,8 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
+CONFIG += cihanlib
+
 SOURCES += main.cpp \
     genderizerdata.cpp \
     splitdata.cpp
