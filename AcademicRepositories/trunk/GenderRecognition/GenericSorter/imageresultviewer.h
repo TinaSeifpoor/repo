@@ -15,24 +15,15 @@ public:
     ~ImageResultViewer();
     void setDir(QString path);
     QDir dir() const;
-    void sendLeft(QListWidgetItem* widgetItem);
-    void sendRight(QListWidgetItem* widgetItem);
     void clear();
-
-signals:
-    void sendLeftSignal(VisionItem*);
-    void sendRightSignal(VisionItem*);
+    QList<VisionItem *> selectedVisionItems();
+    void received(VisionItem *item);
 
 public slots:
-    void received(VisionItem* item);
     void refresh();
 
 protected:
     void wheelEvent(QWheelEvent *w);
-
-private slots:
-    void sendLeftTriggered();
-    void sendRightTriggered();
 
 private:
     QHash<VisionItem*, QListWidgetItem*> items;

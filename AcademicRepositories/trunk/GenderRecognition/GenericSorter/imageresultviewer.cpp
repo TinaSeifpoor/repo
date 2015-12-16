@@ -2,6 +2,7 @@
 #include "visionitem.h"
 #include <QShortcut>
 #include <QWheelEvent>
+
 ImageResultViewer::ImageResultViewer(QWidget *parent) :
     QListWidget(parent)
 {
@@ -27,26 +28,6 @@ QDir ImageResultViewer::dir() const
     return __dir;
 }
 
-void ImageResultViewer::sendLeft(QListWidgetItem* widgetItem)
-{
-    VisionItem* item = items.key(widgetItem);
-    emit sendLeftSignal(item);
-    items.remove(item);
-    setSelectionMode(SingleSelection);
-    delete widgetItem;
-    setSelectionMode(ExtendedSelection);
-}
-
-void ImageResultViewer::sendRight(QListWidgetItem* widgetItem)
-{
-    VisionItem* item = items.key(widgetItem);
-    emit sendRightSignal(item);
-    items.remove(item);
-    setSelectionMode(SingleSelection);
-    delete widgetItem;
-    setSelectionMode(ExtendedSelection);
-}
-
 void ImageResultViewer::clear()
 {
     foreach (VisionItem* item, items.keys()) {
@@ -54,6 +35,20 @@ void ImageResultViewer::clear()
         delete item;
     }
     items.clear();
+}
+
+QList<VisionItem*> ImageResultViewer::selectedVisionItems()
+{
+    QList<VisionItem*> visionItems;
+    foreach(QListWidgetItem * widgetItem,selectedItems()) {
+        VisionItem* item = items.key(widgetItem);
+        items.remove(item);
+        visionItems << item;
+        setSelectionMode(SingleSelection);
+        delete widgetItem;
+        setSelectionMode(ExtendedSelection);
+    }
+    return visionItems;
 }
 
 void ImageResultViewer::refresh()
@@ -91,18 +86,4 @@ void ImageResultViewer::received(VisionItem* item)
     item->moveTo(__dir.path());
     items.insert(item, widgetItem);
     scrollToItem(widgetItem, QAbstractItemView::EnsureVisible);
-}
-
-void ImageResultViewer::sendLeftTriggered()
-{
-    foreach (QListWidgetItem* widgetItem, selectedItems()) {
-        sendLeft(widgetItem);
-    }
-}
-
-void ImageResultViewer::sendRightTriggered()
-{
-    foreach (QListWidgetItem* widgetItem, selectedItems()) {
-        sendRight(widgetItem);
-    }
 }

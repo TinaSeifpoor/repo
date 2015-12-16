@@ -1,8 +1,9 @@
 #include <QCoreApplication>
 #include "genderizerdata.h"
-#include "splitdata.h"
+#include "cihanlib.h"
 #include <QDir>
 #include <QFile>
+typedef CihanLib::CData SplitData;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);

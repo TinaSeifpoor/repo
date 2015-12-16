@@ -18,9 +18,7 @@ TEMPLATE = app
 CONFIG += cihanlib
 
 SOURCES += main.cpp \
-    genderizerdata.cpp \
-    splitdata.cpp
+    genderizerdata.cpp
 
 HEADERS += \
-    genderizerdata.h \
-    splitdata.h
+    genderizerdata.h

@@ -14,9 +14,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public slots:
-    void moverClosed(QWidget* w);
-
+    void init();
+private slots:
+    void on_actionClear_Revert_all_triggered();
 private:
     Ui::MainWindow *ui;
 };

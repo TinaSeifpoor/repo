@@ -7,88 +7,99 @@
 #include <QSettings>
 #include <QDockWidget>
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QSettings settings;
-    if (settings.childGroups().isEmpty()) {
-        settings.beginGroup("Original");
-        settings.setValue("LeftShotcut", "A");
-        settings.setValue("LeftShortcutReceiver", "Left");
-        settings.setValue("RightShortcut", "D");
-        settings.setValue("RightShortcutReceiver", "Right");
-        settings.endGroup();
-        settings.beginGroup("Left");
-        settings.setValue("LeftShotcut", "A");
-        settings.setValue("LeftShortcutReceiver", "Original");
-        settings.setValue("RightShortcut", "D");
-        settings.setValue("RightShortcutReceiver", "Right");
-        settings.endGroup();
-        settings.beginGroup("Right");
-        settings.setValue("LeftShotcut", "A");
-        settings.setValue("LeftShortcutReceiver", "Left");
-        settings.setValue("RightShortcut", "D");
-        settings.setValue("RightShortcutReceiver", "Original");
-        settings.endGroup();
-    }
-
-    // create mdi windows
-    QHash<QString, ImageMover*> movers;
-    foreach (QString key, settings.childGroups()) {
-        settings.beginGroup(key);
-        ImageMover* mover = new ImageMover(this);
-        movers.insert(key, mover);
-        mover->setObjectName(key);
-        mover->setPath(settings.value("Path",QDir::current().path()).toString());
-        mover->setLeftShortcut(settings.value("LeftShortcut", "A").toString());
-        mover->setRightShortcut(settings.value("RightShortcut", "D").toString());
-
-
-        QDockWidget* subwindow = new QDockWidget(this);
-        subwindow->setAllowedAreas(Qt::DockWidgetArea_Mask);
-        subwindow->setWindowTitle(key);
-        subwindow->setWidget(mover);
-        addDockWidget((Qt::DockWidgetArea)settings.value("DockWidgetPosition").toInt(),subwindow);
-        settings.endGroup();
-    }
-
-    foreach (QString key, settings.childGroups()) {
-        settings.beginGroup(key);
-        ImageMover* baseMover = movers.value(key);
-        ImageMover* leftMover = movers.value(settings.value("LeftShortcutReceiver").toString(),0);
-        leftMover->connect(baseMover, SIGNAL(sendLeftSignal(VisionItem*)), SIGNAL(received(VisionItem*)));
-        ImageMover* rightMover = movers.value(settings.value("RightShortcutReceiver").toString(),0);
-        rightMover->connect(baseMover, SIGNAL(sendRightSignal(VisionItem*)), SIGNAL(received(VisionItem*)));
-        settings.endGroup();
-    }
+    init();
 }
 
 MainWindow::~MainWindow()
 {
     QSettings settings;
-    QStringList keys;
     QList<QDockWidget*> dockwidgets = findChildren<QDockWidget*>();
     foreach (QDockWidget* subwindow, dockwidgets) {
         QString key = subwindow->windowTitle();
         settings.beginGroup(key);
         settings.setValue("DockWidgetPosition",(int)dockWidgetArea(subwindow));
-        keys << key;
+        settings.setValue("Path", dynamic_cast<ImageMover*>(subwindow->widget())->path());
         settings.endGroup();
     }
-    foreach (QString key, settings.childGroups()) {
-        if (!keys.contains(key)) {
-            settings.remove(key);
-        }
-    }
+    QString key = "Center";
+    settings.beginGroup(key);
+    settings.setValue("Path", findChild<ImageMover*>("Center")->path());
     delete ui;
 }
 
-void MainWindow::moverClosed(QWidget* w)
+void MainWindow::init()
 {
-    if (w) {
-        QSettings settings;
-        settings.remove(w->objectName());
+    QHash<QString, ImageMover*> movers;
+    QSettings settings;
+    // create dock widgets
+    settings.beginGroup("Movers");
+    foreach (QString key, settings.childGroups()) {
+        settings.beginGroup(key);
+        ImageMover* mover = new ImageMover(this);
+        movers.insert(key, mover);
+        mover->setObjectName(key);
+        mover->setPath(settings.value("Path",QDir::currentPath()).toString());
+        if (key!="Center") {
+            QDockWidget* subwindow = new QDockWidget(this);
+            subwindow->setAllowedAreas(Qt::DockWidgetArea_Mask);
+            subwindow->setWindowTitle(key);
+            subwindow->setWidget(mover);
+            addDockWidget((Qt::DockWidgetArea)settings.value("DockWidgetPosition",1).toInt(),subwindow);
+        } else {
+            ui->gridLayout->addWidget(mover);
+        }
+        settings.endGroup();
     }
+
+    foreach (QString key, settings.childGroups()) {
+        settings.beginGroup(key);
+        ImageMover* mover = movers.value(key);
+        settings.endGroup();
+        foreach (QString subKey, settings.childGroups()) {
+            settings.beginGroup(subKey);
+            QString shortcutKey = settings.value("Shortcut").toString();
+            if (!shortcutKey.isEmpty()) {
+                ImageMover* targetMover;
+                if (subKey==key) {
+                    targetMover =  movers.value("Center");
+                } else {
+                    targetMover = movers.value(subKey);
+                }
+                mover->setShortcut(shortcutKey, targetMover);
+            }
+            settings.endGroup();
+        }
+    }
+}
+
+void MainWindow::on_actionClear_Revert_all_triggered()
+{
+    QSettings settings;
+    settings.clear();
+    if (settings.childGroups().isEmpty()) {
+        settings.beginGroup("Movers");
+        settings.beginGroup("Top");
+        settings.setValue("Shortcut",   "W");
+        settings.endGroup();
+        settings.beginGroup("Left");
+        settings.setValue("Shortcut",   "A");
+        settings.endGroup();
+        settings.beginGroup("Bottom");
+        settings.setValue("Shortcut",   "S");
+        settings.endGroup();
+        settings.beginGroup("Right");
+        settings.setValue("Shortcut",   "D");
+        settings.endGroup();
+        settings.beginGroup("Center");
+        settings.setValue("Path", QDir::currentPath());
+        settings.endGroup();
+        settings.endGroup();
+    }
+    qApp->quit();
 }

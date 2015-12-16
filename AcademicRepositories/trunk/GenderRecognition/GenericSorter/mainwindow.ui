@@ -41,6 +41,23 @@
     </property>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>698</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionClear_Revert_all"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
   <action name="actionTile_windows">
    <property name="checkable">
     <bool>false</bool>
@@ -78,6 +95,11 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionClear_Revert_all">
+   <property name="text">
+    <string>Clear &amp; Revert all</string>
    </property>
   </action>
  </widget>
