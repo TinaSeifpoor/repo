@@ -8,10 +8,10 @@ using CihanLib::CData;
 using CihanLib::CLBP;
 using CihanLib::CCommon;
 
-const char* femaleDir   = "female_aligned";
-const char* maleDir     = "male_aligned";
-const char* femaleKey = "female";
-const char* maleKey   = "male";
+const char* femaleDir   = "female";
+const char* maleDir     = "male";
+const char* femaleKey = "1";
+const char* maleKey   = "0";
 void featureExtractGenderData(QString dirPath, QString genderKey);
 int main(int argc, const char *argv[]) {
     for (int i=1;i<argc;++i) {

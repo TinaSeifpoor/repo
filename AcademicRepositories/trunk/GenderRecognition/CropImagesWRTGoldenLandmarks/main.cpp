@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
         target.mkpath(target.path());
         foreach (QFileInfo wildInfo, wildData()) {
             CLandmark landmark(wildInfo);
-            cv::Mat aligned = landmark.alignTo(golden);
+            cv::Mat aligned = landmark.alignTo(golden,0,99999);
             if (aligned.cols && aligned.rows) {
                 QString targetFilePath = target.filePath(wildInfo.fileName());
                 cv::imwrite(targetFilePath.toStdString(), aligned);
