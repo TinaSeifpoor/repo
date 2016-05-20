@@ -46,7 +46,7 @@ a.a.akdag@uva.nl}
 \section{Introduction}
 
 
-Face detection has been a very interesting task for computer vision and machine learning.
+Face detection has been a very interesting task for the society, culture, art, history, computer vision and machine learning.
 
 \section{Related Work}
 
@@ -83,24 +83,10 @@ Database image representations are then predicted by the linear svm to be sorted
 
 \subsection{Face Crop on Rijksmuseum}
 
-\subsection{Gender Annotation on Rijkmuseum}
-Painting image pieces hand-annotated into four sub-categories:
-
-\begin{itemize}
-	\item Female (499)
-	\item Male (1.006)
-	\item Bad Face (11.030)
-	\item Trash
-\end{itemize}
-
-“Trash” contains false positive face regions which are not actually face or are of very poor quality. “Bad Face” category consists of correct face regions that are poor quality, are not paintings - pieces from masks / statues etc., cartoons or any non-oil painting piece in general.
-
-
-
 \section{Face image databases annotated with gender info}
 First step on preparing a gender recognition algorithm is to prepare annotated training data. In most cases, variety in the training set is directly proportional to the algorithm's success. 
 
-General info regarding Viola-Jones crop, cleaning and if applicable, annotating will be here.
+General info regarding crop, cleaning and if applicable, annotating will be here.
 
 Each subsection should mention the value of databases and their unique characteristics for our study.
 
@@ -112,7 +98,7 @@ Importance of the annotation\cite{mathias2014face} should be remarked.
 To this end, 250 actor and 250 actress names from IMDB (Internet Movie DataBase) are used to collect male and female photos from Google Image results using part of the Database Sorter\ref{[ss:databasesorter]}. This method is inspired largely by Jia's work: Learning to classify gender from four million images
 \cite{jia2015learning}.
 
-For data preparation, Viola-Jones face detection algorithm\cite{viola} is used to crop the faces. Viola-Jones results are cleaned by hand for non-faces (or wrong gender).
+For data preparation, Zhu framework\cite{zhu2012face} is used to locate the faces, find the landmarks and crop to face bounding box. Algorithm results are cleaned by hand for false positives (or reorganized in the case of wrong gender).
 
 \subsection{Labeled faces in the wild}\label{ss-dbLFW}
 LFW\cite{LFWTech} face database is used to form another set of gender images. Similar to section \ref{[ss-dbGenderGoogleImages]}, Viola-Jones algorithm is used for face crop.
@@ -121,6 +107,19 @@ LFW dataset, as provided, are not categorized by the gender but only the names o
 
 \subsection{10k US Adult Faces Database}\label{ss-db10k}
 10k adult faces\cite{bainbridge2013intrinsic} database contains more than ten thousand images, aligned and landmarked. This database contains neither gender information nor first names like LFW. Hence, first Viola-Jones, then hand organization is performed for labeling.
+
+\subsection{Rijkmuseum Art Database}\label{ss-dbRijk}
+Painting\cite{rijksmuseum1976tot} image pieces hand-annotated into four sub-categories:
+
+\begin{itemize}
+	\item Female (499)
+	\item Male (1.006)
+	\item Bad Face (11.030)
+	\item Trash
+\end{itemize}
+
+“Trash” contains false positive face regions which are not actually face or are of very poor quality. “Bad Face” category consists of correct face regions that are poor quality, are not paintings - pieces from masks / statues etc., cartoons or any non-oil painting piece in general.
+
 
 \section{Whole Packages}
 
