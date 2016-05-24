@@ -10,7 +10,23 @@
 %\usepackage{newcent}   % uses new century schoolbook postscript font  
 \topmargin=-0.5in  % start text higher on the page
 \setlength{\textheight}{10in} % increase text height to fit resume on 1 page
-\begin{document}  
+\begin{document}
+	
+	\newcommand{\cba}[2]{
+		\bf\hspace{.08in}#1\normalfont
+		\begin{itemize}
+			\item[] #2\\
+		\end{itemize}
+		}
+		
+	\newcommand{\cbb}[3]{
+		\begin{tabular}{p{2in} r}
+			{\bf #1}, &  #2
+		\end{tabular}	
+		\begin{itemize}
+			\item[] #3 
+		\end{itemize}}
+	
 	\name{Cihan Sari}
 	
 	\address{Bordenbergweg Str. 64367, M\"uhltal\\
@@ -20,77 +36,40 @@
 	%\includegraphics{me.jpg}       
 	%              \end{figure}          d
 	\begin{resume}
-		
 		\begin{wrapfigure}{r}{0.1\textwidth}
 			\vspace{-1in}
 			\includegraphics[width=1in]{me.jpg}
 		\end{wrapfigure}
 		
 		\vspace{.5in}
-		\section{SKILLS} 
-		\begin{tabular}{p{2in} r}
-			{\bf Programming},
-		\end{tabular}	
-		\begin{itemize}
-			\item[] C++, Qt, C\#, Matlab, Bash
-		\end{itemize} 
-		
-		\begin{tabular}{p{2in} r}
-			{\bf Subjects of Interest},
-		\end{tabular}	
-		\begin{itemize}
-			\item[] Machine Learning, Pattern Recognition, Computer Vision,
-		\end{itemize} 
-		
-		\begin{tabular}{p{2in} r}
-			{\bf Personal},
-		\end{tabular}	
-		\begin{itemize}
-			\item[] Team player, Hard worker, and Researcher
-		\end{itemize}
-		
+		\section{SKILLS}
+		\cba{Programming}{C++, Qt, C\#, Matlab, Bash}
+		\cba{Subjects of Interest}{Machine Learning, Pattern Recognition, Computer Vision}
+		\cba{Personal}{Team player, Hard worker, and Researcher}
 		
 		\vspace{.5in}
+
 		\section{EXPERIENCE}
-		\begin{tabular}{p{2in} r}
-			{\bf ISRA Vision AG}, &  January 2016 - (currently ongoing)
-		\end{tabular}	
-		\begin{itemize}
-			\item[] R\&D Project Manager on Corporate \& Electronics, Illuminations and Sensors center, sensor and hardware solutions, development and management 
-		\end{itemize} 
+		\cbb{ISRA Vision AG}{January 2016 - (currently ongoing)}
+		{R\&D Project Manager on Corporate \& Electronics, Illuminations and Sensors center, sensor and hardware solutions, development and management}
 		
-		\begin{tabular}{p{2in} r}
-			{\bf Vistek ISRA Vision}, &  January 2014 - December 2015 (2 years)
-		\end{tabular}	
-		\begin{itemize}
-			\item[] R\&D Manager of research and development team of machine vision based solutions for industrial automation and inspection as well as computer vision applications
-		\end{itemize} 
+		\cbb{Vistek ISRA Vision}{January 2014 - December 2015 (2 years)}
+		{R\&D Manager of research and development team of machine vision based solutions for industrial automation and inspection as well as computer vision applications}
 		
-		\begin{tabular}{p{2in} r}
-			{\bf Bo\u{g}azi\c{c}i Uni. Signal and Image Processing Laboratory},&  February 2012 -  December 2013 \\
-		\end{tabular}	
-		\begin{itemize}
-			\vspace{.1cm}
-			\item[] Member of research team
-		\end{itemize}
+		\cbb{Bo\u{g}azi\c{c}i Uni. Signal and Image Processing Laboratory}{February 2012 -  December 2013}
+		{Member of research team}
 		
-		\begin{tabular}{p{2in} r}
-			{\bf Vistek ISRA Vision}, &  February 2010 - October 2013 (3 years 9 months)
-		\end{tabular}	
-		\begin{itemize}
-			\item[] Member of research and development team of machine vision based solutions for industrial automation and inspection as well as computer vision applications
-		\end{itemize}
+		\cbb{Vistek ISRA Vision}{February 2010 - October 2013 (3 years 9 months)}
+		{Member of research and development team of machine vision based solutions for industrial automation and inspection as well as computer vision applications}
 		
 		\vspace{.5in}
 		\section{EDUCATION}
-		{\bf Bo\u{g}azi\c{c}i University}, Istanbul \\
-		Systems and Control Engineering (MSc), ongoing \\
-		G.P.A. 3.6/4.0
-		
-		\begin{ncolumn}{1}
-			
-			{\bf Subjects} \\
-			Introduction to Image Processing \\
+		\cbb{Bo\u{g}azi\c{c}i University}{Istanbul}
+		{Systems and Control Engineering (MSc) - ongoing\\G.P.A. 3.6/4.0}
+
+		\hspace{.08in}{\bf Subjects}\vspace{-.15in}\\
+		\begin{itemize}
+			\item[] Introduction to Image Processing \\
 			Introduction to Robot Control\\
 			Pattern Recognition \\
 			Computer Vision \\
@@ -98,33 +77,29 @@
 			Autonomous Robots \\
 			Optimization Techniques \\
 			Stochastic Processes \& Applications
-		\end{ncolumn}
+		\end{itemize}
 		
-		
-		{\bf Yeditepe University}, Istanbul \\
-		Electrical and Electronics Engineering (BSc), 2010 \\
-		G.P.A. 2.6/4.0 
-		
-		\begin{ncolumn}{1}
-			{\bf Subjects}
-			
-			Digital Signal Processing \\
+		\cbb{Yeditepe University}{Istanbul}
+		{Electrical and Electronics Engineering (BSc), 2010\\G.P.A. 2.6/4.0}
+
+		\hspace{.08in}{\bf Subjects}\vspace{-.15in}\\
+		\begin{itemize}
+			\item[] Digital Signal Processing \\
 			Digital Control \\
 			Micro Controllers
-		\end{ncolumn}
-		
-		
+		\end{itemize}
+
 		\section{PROJECTS} 
 		\normalsize{\section{ISRA Vision Projects}}
 		\begin{itemize} \itemsep -2pt % reduce space between items
-			\item {\bf BeadMaster}, 2016 -: Glass cup quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked on vision solutions for mouth, sides and surface purity inspection and as coordinator between vision and software team.
-			\item {\bf TIS}, 2014 - 2015: Tumbler Inspection System, quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked as team manager development for mouth, sides and surface purity inspection and as coordinator between vision and software team.
-			\item {\bf TIS}, 2011 - 2013: Tumbler Inspection System, quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked on vision solutions for mouth, sides and surface purity inspection and as coordinator between vision and software team.
-			\item {\bf Torpedo Inspection}, 2013: Worked on core program, vision algorithm, user interface and database.
-			\item {\bf Color Inspection}, 2013: Worked on core program, user interface, database and machine vision. Colour inspection is used for both biscuits and fabrics.
-			\item {\bf Refrigerator Measurement System}, 2012: Worked on vision algorithm, detection of interest point in the images, calibrating 10 cameras to work in the same workspace.
-			\item {\bf Texture Matching}, 2011: Worked on fabric texture matching using Scale Invariant Feature Transform (SIFT), Speeded up Robust Features (SURF) and bag of visual words (BoW).
-			\item {\bf VisMos}, March - June 2010: Granite / Marble Mosaic Tile Setting System. Worked on accurate tile position and colour detection to provide exact coordinates for robot arm to pick up the tiles.
+			\item[] {\bf BeadMaster}, 2016 -: Glass cup quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked on vision solutions for mouth, sides and surface purity inspection and as coordinator between vision and software team.
+			\item[] {\bf TIS}, 2014 - 2015: Tumbler Inspection System, quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked as team manager development for mouth, sides and surface purity inspection and as coordinator between vision and software team.
+			\item[] {\bf TIS}, 2011 - 2013: Tumbler Inspection System, quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked on vision solutions for mouth, sides and surface purity inspection and as coordinator between vision and software team.
+			\item[] {\bf Torpedo Inspection}, 2013: Worked on core program, vision algorithm, user interface and database.
+			\item[] {\bf Color Inspection}, 2013: Worked on core program, user interface, database and machine vision. Colour inspection is used for both biscuits and fabrics.
+			\item[] {\bf Refrigerator Measurement System}, 2012: Worked on vision algorithm, detection of interest point in the images, calibrating 10 cameras to work in the same workspace.
+			\item[] {\bf Texture Matching}, 2011: Worked on fabric texture matching using Scale Invariant Feature Transform (SIFT), Speeded up Robust Features (SURF) and bag of visual words (BoW).
+			\item[] {\bf VisMos}, March - June 2010: Granite / Marble Mosaic Tile Setting System. Worked on accurate tile position and colour detection to provide exact coordinates for robot arm to pick up the tiles.
 		\end{itemize}
 		\normalsize{\section{In Proceedings}}
 		\begin{itemize}
