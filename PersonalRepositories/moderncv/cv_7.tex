@@ -1,0 +1,228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% "ModernCV" CV and Cover Letter
+% LaTeX Template
+% Version 1.2 (25/3/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Xavier Danaux (xdanaux@gmail.com) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Important note:
+% This template requires the moderncv.cls and .sty files to be in the same 
+% directory as this .tex file. These files provide the resume style and themes 
+% used for structuring the document.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt,a4paper,sans]{moderncv} % Font sizes: 10, 11, or 12; paper sizes: a4paper, letterpaper, a5paper, legalpaper, executivepaper or landscape; font families: sans or roman
+
+\moderncvstyle{casual} % CV theme - options include: 'casual' (default), 'classic', 'oldstyle' and 'banking'
+\moderncvcolor{blue} % CV color - options include: 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage[scale=0.75]{geometry} % Reduce document margins
+%\setlength{\hintscolumnwidth}{3cm} % Uncomment to change the width of the dates column
+%\setlength{\makecvtitlenamewidth}{10cm} % For the 'classic' style, uncomment to adjust the width of the space allocated to your name
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CONTACT INFORMATION SECTION
+%----------------------------------------------------------------------------------------
+
+\firstname{Cihan} % Your first name
+\familyname{Sari} % Your last name
+
+% All information in this block is optional, comment out any lines you don't need
+\title{Curriculum Vitae}
+\address{Bordenbergweg Str. 64367}{M\"uhltal, Germany}
+\mobile{+49 176 62 01 37 66}
+\email{cihansari86@gmail.com}
+
+\photo[70pt][0.4pt]{me} % The first bracket is the picture height, the second is the thickness of the frame around the picture (0pt for no frame)
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	COVER LETTER
+%----------------------------------------------------------------------------------------
+
+% To remove the cover letter, comment out this entire block
+%
+%\clearpage
+%
+%\recipient{HR Department}{Corporation\\123 Pleasant Lane\\12345 City, State} % Letter recipient
+%\date{\today} % Letter date
+%\opening{Dear Sir or Madam,} % Opening greeting
+%\closing{Sincerely yours,} % Closing phrase
+%\enclosure[Attached]{curriculum vit\ae{}} % List of enclosed documents
+%
+%\makelettertitle % Print letter title
+%
+%\lipsum[1-3] % Dummy text
+%
+%\makeletterclosing % Print letter signature
+%
+%\newpage
+
+%----------------------------------------------------------------------------------------
+%	CURRICULUM VITAE
+%----------------------------------------------------------------------------------------
+
+\makecvtitle % Print the CV title
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Education}
+
+\cventry{2012--ongoing}{Masters on Systems and Control Engineering }{Bo\u{g}azi\c{c}i University}{Istanbul}{}{\vspace{.1em}Subjects
+	\begin{itemize}\setlength\itemsep{-1.2em}
+		\item Introduction to Image Processing \\
+		\item Introduction to Robot Control\\
+		\item Pattern Recognition \\
+		\item Computer Vision \\
+		\item Data Mining for Visual Media \\
+		\item Autonomous Robots \\
+		\item Optimization Techniques \\
+		\item Stochastic Processes \& Applications
+	\end{itemize}}{}
+
+
+\cventry{2004--2010}{Bachelor of Electrical and Electronics Engineering}{Yeditepe University}{Istanbul}{}{}{}
+
+%----------------------------------------------------------------------------------------
+%	WORK EXPERIENCE SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Work Experience}
+
+\cventry{2016--Present}{Project Manager}{\textsc{ISRA Vision AG}}{Darmstadt}{}{Project Manager on Corporate Electronics, Illuminations and Sensors, hardware solutions, development and management}
+
+%------------------------------------------------
+
+\cventry{2014--2015}{R\&D Manager}{\textsc{Vistek ISRA Vision}}{Istanbul}{}{R\&D Manager of research and development team. Working on machine vision based solutions for industrial automation, quality control and computer vision applications}
+
+%------------------------------------------------
+
+\cventry{2010--2014}{R\&D Engineer}{\textsc{Vistek ISRA Vision}}{Istanbul}{}{Member of research and development team. Working on machine vision based solutions for industrial automation, quality control and computer vision applications}
+
+%----------------------------------------------------------------------------------------
+%	COMPUTER SKILLS SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Computer skills}
+
+\cvitem{}{C++, \textsc{Qt}, C\#, \textsc{Matlab}, \textsc{Bash}, \LaTeX, MS Office, Microsoft Windows, Linux}
+
+%----------------------------------------------------------------------------------------
+%	COMMUNICATION SKILLS SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Communication Skills}
+
+\cvitem{2013}{Interpersonal Communication, Alexander Harmsen}
+\cvitem{2014}{Effective Leadership, Alexander Harmsen}
+
+
+
+%----------------------------------------------------------------------------------------
+%	Projects
+%----------------------------------------------------------------------------------------
+
+\section{ISRA Projects}
+
+%------------------------------------------------
+
+\cventry{2016--ongoing}{BeadMaster}{}{}{Tean Manager}{2D Bead inspection sensor. Worked as \emph{project manager} coordination and planning for hardware development team.}
+
+%------------------------------------------------
+
+\cventry{2011--2016}{TIS Tumbler Inspection}{}{}{Team Manager}{Tableware Inspection System, quality inspection machine (mouth, sides, surface, brim and bottom purity inspection). Worked as \emph{vision engineer and coordinator} for three years, then became \emph{team manager} of research and development team.}
+
+%------------------------------------------------
+
+\cventry{2014--2015}{TIS Color Inspection}{}{}{Solo Developer}{Worked as \emph{the developer} on core program, user interface, database and machine vision. Color inspection is used for both biscuits and fabrics.}
+
+%------------------------------------------------
+
+\cventry{2012--2013}{Refrigerator Measurement System}{}{Solo Developer}{ISRA Projects}{Worked on \emph{vision algorithm}, detection of interest point in the images, calibrating 10 cameras to work in the same workspace.}
+
+%------------------------------------------------
+
+\cventry{2011--2012}{Texture Matching}{}{}{Solo Developer}{Worked as \emph{the developer} on fabric texture matching using Scale Invariant Feature Transform (SIFT), Sped up Robust Features (SURF) and bag of visual words (BoW).}
+
+%------------------------------------------------
+
+\cventry{2010--2012}{VisMos}{}{}{Team Member}{Granite / Marble Mosaic Tile Setting System. Worked on \emph{accurate tile position and color detection} to provide exact coordinates for robot arm to pick up the tiles.}
+
+%----------------------------------------------------------------------------------------
+%	Projects
+%----------------------------------------------------------------------------------------
+
+\section{Personal and Grad Projects}
+
+%------------------------------------------------
+
+\cventry{2015--2016}{Gender Data for Face Images}{}{}{Grad Project}{Very rich and extended face database with gender data has been formed combining: Rijksmuseum Art Database, 10k US Adult Faces Database, Labeled faces in the wild and Google image search results on 500 actor and actress names. FischerFaces and Intraface implementations are used for face detection. Resulting hundreds of thousands of images categorized manually.}
+
+%------------------------------------------------
+
+\cventry{2014--2015}{Database Sorter}{}{}{Personal Project}{Database sorter is a software framework with pieces in Matlab, MatConvNet, pretrained C-NN model (imagenet-vgg-f) on ImageNet and Qt. Its purpose is to sort any given raw database of images into text categories specified by the user, with the power of Google image search results.}
+
+%------------------------------------------------
+
+\cventry{2012--2013}{Hough Forests based Face Detection}{}{}{Grad Project}{Project for Data Mining for Visual Media course, Hough Forests architecture is investigated for face detection using OpenCV 2.4.3, Qt 5.0.1. 3000 samples from cropped labeled faces in the wild (LFW) dataset is used for training decision forests. Faces are divided to 16 patches ($4\times4$). Extremely randomized trees are given an objective to classify the face patches. A tiny program is used to generate these trees using a part of the training set and this program is distributed to 14 computers. Each computer generated $500 - 1200$ unique trees and according to their individual and combined performances, each has reached to the generalized error that is proposed by RDF ($40\%$ accuracy on identifying a patch correctly). Finally, probabilistic voting is used to determine the face in the image. 99.37\% performance is reached on Cropped LFW (on remaining 10233 test images) and 70.60\% on 13233 full LFW images.}
+
+%------------------------------------------------
+
+\cventry{2012--2013}{Random Decision Forests}{}{}{Personal Project}{As part of the Data Mining for Visual Media course, a two hours RDF presentation is given to the class, including decision trees, studies that lead to RDF, its algorithm, parameters and advantages, some tricks on its usage, comparisons against SVM and Neural Networks and popular studies.}
+
+%------------------------------------------------
+
+\cventry{2012}{Home Service Robot}{}{}{Grad Project}{Project for Autonomous Robots course using Robot Operating System (ROS), Qt 4.6.4, OpenCV 2.4.2. 10 minutes are given to simultaneously map the environment and position the robot. Afterwards, random requests are given to the robot via control panel to go to drink, where robot requests it, then goes to the visitor. Robot gives requests using speech synthesis module and takes requests using speech recognition. Environment is simulated using Virtual Robot Experimentation Platform (V-Rep), a control panel to handle requests, keep track of the current map, robot position, emergency stop etc. is coded using Qt. Same interface can be used to manually move robot in the map or katana arm (although obstacle avoidance module overrides this control when necessary). OpenCV is used to create the map, visualize it, identify objects of the surrounding (drink, user, door handles). Orocos Kinematics Dynamics (KDL) package is used for arm dynamics to open the doors using robot arm. Rapidly exploring random trees (RRT) is implemented for path finding.}
+
+%------------------------------------------------
+
+\cventry{2011--2012}{Leaf Recognition}{}{}{Grad Project}{Project for Introduction to Image Processing and Computer Vision course, which eventually lead to "Combination of Gross Shape Features, Fourier Descriptors and Multiscale Distance Matrix for Leaf Recognition" study. It recognizes the provided leaves using three separate SVM classifiers trained with respective feature sets and determines the final decision by weighing decisions with cross-validation performances.}
+
+%------------------------------------------------
+
+\cventry{2011--2012}{Gender Recognition with Random Decision Forests}{}{}{Grad Project}{Project for Pattern Recognition course, which eventually lead to a joint study "Facial Feature Selection for Gender Recognition based on Random Decision Forests". Throughout the tests, the number of necessary features that is used on SVM is successfully reduced to half (445 features out of total 832) with 1.4\% performance sacrifice.}
+
+%----------------------------------------------------------------------------------------
+%	LANGUAGES SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Languages}
+
+\cvitemwithcomment{Turkish}{Mother tongue}{}
+\cvitemwithcomment{English}{Bilingual}{Language at home and work}
+\cvitemwithcomment{German}{Basic}{Basic words and phrases only}
+
+%----------------------------------------------------------------------------------------
+%	INTERESTS SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Interests}
+
+\renewcommand{\listitemsymbol}{-~} % Changes the symbol used for lists
+
+\cvlistdoubleitem{Machine Learning}{Pattern Recognition}
+\cvlistdoubleitem{Roleplaying}{Computer Games}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
