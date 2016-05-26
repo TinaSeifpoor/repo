@@ -36,15 +36,15 @@
 
 \newlength{\datebox}\settowidth{\datebox}{2014 - Present} % Set the width of the date box in each block
 
-\newcommand{\NewEntry}[3]{\noindent\hangindent=1em\hangafter=0 \parbox{\datebox}{\textit{#1}}\hspace{1.5em} #2 #3 % Define a command for each new block - change spacing and font sizes here: #1 is the left margin, #2 is the italic date field and #3 is the position/employer/location field
+\newcommand{\NewEntry}[3]{\noindent\parbox{\datebox}{\textit{#1}}\hspace{1.5em} #2 #3 % Define a command for each new block - change spacing and font sizes here: #1 is the left margin, #2 is the italic date field and #3 is the position/employer/location field
 \vspace{0.5em}} % Add some white space after each new entry
 
-\newcommand{\Description}[1]{\hangindent=1em\hangafter=0\noindent\footnotesize{#1}\par\normalsize\vspace{1em}} % Define a command for descriptions of each entry - change spacing and font sizes here
+\newcommand{\Description}[1]{\noindent\footnotesize{#1}\par\normalsize\vspace{1em}} % Define a command for descriptions of each entry - change spacing and font sizes here
 
 \usepackage{color}
 \definecolor{lightgray}{gray}{0.9}
-\newcommand{\CVSection}[1]{
-  \noindent\hspace{-10em}\colorbox{lightgray}{%
+\newcommand{\CVSection}[1]{\noindent
+  \hspace{-10em}\colorbox{lightgray}{%
   \hspace{10em}\parbox{35em}{\Large \spacedlowsmallcaps{#1}}}
 }
 
@@ -72,9 +72,9 @@
 
 \Description{\MarginText{E-mail}tina.seifpoor@gmail.com}% Email address
 
-\Description{\MarginText{Address}Cumhuriyet Mah.,Ye\c{s}ilay Sok.,9/1,Hac{\i}osman,Istanbul} % Personal 
+\Description{\MarginText{Address}Bordenbergweg Str. 64367, M\"uhltal} % Personal 
 
-\Description{\MarginText{Cell Phone}+90 (506) 120 6201} % Phone number(s)
+\Description{\MarginText{Cell Phone}+49 (176) 204 23 036} % Phone number(s)
 
 \vspace{1em} % Extra white space between the personal information section and goal
 
@@ -83,17 +83,23 @@
 %	WORK EXPERIENCE
 %----------------------------------------------------------------------------------------
 
-\CVSection{Work Experience}\vspace{1em}
+\CVSection{Work Experience}
 
 %------------------------------------------------
 
-\NewEntry{2011--2013}{Researcher, \textsc{ADAX Project}  --- Istanbul}
+\NewEntry{2014--2015}{Marketing Manager, \textsc{CryptTech}}
 
-\Description{\MarginText{Bogazici University}Worked as a member of research team in ADAX (Attacks Detection And Countermeasures Simulation) which aims to study feasibility of solutions enabling to detect complex attacks against an information system. \\ Reference: Prof. Emin \textsc{Anarim}\ \ $\cdotp$\ \ \href{anarim@boun.edu.tr}{anarim@boun.edu.tr}}
+\Description{\MarginText{CryptTech Co.}Presentation, technical and customer documentation of network security products (Network monitoring, SIEM, log management and hotspot). \\Reference: Alper \textsc{Yilmaz}\ \ $\cdotp$\ \ \href{alperyilmaz@crypttech.com}{alperyilmaz@crypttech.com}}
 
 %------------------------------------------------
 
-\NewEntry{2008-2009}{Sales Manager, \textsc{F.R.S. Co.} --- Tehran,Iran}
+\NewEntry{2010--2013}{Researcher, \textsc{ADAX Project}}
+
+\Description{\MarginText{Bogazici University}Member of research team in ADAX -- attack detection and counter-measures simulation -- developing solutions to detect complex attacks against information systems. \\ Reference: Prof. Emin \textsc{Anarim}\ \ $\cdotp$\ \ \href{anarim@boun.edu.tr}{anarim@boun.edu.tr}}
+
+%------------------------------------------------
+
+\NewEntry{2008--2010}{Sales Manager, \textsc{F.R.S. Co.}}
 
 \Description{\MarginText{F.R.C. Co.}Customer Relations Manager, Operational Management, Export/Import Organizer  \\ Reference: Mr. Rahim \textsc{Alijani}\ \ $\cdotp$\ \ \href{info@rockstone.biz}{info@rockstone.biz}}
 
@@ -107,7 +113,7 @@
 
 \CVSection{Education}\vspace{1em}
 
-\NewEntry{2014-\small Present}{Bogazici University, Istanbul}
+\NewEntry{2014-\small frozen}{Bogazici University, Istanbul}
 
 \Description{\MarginText{Doctor of Philosophy}School: Electrical \& Electronics Engineering Dept.\newline 
 Thesis: \textit{Application of Self-Interference Lloyd's Fiber Interferometer in pressure and bending sensors}\newline
@@ -140,9 +146,9 @@ Description: This degree focused heavily on general materials of electronics and
 \newpage
 \CVSection{Publications}\vspace{1em}
 
-\Description{{\bf Tina Seifpoor}, Ramin Fadaei Fouladi, Derya Erhan, Emin Anarim, “Statistical filtering against DoS/DdoS attack”, Masfor 2012 Bogazici University, Istanbul, Turkey.}
-\Description{Ramin Fadaei Fouladi, {\bf Tina Seifpoor}, Derya Erhan, Emin Anarim, “Frequency Domain Analysis Approach in Detecting Shrew DDoS Attacks”, Masfor 2012 Bogazici University, Istanbul, Turkey.}
-\Description{Ramin Fadaei Fouladi, {\bf Tina Seifpoor}, Emin Anarim, “Frequency Characteristics of DoS and DDoS Attacks”, SIU 2013, Northern Cyprus.}
+\Description{\textbf{Tina Seifpoor}, Ramin Fadaei Fouladi, Derya Erhan, Emin Anarim, “Statistical filtering against DoS/DdoS attack”, Masfor 2012 Bogazici University, Istanbul, Turkey.}
+\Description{Ramin Fadaei Fouladi, \textbf{Tina Seifpoor}, Derya Erhan, Emin Anarim, “Frequency Domain Analysis Approach in Detecting Shrew DDoS Attacks”, Masfor 2012 Bogazici University, Istanbul, Turkey.}
+\Description{Ramin Fadaei Fouladi, \textbf{Tina Seifpoor}, Emin Anarim, “Frequency Characteristics of DoS and DDoS Attacks”, SIU 2013, Northern Cyprus.}
 
 
 
@@ -176,7 +182,7 @@ Description: This degree focused heavily on general materials of electronics and
 
 \vspace{1em}
 
-\Description{\MarginText{Working Permit}2015\ \ $\cdotp$\ \ Extendable to 2019}
+\Description{\MarginText{Working Permit}2018}
 
 %------------------------------------------------
 
@@ -194,6 +200,10 @@ Description: This degree focused heavily on general materials of electronics and
 \vspace{-0.5em} % Negative vertical space to counteract the vertical space between every \Description command
 
 \Description{\parbox{\langbox}{\textsc{Turkish}}\ \ $\cdotp$\ \ \ Intermediate}
+
+\vspace{-0.5em} % Negative vertical space to counteract the vertical space between every \Description command
+
+\Description{\parbox{\langbox}{\textsc{German}}\ \ $\cdotp$\ \ \ Beginner}
 
 \vspace{1em} % Negative vertical space to counteract the vertical space between every \Description command
 
