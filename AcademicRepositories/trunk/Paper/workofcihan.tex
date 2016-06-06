@@ -2,7 +2,10 @@
 % Based on CVPR 07 and LNCS, with modifications by DAF, AZ and elle, 2008 and AA, 2010, and CC, 2011; TT, 2014
 
 \documentclass[runningheads]{llncs}
-\usepackage{graphicx, wrapfig}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
 \usepackage{amsmath,amssymb} % define this before the line numbering.
 \usepackage{ruler}
 \usepackage{color}
@@ -59,19 +62,77 @@ I \textbf{really} should categorize related works in these three: art-related, m
 \subsection{Data Supervisor}\label{[ss:datasupervisor]}
 
 
-In today's modern world, thanks to the computation power and the availability of Internet, there are thousands of databases available for a research scientist. However, vast majority of the databases have been gathered for a single purpose and marked as such. For example, Iris Flower Database\cite{fisher1936use}. It is a multivariate data set that contains sepal and petal dimensions (width and height) from Iris flowers of three related species. Another example, MNIST\cite{lecun1998mnist} is an image database of handwritten digits. It is gathered and tailored together to distinguish between different handwritten digits. These databases are currently used as benchmarking studies for machine learning algorithms. MNIST, along with ImageNet\cite{ILSVRC15}, is one of the most popular benchmark for C-NN implementations from different libraries and tool sets. At the end of the day, most of the databases have been gathered for specific purposes and does not (cannot) contain all the information regarding objects they contain.
+In today's modern world, thanks to the availability of Internet and accessible computational power, there are thousands of databases available for a research scientist. However, vast majority of the databases have been gathered for a single purpose and marked as such. For example, Iris Flower Database\cite{fisher1936use} is a multivariate data set that contains sepal and petal dimensions (width and height) from Iris flowers of three related species. Another example, MNIST\cite{lecun1998mnist} is an image database of handwritten digits which is gathered and tailored together to distinguish between different handwritten digits. These databases are currently used as proof of concept or benchmarking studies for machine learning algorithms. MNIST, along with ImageNet\cite{ILSVRC15}, is one of the most popular benchmark for C-NN implementations from different libraries and tool sets. However, majority of these databases have been gathered for a specific purpose and annotated as such and therefore does not (cannot) contain information in all the aspects on the objects they contain.
 
-\begin{wrapfigure}{r}{5cm}
-	\includegraphics{data_supervisor}
-	\caption{Supervisor results on RijksMuseum}
-	\label{fig-dsupervisor}	
-\end{wrapfigure}
 
-Supervisor is developed to address this main issue. Data supervisor, as the name might suggest, attempts to annotate the database into categories given to the system via strings. In summary, the algorithm uses Google image search\cite{googleImage} to retrieve first hundred query results for the string, to understand the category. These “supervised” categorical data are then converted to information via C-NN\cite{Chatfield14} feature extraction. Therefore, system gains access to the “supervised” categorical information in C-NN feature space. Linear SVM model is trained to distinguish between the categorical information, using C-NN feature responses. Resulting svm model is then used over the “unknown” C-NN feature responses from the database to compute probability of each image belonging to each given string and sorted accordingly.
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/arm}
+		\caption{Arm}
+		\label{fig:arm}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/bag}
+		\caption{Bag}
+		\label{fig:bag}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/cup}
+		\caption{Cup}
+		\label{fig:cup}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/hair}
+		\caption{Hair}
+		\label{fig:hair}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/jewelry}
+		\caption{Jewelry}
+		\label{fig:jewelry}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/painting}
+		\caption{Painting}
+		\label{fig:painting}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/pants}
+		\caption{Pants}
+		\label{fig:pants}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/plate}
+		\caption{Plate}
+		\label{fig:plate}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/data_supervisor/portrait}
+		\caption{Portrait}
+		\label{fig:portrait}
+	\end{subfigure}
+	\caption{Supervisor query results on RijksMuseum}\label{fig-dsupervisor}
+\end{figure}
+
+
+Supervisor is developed to address this issue. Data supervisor, it's name would suggest, attempts to annotate the database into categories given to the system via strings. In summary, the algorithm uses Google image search\cite{googleImage} to retrieve first hundred query image results for the string, as a mean to learn the category. These “supervised” categorical data are then converted to information via C-NN\cite{Chatfield14} feature extraction. Therefore, system gains access to the “supervised” categorical information in C-NN feature space. Linear SVM model\cite{CC01a} is trained to distinguish between the categorical information, using C-NN feature responses. Resulting SVM model is then used over the “unknown” C-NN feature responses from the database to compute probability of each image belonging to a given string and sorted accordingly.
 
 Supervisor is a software framework with roots in Matlab\cite{MATLAB:2014}, MatConvNet\cite{matconvnet}, pretrained C-NN model\cite{Chatfield14} (imagenet-vgg-f) on ImageNet\cite{ILSVRC15} and Qt. Its purpose is to sort any given raw database of images into categories specified by the user inspired largely by In Search of Art by Zisserman\cite{Crowley14a}.
 
-An example of the data supervisor from Rijksmuseum\cite{rijksmuseum1976tot} is given in \ref{fig-dsupervisor}. One of the main differences from Zisserman's\cite{Crowley14a} implementation is that data supervisor does not have a predefined negative set. However, user can still add broad category names into the list for the sole purpose of concentrating the other categories (e.g. stuff, things, etc).
+An example of the data supervisor from Rijksmuseum\cite{rijksmuseum1976tot} is given in Figure \ref{fig-dsupervisor}. One of the main differences from Zisserman's\cite{Crowley14a} implementation is that data supervisor does not have a predefined negative set. However, user can still add broad category names into the list for the sole purpose of concentrating other categories (e.g. stuff, things, etc).
 
 
 \subsection{Face crop with FisherFaces in OpenCV}
