@@ -128,20 +128,59 @@ In today's modern world, thanks to the availability of Internet and accessible c
 \end{figure}
 
 
-Supervisor is developed to address this issue. Data supervisor, it's name would suggest, attempts to annotate the database into categories given to the system via strings. In summary, the algorithm uses Google image search\cite{googleImage} to retrieve first hundred query image results for the string, as a mean to learn the category. These “supervised” categorical data are then converted to information via C-NN\cite{Chatfield14} feature extraction. Therefore, system gains access to the “supervised” categorical information in C-NN feature space. Linear SVM model\cite{CC01a} is trained to distinguish between the categorical information, using C-NN feature responses. Resulting SVM model is then used over the “unknown” C-NN feature responses from the database to compute probability of each image belonging to a given string and sorted accordingly.
+Supervisor is developed to address this issue. Data supervisor, it's name would suggest, attempts to annotate the database into categories given to the system via strings. Algorithm flow is given in figure \ref{fig:supervisorflow}. In summary, the algorithm flowchart uses Google image search\cite{googleImage} to retrieve first hundred query image results for the string, as a mean to learn the category. These “supervised” categorical data are then converted to information via C-NN\cite{Chatfield14} feature extraction. Therefore, system gains access to the “supervised” categorical information in C-NN feature space. Linear SVM model\cite{CC01a} is trained to distinguish between the categorical information, using C-NN feature responses. Resulting SVM model is then used over the “unknown” C-NN feature responses from the database to compute probability of each image belonging to a given string and sorted accordingly.
 
 Supervisor is a software framework with roots in Matlab\cite{MATLAB:2014}, MatConvNet\cite{matconvnet}, pretrained C-NN model\cite{Chatfield14} (imagenet-vgg-f) on ImageNet\cite{ILSVRC15} and Qt. Its purpose is to sort any given raw database of images into categories specified by the user inspired largely by In Search of Art by Zisserman\cite{Crowley14a}.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{figures/data_supervisor/flowchart}
+	\caption{Supervisor flowchart}
+	\label{fig:supervisorflow}
+\end{figure}
 
 An example of the data supervisor from Rijksmuseum\cite{rijksmuseum1976tot} is given in Figure \ref{fig-dsupervisor}. One of the main differences from Zisserman's\cite{Crowley14a} implementation is that data supervisor does not have a predefined negative set. However, user can still add broad category names into the list for the sole purpose of concentrating other categories (e.g. stuff, things, etc).
 
 
-\subsection{Face crop with FisherFaces in OpenCV}
-162.936 plain crops from RijksMuseum\cite{rijksmuseum1976tot} with ViolaJones. Lots of repetition. 
 
-FisherFaces (and Intraface face landmark extraction): 8611 after hand-clean. 191 female, 533 male, 446 faces in low quality, 511 garbage: 5130 not checked.
+
+
+
+
+
+
 \subsection{Face landmarks with Intraface}
 
-\subsection{Face alignment and LBP features}
+\subsection{Face crop with FisherFaces in OpenCV with IntraFace}
+162.936 plain crops from RijksMuseum\cite{rijksmuseum1976tot} with ViolaJones only! Lots of repetition..
+
+Fisherfaces and Intraface landmarking success criteria provides 6807 hits. 
+
+1681 categorized by hand into four: 191 female, 533 male, 446 faces in low quality (or lacking color), 511 garbage.
+
+\subsection{Face alignment and LBP features with LinearSVM}
+Gender recognition performance study results with 10k US Adult Faces Database (featured in section \ref{ss-db10k}). Decision forest using Weka\cite{hall2009weka}. 10 fold cross-validation results are given in Table \ref{tab:10kadultPerformance}. Confusion matrix is given in Table \ref{tab:10kadultConfusion}.
+
+\begin{table}
+	\centering
+	\caption{10k Adult Faces Database performances}\label{tab:10kadultPerformance}
+	\hspace{1cm}
+	\begin{tabular}{l|rr}
+		Correctly Classified Instances & 7997 & 90.6\%\\
+		Incorrectly Classified Instances & 827 & 9.37\%\\
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\centering
+	\caption{10k Adult Faces Database Confusion Matrix}\label{tab:10kadultConfusion}
+	\hspace{1cm}
+	\begin{tabular}{rrl}
+		f & m & $\leftarrow$ classified as\\
+		3017 & 680 & f = female \\
+		147&4980&m= male\\
+		& & $\uparrow$ actual
+	\end{tabular}
+\end{table}
 
 \subsection{Style Transfer}
 
@@ -172,8 +211,13 @@ LFW\cite{LFWTech} face database is used to form another set of gender images. Si
 
 LFW dataset, as provided, are not categorized by the gender but only the names of the celebrities. Therefore, genderize.io framework is used on the first names of the celebrities to determine their gender. Unfortunately, genderize predictions were not very satisfactory (a little above fifty per cent observed) and face crops are, again, reorganized by hand for wrong gender (and false positives).
 
+13580 total face images. 12873 face images that are gender annotated (2907 female, 9966 male). Landmark extraction successful on 12428 (2839 female, 9589 male).
+
+
 \subsection{10k US Adult Faces Database}\label{ss-db10k}
 10k adult faces\cite{bainbridge2013intrinsic} database contains more than ten thousand images, aligned and landmarked. This database contains neither gender information nor first names like LFW. Hence, first Viola-Jones, then hand organization is performed for labeling.
+
+10176 total face images. 10168 face images that are gender annotated (4360 female, 5800 male). Landmark extraction successful on 8824 (3697 female and 5127 male).
 
 \subsection{Rijkmuseum Art Database}\label{ss-dbRijk}
 Painting\cite{rijksmuseum1976tot} image pieces hand-annotated into four sub-categories:
