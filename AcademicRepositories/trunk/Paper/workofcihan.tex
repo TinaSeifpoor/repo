@@ -14,7 +14,18 @@
 
 \newcommand*{\affaddr}[1]{#1} % No op here. Customize it for different styles.
 \newcommand*{\affmark}[1][*]{\textsuperscript{#1}}
-
+\newcommand*{\confMat}[6]{
+		\begin{tabular}{rrl}
+			#1 & #2 & $\leftarrow$ classified as\\
+			#3 & #4 & #1\\
+			#5&#6&#2\\
+			& & $\uparrow$ actual
+		\end{tabular}
+		}
+\usepackage{lipsum} % for dummy text only
+\usepackage{xcolor} % to make dummy text non-intrusive
+\newcommand{\fillertext}{\textcolor{black!20}{\lipsum[5-6]}}
+\newcommand{\longfillertext}{\textcolor{black!20}{\lipsum[5-13]}}
 \begin{document}
 % \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
 % \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
@@ -23,11 +34,11 @@
 \mainmatter
 \def\ECCV14SubNumber{***}  % Insert your submission number here
 
-\title{Cihan's Work} % Replace with your title
+\title{Work work} % Replace with your title
 
-\titlerunning{Cihan's work with submission ID \ECCV14SubNumber}
+\titlerunning{Work work with submission ID \ECCV14SubNumber}
 
-\authorrunning{Cihan's work with submission ID \ECCV14SubNumber}
+\authorrunning{Work work with submission ID \ECCV14SubNumber}
 
 \author{Cihan Sari\affmark[1] \and Albert Ali Salah\affmark[2] \and Alkim Almila Akdag Salah\affmark[3]}
 
@@ -48,8 +59,9 @@ a.a.akdag@uva.nl}
 
 \section{Introduction}
 
-
 Face detection has been a very interesting task for the society, culture, art, history, computer vision and machine learning.
+
+\fillertext
 
 \section{Related Work}
 
@@ -57,9 +69,11 @@ I \textbf{really} should categorize related works in these three: art-related, m
 
 \cite{van2015toward}\cite{zhu2012face}\cite{XiongD13}\cite{srinivasan2015computerized}\cite{Crowley14a}\cite{googleImage}\cite{pascal-voc-2012}\cite{ILSVRC15}\cite{agrawal2014analyzing}\cite{mathias2014face}\cite{cheng2015semantically}\cite{lempitsky2010learning}\cite{grosso2012understanding}\cite{ng2012recognizing}\cite{castrillon2013improving}\cite{portraitpainting-npar11}
 
+\fillertext\fillertext
+
 \section{Methodology}
 
-\subsection{Data Supervisor}\label{[ss:datasupervisor]}
+\subsection{Data Supervisor}\label{ss:datasupervisor}
 
 
 In today's modern world, thanks to the availability of Internet and accessible computational power, there are thousands of databases available for a research scientist. However, vast majority of the databases have been gathered for a single purpose and marked as such. For example, Iris Flower Database\cite{fisher1936use} is a multivariate data set that contains sepal and petal dimensions (width and height) from Iris flowers of three related species. Another example, MNIST\cite{lecun1998mnist} is an image database of handwritten digits which is gathered and tailored together to distinguish between different handwritten digits. These databases are currently used as proof of concept or benchmarking studies for machine learning algorithms. MNIST, along with ImageNet\cite{ILSVRC15}, is one of the most popular benchmark for C-NN implementations from different libraries and tool sets. However, majority of these databases have been gathered for a specific purpose and annotated as such and therefore does not (cannot) contain information in all the aspects on the objects they contain.
@@ -140,15 +154,10 @@ Supervisor is a software framework with roots in Matlab\cite{MATLAB:2014}, MatCo
 
 An example of the data supervisor from Rijksmuseum\cite{rijksmuseum1976tot} is given in Figure \ref{fig-dsupervisor}. One of the main differences from Zisserman's\cite{Crowley14a} implementation is that data supervisor does not have a predefined negative set. However, user can still add broad category names into the list for the sole purpose of concentrating other categories (e.g. stuff, things, etc).
 
-
-
-
-
-
-
-
-
 \subsection{Face landmarks with Intraface}
+Golden landmark extraction (10k US Adult faces used), generalized procrustes.
+
+\fillertext
 
 \subsection{Face crop with FisherFaces in OpenCV with IntraFace}
 162.936 plain crops from RijksMuseum\cite{rijksmuseum1976tot} with ViolaJones only! Lots of repetition.. Results omitted and Fisherfaces and Intraface landmarking used instead.
@@ -174,52 +183,58 @@ Gender recognition performance study results with 10k US Adult Faces Database (f
 	\centering
 	\caption{10k Adult Faces Database Confusion Matrix}\label{tab:10kadultConfusion}
 	\hspace{1cm}
-	\begin{tabular}{rrl}
-		f & m & $\leftarrow$ classified as\\
-		3017 & 680 & f = female \\
-		147&4980&m= male\\
-		& & $\uparrow$ actual
+	\confMat{f}{m}{3017}{680}{147}{4980}
+\end{table}
+
+Then same system trained with whole 10k adult faces and tested against labeled faces in wild. Confusion matrix is given in Table \ref{tab:10kadultTrainLFWTestConfusion}. Performance results are in Table \ref{tab:10kadultTrainLFWTestPerformance}.
+
+\begin{table}
+	\centering
+	\caption{LFW Performances}\label{tab:10kadultTrainLFWTestPerformance}
+	\hspace{1cm}
+	\begin{tabular}{l|rr}
+		Correctly Classified Instances & 11006 & 88.56\%\\
+		Incorrectly Classified Instances & 1422 & 11.44\%\\
 	\end{tabular}
 \end{table}
 
+\begin{table}
+	\centering
+	\caption{LFW Confusion Matrix}\label{tab:10kadultTrainLFWTestConfusion}
+	\hspace{1cm}
+	\confMat{f}{m}{1895}{944}{478}{9111}
+\end{table}
+\fillertext
 \subsection{Style Transfer}
-
+Possible tool to bridge the gap between Rijksmuseum and human faces found in LFW, 10k US Adult faces, Google image results, etc..
+\fillertext
 \section{Rijksmuseum Art Database}
+Art database story belongs here.
+
+\fillertext
+
 \subsection{Meta data and dates on Rijksmuseum}
+Meta data categories: filename	format	date	type english	title	subject	contributor	relation.
+
+Example entries are given in Table \ref{tab:RijksMetaData}.
+
+\begin{table}
+	\centering
+	\caption{Several example meta data entries}\label{tab:RijksMetaData}
+	\hspace{1cm}\tiny
+	\begin{tabular}{llrlllll}
+		\bfseries filename & \bfseries format & \bfseries date & \bfseries type in English & \bfseries title & \bfseries subject & \bfseries contributor & \bfseries relation\\
+009071 & brons 		& 1475 & beeldhouwwerk 		& De gerechtigheid\dots &  &  & \\
+008450 & brons 		& 1476 & graffiguur 	& Pseudo Philips van\dots& 41D2 & Bruikleen\dots & BK-AM-33\\
+008550 & polychromie& 1480 & beeldhouwwerk 		& Bewening van\dots & 73D7211(+5) & Aankoop\dots & \\
+104894 & boekdruk 	& 1706 & inhoudsopgave & Byvoegsel tot de ... &  &  & RP-P-OB-83.133\\
+091654 & polychromie& 1735 & schaal (objectnaam) & Hartvormige schaal... & 25G3 & Schenking\dots & \\
+060116 & etsen 		& 1764 & prent & Portret van P. Born & 31A5331 &  & \\
+069114 & hout 		& 1780 & werfmodel & Halfmodel van een... &  &  & \\
+	\end{tabular}
+\end{table}
 
 \subsection{Face Crop on Rijksmuseum}
-
-\section{Face image databases annotated with gender info}
-First step on preparing a gender recognition algorithm is to prepare annotated training data. In most cases, variety in the training set is directly proportional to the algorithm's success. 
-
-General info regarding crop, cleaning and if applicable, annotating will be here.
-
-Each subsection should mention the value of databases and their unique characteristics for our study.
-
-Importance of the annotation\cite{mathias2014face} should be remarked.
-
-
-\subsection{IMDB and Google Image results}\label{[ss-dbGenderGoogleImages]}
-
-To this end, 250 actor and 250 actress names from IMDB (Internet Movie DataBase) are used to collect male and female photos from Google Image results using part of the Database Sorter\ref{[ss:datasupervisor]}. This method is inspired largely by Jia's work: Learning to classify gender from four million images
-\cite{jia2015learning}.
-
-For data preparation, Zhu framework\cite{zhu2012face} is used to locate the faces, find the landmarks and crop to face bounding box. Algorithm results are cleaned by hand for false positives (or reorganized in the case of wrong gender).
-
-\subsection{Labeled faces in the wild}\label{ss-dbLFW}
-LFW\cite{LFWTech} face database is used to form another set of gender images. Similar to section \ref{[ss-dbGenderGoogleImages]}, Viola-Jones algorithm is used for face crop.
-
-LFW dataset, as provided, are not categorized by the gender but only the names of the celebrities. Therefore, genderize.io framework is used on the first names of the celebrities to determine their gender. Unfortunately, genderize predictions were not very satisfactory (a little above fifty per cent observed) and face crops are, again, reorganized by hand for wrong gender (and false positives).
-
-13580 total face images. 12873 face images that are gender annotated (2907 female, 9966 male). Landmark extraction successful on 12428 (2839 female, 9589 male).
-
-
-\subsection{10k US Adult Faces Database}\label{ss-db10k}
-10k adult faces\cite{bainbridge2013intrinsic} database contains more than ten thousand images, aligned and landmarked. This database contains neither gender information nor first names like LFW. Hence, first Viola-Jones, then hand organization is performed for labeling.
-
-10176 total face images. 10168 face images that are gender annotated (4360 female, 5800 male). Landmark extraction successful on 8824 (3697 female and 5127 male).
-
-\subsection{Rijkmuseum Art Database}\label{ss-dbRijk}
 Painting\cite{rijksmuseum1976tot} image pieces hand-annotated into four sub-categories:
 
 \begin{itemize}
@@ -232,11 +247,44 @@ Painting\cite{rijksmuseum1976tot} image pieces hand-annotated into four sub-cate
 “Trash” contains false positive face regions which are not actually face or are of very poor quality. “Bad Face” category consists of correct face regions that are poor quality, are not paintings - pieces from masks / statues etc., cartoons or any non-oil painting piece in general.
 
 
-\section{Whole Packages}
+\section{Face image databases annotated with gender info}
+First step on preparing a gender recognition algorithm is to prepare annotated training data. In most cases, variety in the training set is directly proportional to the algorithm's success. 
+
+General info regarding crop, cleaning and if applicable, annotating will be here.
+
+Each subsection should mention the value of databases and their unique characteristics for our study.
+
+Importance of the annotation\cite{mathias2014face} should be remarked.
+
+
+\subsection{IMDB and Google Image results}\label{ss-dbGenderGoogleImages}
+
+To this end, 250 actor and 250 actress names from IMDB (Internet Movie DataBase) are used to collect male and female photos from Google Image results using part of the Database Sorter\ref{ss:datasupervisor}. This method is inspired largely by Jia's work: Learning to classify gender from four million images
+\cite{jia2015learning}.
+
+For data preparation, Zhu framework\cite{zhu2012face} is used to locate the faces, find the landmarks and crop to face bounding box. Algorithm results are cleaned by hand for false positives (or reorganized in the case of wrong gender).
+
+\subsection{Labeled faces in the wild}\label{ss-dbLFW}
+LFW\cite{LFWTech} face database is used to form another set of gender images. Similar to section \ref{ss-dbGenderGoogleImages}, Viola-Jones algorithm is used for face crop.
+
+LFW dataset, as provided, are not categorized by the gender but only the names of the celebrities. Therefore, genderize.io framework is used on the first names of the celebrities to determine their gender. Unfortunately, genderize predictions were not very satisfactory (a little above fifty per cent observed) and face crops are, again, reorganized by hand for wrong gender (and false positives).
+
+13580 total face images. 12873 face images that are gender annotated (2907 female, 9966 male). Landmark extraction successful on 12428 (2839 female, 9589 male).
+
+
+\subsection{10k US Adult Faces Database}\label{ss-db10k}
+10k adult faces\cite{bainbridge2013intrinsic} database contains more than ten thousand images, aligned and landmarked. This database contains neither gender information nor first names like LFW. Hence, first Viola-Jones, then hand organization is performed for labeling.
+
+10176 total face images. 10168 face images that are gender annotated (4360 female, 5800 male). Landmark extraction successful on 8824 (3697 female and 5127 male).
+
+\section{Packages}
+Here are the subproblem description and solutions explained. Should be diffused to whole paper later on.
+
+\fillertext
 
 \subsection{Painting Recognizer on Google Images}
 
-Google image result collection similar to section \ref{[ss:datasupervisor]} for portrait images over centuries. An example query in Figure \ref{pr-googleres}.
+Google image result collection similar to section \ref{ss:datasupervisor} for portrait images over centuries. An example query in Figure \ref{pr-googleres}.
 
 \begin{figure}
 	\centering
@@ -267,7 +315,7 @@ RGB intensity values are then used to compute five dominant colors per 3 years w
 
 
 \section{Conclusions}
-
+\longfillertext
 \clearpage
 
 \bibliographystyle{splncs}
